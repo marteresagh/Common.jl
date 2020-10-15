@@ -1,0 +1,7 @@
+name = "Common"
+uuid = "1e120bc2-2bd2-483a-9663-793997b3971f"
+authors = ["marteresagh <marteresa28@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+LinearAlgebraicRepresentation = "95167b0c-186a-594b-a231-52369c6de044"
