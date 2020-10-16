@@ -28,5 +28,5 @@ module Common
 		end
 	end
 
-	export PointCloud, Hyperplane, AABB
+	export Lar, PointCloud, Hyperplane, AABB
 end # module
