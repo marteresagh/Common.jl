@@ -1,6 +1,6 @@
 using Common, Visualization
 
-# input generation
+# input generation ==================================================== PLANE
 npoints = 1000
 xslope = 0.5
 yslope = 0.
@@ -28,7 +28,7 @@ GL.VIEW([
 ]);
 
 
-# input generation
+# input generation ==================================================== LINE
 xs = 3*rand(npoints)
 ys = Float64[]
 

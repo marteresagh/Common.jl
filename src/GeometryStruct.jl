@@ -28,8 +28,8 @@ mutable struct AABB
     y_min::Float64
     z_max::Float64
     z_min::Float64
-	AABB(x_max, x_min, y_max, y_min, z_max, z_min) = new (x_max, x_min, y_max, y_min, z_max, z_min)
-	AABB(x_max, x_min, y_max, y_min) = new (x_max, x_min, y_max, y_min, 0, 0)
+	AABB(x_max, x_min, y_max, y_min, z_max, z_min) = new(x_max, x_min, y_max, y_min, z_max, z_min)
+	AABB(x_max, x_min, y_max, y_min) = new(x_max, x_min, y_max, y_min, 0, 0)
 end
 
 """
