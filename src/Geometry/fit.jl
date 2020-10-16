@@ -8,7 +8,7 @@ function Fit_Line(points::Lar.Points)
 
 	npoints = size(points,2)
 	@assert npoints>=2 "linefit: at least 2 points needed"
-	centroid = PointClouds.centroid(points)
+	centroid = Common.centroid(points)
 
 	C = zeros(2,2)
 	for i in 1:npoints
@@ -32,7 +32,7 @@ function Fit_Plane(points::Lar.Points)
 
 	npoints = size(points,2)
 	@assert npoints>=3 "PlaneFromPoints: at least 3 points needed"
-	centroid,V = PointClouds.subtractaverage(points)
+	centroid,V = Common.subtractaverage(points)
 
 	# Matrix
 	xx = 0.; xy = 0.; xz = 0.;
