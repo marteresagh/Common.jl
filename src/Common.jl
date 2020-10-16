@@ -4,7 +4,6 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-	using Delaunay
 
 	# println with flush
     flushprintln(s...) = begin
@@ -16,17 +15,10 @@ module Common
 	include("GeometryStruct.jl")
 
 	#include all file .jl in other folders
-	folders = ["Geometry"]
-	for dir in folders
-		for file in readdir(dir)
-			
-			include(joinpath(dir,file))
-			# include("Geometry/distance.jl")
-			# include("Geometry/fit.jl")
-			# include("Geometry/util.jl")
-			# include("Geometry/geometrytools.jl")
-			# include("Geometry/delaunay.jl")
-		end
-	end
+	include("Geometry/distance.jl")
+	include("Geometry/fit.jl")
+	include("Geometry/util.jl")
+	include("Geometry/geometrytools.jl")
+	include("Geometry/delaunay.jl")
 	export Lar, PointCloud, Hyperplane, AABB
 end # module
