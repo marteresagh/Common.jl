@@ -4,7 +4,8 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-
+	using Delaunay
+	
 	# println with flush
     flushprintln(s...) = begin
 		println(stdout,s...)

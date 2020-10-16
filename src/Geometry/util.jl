@@ -4,6 +4,15 @@ Average of points.
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
 
 """
+"""
+function boundingbox(points::Lar.Points)::AABB
+	bb = Lar.boundingbox(points)
+	aabb=[[a,b]  for (a,b) in zip(bb[2],bb[1])]
+
+	AABB(vcat(aabb...)...)
+end
+
+"""
 Compute the average of the data points and traslate data.
 """
 function subtractaverage(points::Lar.Points)
@@ -31,13 +40,13 @@ end
 
 Return verteces of the intersection of a `plane` and an `AABB`.
 """
-function intersectAABBplane(AABB::Tuple{Array{Float64,2},Array{Float64,2}}, axis,centroid)
+function intersectAABBplane(AABB::AABB, normal, centroid)
 
     function pointint(i,j,lambda,allverteces)
         return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
     end
 
-	coordAABB = hcat(AABB...)
+	coordAABB = [AABB.x_min AABB.x_max; AABB.y_min AABB.y_max; AABB.z_min AABB.z_max ]
 
     allverteces = []
     for x in coordAABB[1,:]
@@ -50,7 +59,7 @@ function intersectAABBplane(AABB::Tuple{Array{Float64,2},Array{Float64,2}}, axis
 
     vertexpolygon = []
     for (i,j) in Lar.larGridSkeleton([1,1,1])(1)
-        lambda = (Lar.dot(axis,centroid)-Lar.dot(axis,allverteces[i]))/Lar.dot(axis,allverteces[j]-allverteces[i])
+        lambda = (Lar.dot(normal,centroid)-Lar.dot(normal,allverteces[i]))/Lar.dot(normal,allverteces[j]-allverteces[i])
         if lambda>=0 && lambda<=1
             push!(vertexpolygon,pointint(i,j,lambda,allverteces))
         end

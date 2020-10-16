@@ -4,4 +4,5 @@ authors = ["marteresagh <marteresa28@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+Delaunay = "07eb4e4e-0c6d-46ef-bc4e-83d5e5d860a9"
 LinearAlgebraicRepresentation = "95167b0c-186a-594b-a231-52369c6de044"
