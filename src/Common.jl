@@ -5,7 +5,7 @@ module Common
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
 	using Delaunay
-	
+
 	# println with flush
     flushprintln(s...) = begin
 		println(stdout,s...)
@@ -32,5 +32,7 @@ module Common
 	include("Geometry/distance.jl")
 	include("Geometry/fit.jl")
 	include("Geometry/util.jl")
+	include("Geometry/geometrytools.jl")
+	include("Geometry/delaunay.jl")
 	export Lar, PointCloud, Hyperplane, AABB
 end # module
