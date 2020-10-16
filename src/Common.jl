@@ -6,7 +6,7 @@ module Common
 	Lar = LinearAlgebraicRepresentation
 
 	# println with flush
-    flushprintln(s...) = begin
+	flushprintln(s...) = begin
 		println(stdout,s...)
 		flush(stdout)
 	end
@@ -20,5 +20,5 @@ module Common
 	include("Geometry/util.jl")
 	include("Geometry/geometrytools.jl")
 	include("Geometry/delaunay.jl")
-	export Lar, PointCloud, Hyperplane, AABB
+	export Lar, PointCloud, Hyperplane, AABB, flushprintln
 end # module
