@@ -8,11 +8,11 @@ Compute the average of the data points and traslate data.
 """
 function subtractaverage(points::Lar.Points)
 	m,npoints = size(points)
-	centroid = centroid(points)
-	affineMatrix = Lar.t(-centroid...)
+	c = centroid(points)
+	affineMatrix = Lar.t(-c...)
 	V = [points; fill(1.0, (1,npoints))]
 	Y = (affineMatrix * V)[1:m,1:npoints]
-	return centroid,Y
+	return c,Y
 end
 
 """
