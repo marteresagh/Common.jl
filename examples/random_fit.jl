@@ -41,7 +41,7 @@ points = convert(Lar.Points, hcat(xs,ys)')
 
 # fit
 params2D = Common.LinearFit(points)
-V,EV = DrawLine(Hyperplane(PointCloud(points),params2D...))
+V,EV = Common.DrawLine(Hyperplane(PointCloud(points),params2D...))
 
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
