@@ -12,9 +12,9 @@ struct PointCloud
     coordinates::Lar.Points
     rgbs::Lar.Points
 
-	PointCloud(n_points,coordinates,rgbs) = n_points == size(coordinates,2) == size(rgbs,2) ?  new(n_points,coordinates,rgbs) : error("not consistent")
+	PointCloud(n_points,coordinates,rgbs) = n_points == size(coordinates,2) ?  new(n_points,coordinates,rgbs) : error("not consistent")
 	PointCloud(coordinates,rgbs) = PointCloud(size(coordinates,2),coordinates,rgbs)
-	PointCloud(coordinates) = PointCloud(size(coordinates,2),coordinates,zeros(3,size(coordinates,2)))
+	PointCloud(coordinates) = PointCloud(size(coordinates,2),coordinates,reshape([],0,0))
 	PointCloud() = PointCloud(0,reshape([],0,0),reshape([],0,0))
 end
 
