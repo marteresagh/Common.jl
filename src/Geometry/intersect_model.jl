@@ -28,6 +28,16 @@ function intersectAABBplane(AABB::AABB, normal, centroid)
     return hcat(vertexpolygon...)
 end
 
+"""
+"""
+function box_new_coords_system(model)
+	verts,edges,faces = model
+	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
+	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
+	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
+	#coordsystem = [axis_x';axis_y';axis_z']
+	return [axis_x';axis_y';axis_z']
+end
 
 """
 Compute collision detection of two AABB.
@@ -53,26 +63,55 @@ end
 check if point p is in model.
 """
 function inmodel(model)
-	verts,edges,faces = model
-	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
-	coordsystem = [axis_x';axis_y';axis_z']
+	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*verts
-	a = [extrema(newverts[i,:]) for i in 1:3]
-	A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
+	A = boundingbox(newverts)
+	# a = [extrema(newverts[i,:]) for i in 1:3]
+	# A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
 
 	function inmodel0(p)
 		newp = coordsystem*p
 		# 1. - axis x AleftB = A[1,max]<B[1,min]  ArightB = A[1,min]>B[1,max]
 		# 2. - axis y AfrontB = A[2,max]<B[2,min]  AbehindB = A[2,min]>B[2,max]
 			# 3. - axis z AbottomB = A[3,max]<B[3,min]  AtopB = A[3,min]>B[3,max]
-		return (A[2][1]>=newp[1] && A[1][1]<=newp[1]) &&
-					 (A[2][2]>=newp[2] && A[1][2]<=newp[2]) &&
-					  (A[2][3]>=newp[3] && A[1][3]<=newp[3])
+		return  (A.x_max>=newp[1] && A.x_min<=newp[1]) &&
+				(A.y_max>=newp[2] && A.y_min<=newp[2]) &&
+				(A.z_max>=newp[3] && A.z_min<=newp[3])
+		#(A[2][1]>=newp[1] && A[1][1]<=newp[1]) &&
+		# 			 (A[2][2]>=newp[2] && A[1][2]<=newp[2]) &&
+		# 			  (A[2][3]>=newp[3] && A[1][3]<=newp[3])
 	end
+
 	return inmodel0
 end
+
+
+
+"""
+teorema degli assi separanti per conoscere l'intersezione di due box.
+"""
+function separatingaxis(model,octree::AABB)
+	# le due box
+	V,EV,FV = getmodel(octree)
+	verts,edges,faces = model
+
+	# cambio del sistema di riferimento
+	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
+	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
+	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
+	coordsystem = [axis_x';axis_y';axis_z']
+
+	#nuove coordinate
+	newverts = coordsystem*verts
+	newV = coordsystem*V
+
+	#applico AABBdetection
+	A = boundingbox(newverts)
+	B = boundingbox(newV)
+
+	return AABBdetection(A,B)
+end
+
 
 """
 A model and an AABB intersection:
@@ -101,27 +140,4 @@ function modelsdetection(model,octree::AABB)
 	else
 		return 0 # no intersection
 	end
-end
-
-#TODO da finire
-function separatingaxis(model,octree::AABB)
-	V,EV,FV = getmodel(octree)
-	verts,edges,faces = model
-	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
-	coordsystem = [axis_x';axis_y';axis_z']
-	newverts = coordsystem*verts
-	newV = coordsystem*V
-	newaabb = [extrema(newverts[i,:]) for i in 1:3]
-	newAABB = [extrema(newV[i,:]) for i in 1:3]
-
-	aabb =[[a,b]  for (a,b) in zip(newaabb[2],newaabb[1])]
-	A = AABB(vcat(aabb...)...)
-
-	aabb2 =[[a,b]  for (a,b) in zip(newAABB[2],newAABB[1])]
-	B = AABB(vcat(aabb2...)...)
-	#aabb = (hcat([newaabb[1][1],newaabb[2][1],newaabb[3][1]]),hcat([newaabb[1][2],newaabb[2][2],newaabb[3][2]]))
-	#AABB = (hcat([newAABB[1][1],newAABB[2][1],newAABB[3][1]]),hcat([newAABB[1][2],newAABB[2][2],newAABB[3][2]]))
-	return AABBdetection(aabb,AABB)
 end

@@ -14,14 +14,19 @@ Average of points.
 """
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
 
+
+function return_AABB(aabb)
+	#aabb = ([x_min,y_min,z_min],[x_max,y_max,z_max])
+	bb = [[a,b]  for (a,b) in zip(aabb[2],aabb[1])]
+	return AABB(vcat(bb...)...)
+end
+
 """
 Axis aligned bounding box
 """
 function boundingbox(points::Lar.Points)::AABB
 	bb = Lar.boundingbox(points)
-	aabb=[[a,b]  for (a,b) in zip(bb[2],bb[1])]
-
-	AABB(vcat(aabb...)...)
+	return return_AABB(bb)
 end
 
 """
