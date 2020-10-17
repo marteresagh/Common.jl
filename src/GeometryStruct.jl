@@ -42,3 +42,29 @@ mutable struct Hyperplane
 	Hyperplane(points,direction,centroid) = new(points,direction,centroid)
 	Hyperplane(direction,centroid) = new(PointCloud(),direction,centroid)
 end
+
+
+"""
+{
+   "scale":{
+      "x":1.,
+      "y":1.,
+      "z":1.
+   },
+   "position":{
+   	  "x":0.,
+	  "y":0.,
+	  "z":0.
+   },
+   "rotation":{
+      "x":0.,
+      "y":0.,
+      "z":0.
+   },
+}
+"""
+struct Volume
+	scale::Array{Float64,1}
+	position::Array{Float64,1}
+	rotation::Array{Float64,1}
+end
