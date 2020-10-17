@@ -73,3 +73,24 @@ function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.
 	V,FV = Lar.struct2lar(out)
 	return V, FV
 end
+
+
+"""
+Return LAR model of the aligned axis box defined by `aabb`.
+"""
+function boxmodel_from_aabb(aabb::AABB)
+	min,max = aabb
+	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
+		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
+		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
+	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
+	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
+	return V,EV,FV
+end
+
+"""
+"""
+function getmodel(bbin::AABB)
+	# in questo formato gli viene passato -> bbin = [x_min y_min z_min x_max y_max z_max ]
+	return boxmodel_from_aabb(bbin)
+end

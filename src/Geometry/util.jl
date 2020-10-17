@@ -38,38 +38,6 @@ end
 
 
 """
-	intersectAABBplane(AABB::Tuple{Array{Float64,2},Array{Float64,2}}, plane::NTuple{4,Float64})
-
-Return verteces of the intersection of a `plane` and an `AABB`.
-"""
-function intersectAABBplane(AABB::AABB, normal, centroid)
-
-    function pointint(i,j,lambda,allverteces)
-        return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
-    end
-
-	coordAABB = [AABB.x_min AABB.x_max; AABB.y_min AABB.y_max; AABB.z_min AABB.z_max ]
-
-    allverteces = []
-    for x in coordAABB[1,:]
-        for y in coordAABB[2,:]
-            for z in coordAABB[3,:]
-                push!(allverteces,[x,y,z])
-            end
-        end
-    end
-
-    vertexpolygon = []
-    for (i,j) in Lar.larGridSkeleton([1,1,1])(1)
-        lambda = (Lar.dot(normal,centroid)-Lar.dot(normal,allverteces[i]))/Lar.dot(normal,allverteces[j]-allverteces[i])
-        if lambda>=0 && lambda<=1
-            push!(vertexpolygon,pointint(i,j,lambda,allverteces))
-        end
-    end
-    return hcat(vertexpolygon...)
-end
-
-"""
 	matchcolumn(a,B)
 
 Finds index column of `a` in matrix `B`.
@@ -95,29 +63,6 @@ matchcolumn(a,B) = findfirst(j->all(i->a[i] == B[i,j],1:size(B,1)),1:size(B,2))
 #
 # 	return hmax-hmin
 # end
-
-"""
-Compute collision detection of two AABB.
-"""
-function  AABBdetection(aabb::Tuple{Array{Float64,2},Array{Float64,2}},AABB::Tuple{Array{Float64,2},Array{Float64,2}})::Bool
-	A=hcat(aabb...)
-	B=hcat(AABB...)
-	@assert size(A,1) == size(B,1) "AABBdetection: not same dimension"
-	dim = size(A,1)
-	m=1
-	M=2
-	# 1. - axis x AleftB = A[1,max]<B[1,min]  ArightB = A[1,min]>B[1,max]
-	# 2. - axis y AfrontB = A[2,max]<B[2,min]  AbehindB = A[2,min]>B[2,max]
-	if dim == 3
-		# 3. - axis z AbottomB = A[3,max]<B[3,min]  AtopB = A[3,min]>B[3,max]
-		return !( A[1,M]<=B[1,m] || A[1,m]>=B[1,M] ||
-				 A[2,M]<=B[2,m] ||A[2,m]>=B[2,M] ||
-				  A[3,M]<=B[3,m] || A[3,m]>=B[3,M] )
-
-	end
-	return !( A[1,M]<=B[1,m] || A[1,m]>=B[1,M] ||
-			 A[2,M]<=B[2,m] || A[2,m]>=B[2,M] )
-end
 
 """
  	CAT(args)
