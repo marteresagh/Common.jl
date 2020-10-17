@@ -1,9 +1,21 @@
 """
+Apply affine transformation to points V.
+"""
+function apply_matrix(affineMatrix, V)
+	m,n = size(V)
+	W = [V; fill(1.0, (1,n))]
+	T = (affineMatrix * W)[1:m,1:n]
+	return T
+end
+
+
+"""
 Average of points.
 """
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
 
 """
+Axis aligned bounding box
 """
 function boundingbox(points::Lar.Points)::AABB
 	bb = Lar.boundingbox(points)
@@ -22,16 +34,6 @@ function subtractaverage(points::Lar.Points)
 	V = [points; fill(1.0, (1,npoints))]
 	Y = (affineMatrix * V)[1:m,1:npoints]
 	return c,Y
-end
-
-"""
-Apply affine transformation to points V.
-"""
-function apply_matrix(affineMatrix, V)
-	m,n = size(V)
-	W = [V; fill(1.0, (1,n))]
-	T = (affineMatrix * W)[1:m,1:n]
-	return T
 end
 
 
