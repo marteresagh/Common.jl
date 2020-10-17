@@ -79,7 +79,6 @@ end
 Return LAR model of the aligned axis box defined by `aabb`.
 """
 function boxmodel_from_aabb(aabb::AABB)
-	min,max = aabb
 	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
 		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
 		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
@@ -91,6 +90,5 @@ end
 """
 """
 function getmodel(bbin::AABB)
-	# in questo formato gli viene passato -> bbin = [x_min y_min z_min x_max y_max z_max ]
 	return boxmodel_from_aabb(bbin)
 end

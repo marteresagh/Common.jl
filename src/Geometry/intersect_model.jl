@@ -115,7 +115,13 @@ function separatingaxis(model,octree::AABB)
 	newV = coordsystem*V
 	newaabb = [extrema(newverts[i,:]) for i in 1:3]
 	newAABB = [extrema(newV[i,:]) for i in 1:3]
-	aabb = (hcat([newaabb[1][1],newaabb[2][1],newaabb[3][1]]),hcat([newaabb[1][2],newaabb[2][2],newaabb[3][2]]))
-	AABB = (hcat([newAABB[1][1],newAABB[2][1],newAABB[3][1]]),hcat([newAABB[1][2],newAABB[2][2],newAABB[3][2]]))
+
+	aabb =[[a,b]  for (a,b) in zip(newaabb[2],newaabb[1])]
+	A = AABB(vcat(aabb...)...)
+
+	aabb2 =[[a,b]  for (a,b) in zip(newAABB[2],newAABB[1])]
+	B = AABB(vcat(aabb2...)...)
+	#aabb = (hcat([newaabb[1][1],newaabb[2][1],newaabb[3][1]]),hcat([newaabb[1][2],newaabb[2][2],newaabb[3][2]]))
+	#AABB = (hcat([newAABB[1][1],newAABB[2][1],newAABB[3][1]]),hcat([newAABB[1][2],newAABB[2][2],newAABB[3][2]]))
 	return AABBdetection(aabb,AABB)
 end
