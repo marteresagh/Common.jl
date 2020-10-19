@@ -29,15 +29,33 @@
 	end
 
 	@testset "Detection" begin
-		A = AABB(1.,0.,1.,0.,1.,0.)
-		model = Common.getmodel(A)
+		@testset "Two AABB" begin
+			A = AABB(1.,0.,1.,0.,1.,0.)
+			model = Common.getmodel(A)
 
-		octree = AABB(1.,0.,1.,0.,1.,0.)
+			octree = AABB(4.,2.,4.,2.,4.,2.)
+			@test Common.modelsdetection(model,octree) == 0
 
-		@test Common.modelsdetection(model,octree)
+			octree = AABB(4.,0.5,4.,0.5,4.,0.5)
+			@test Common.modelsdetection(model,octree) == 1
 
-		volume = Volume([],[],[])
-		model = volume2LARmodel(volume)
-		@test !Common.modelsdetection(model,octree)
+			octree = AABB(0.7,0.2,0.7,0.2,0.7,0.2)
+			@test Common.modelsdetection(model,octree) == 2
+		end
+
+		@testset "Rotated box and AABB" begin
+			volume = Volume([1.,1.,1.],[0.,0.,0.],[0,0,pi/4])
+			model = Common.volume2LARmodel(volume)
+
+			octree = AABB(1.5,0.7,1.5,0.7,1.5,0.7)
+			@test Common.modelsdetection(model,octree) == 0
+
+			octree = AABB(1.5,0.2,1.5,0.2,1.5,0.2)
+			@test Common.modelsdetection(model,octree) == 1
+
+			octree = AABB(0.1,-0.1,0.1,-0.1,0.1,-0.1)
+			@test Common.modelsdetection(model,octree) == 2
+		end
+
 	end
 end
