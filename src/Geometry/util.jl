@@ -90,7 +90,7 @@ end
 
 
 """
-Matrix 2 euler
+Matrix to euler in XYZ order
 """
 function matrix2euler(rotation)
 	# rotation 3x3
@@ -111,6 +111,40 @@ function matrix2euler(rotation)
 end
 
 
+"""
+Euler to matrix
+"""
+function euler2matrix(x,y,z)
+
+		M = Matrix{Float64}(Lar.I,3,3)
+
+		a = Lar.cos( x )
+		b = Lar.sin( x )
+		c = Lar.cos( y )
+		d = Lar.sin( y )
+		e = Lar.cos( z )
+		f = Lar.sin( z )
+
+		ae = a * e
+		af = a * f
+		be = b * e
+		bf = b * f
+
+		M[1,1] = c * e
+		M[1,2] = - c * f
+		M[1,3] = d
+
+		M[2,1] = af + be * d
+		M[2,2] = ae - bf * d
+		M[2,3] = - b * c
+
+		M[ 3,1 ] = bf - ae * d
+		M[ 3,2 ] = be + af * d
+		M[ 3,3 ] = a * c
+
+		return M
+
+end
 
 """
 Find the rotation matrix that aligns vec1 to vec2
