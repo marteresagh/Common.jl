@@ -56,6 +56,6 @@
 			octree = AABB(0.1,-0.1,0.1,-0.1,0.1,-0.1)
 			@test Common.modelsdetection(model,octree) == 2
 		end
-
 	end
+	
 end

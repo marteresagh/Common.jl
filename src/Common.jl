@@ -23,5 +23,5 @@ module Common
 	include("Geometry/intersect_model.jl")
 	include("Geometry/volume.jl")
 
-	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln
+	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel
 end # module
