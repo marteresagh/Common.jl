@@ -20,7 +20,7 @@ module Common
 	include("Geometry/util.jl")
 	include("Geometry/geometrytools.jl")
 	include("Geometry/delaunay.jl")
-	include("Geometry/intersection_model.jl")
+	include("Geometry/intersect_model.jl")
 
 	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln
 end # module
