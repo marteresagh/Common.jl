@@ -16,11 +16,11 @@
 		@test Common.matchcolumn(a,B) == 1
 	end
 
-	@testset "matrix2euler" begin
-		angle = [0,pi/4,0]
-		a = Lar.r(angle...)
-		@test Common.matrix2euler(a[1:3,1:3]) ≈ angle
-
+	@testset "matrix-euler" begin
+		angles = [0,pi/4,pi/2]
+		M = Common.euler2matrix(angles...)
+		euler = Common.matrix2euler(M)
+		@test euler ≈ angles
 	end
 
 end
