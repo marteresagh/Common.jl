@@ -88,6 +88,30 @@ function isinbox(aabb,p)
 end
 
 
+
+"""
+Matrix 2 euler
+"""
+function matrix2euler(rotation)
+	# rotation 3x3
+	y = Lar.asin( clamp( rotation[1,3], - 1, 1 ) )
+
+	if ( Lar.abs( rotation[1,3] ) < 0.9999999 )
+
+		x = Lar.atan( - rotation[2,3], rotation[3,3] )
+		z = Lar.atan( - rotation[1,2], rotation[1,1] )
+
+	 else
+
+		x = Lar.atan( rotation[3,2], rotation[2,2] )
+		z = 0
+
+	end
+	return [x,y,z]
+end
+
+
+
 """
 Find the rotation matrix that aligns vec1 to vec2
 vec1: A 3d "source" vector,
