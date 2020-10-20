@@ -53,6 +53,10 @@ end
 """
 check if point p is in model.
 """
+function bb(newverts)
+	a = [extrema(newverts[i,:]) for i in 1:3]
+	return (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
+end
 function inmodel(model)
 	verts,edges,faces = model
 	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
