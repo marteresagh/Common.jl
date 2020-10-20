@@ -38,8 +38,8 @@ end
 Axis aligned bounding box
 """
 function boundingbox(points::Lar.Points)::AABB
-	bb = Lar.boundingbox(points)
-	return return_AABB(bb)
+	a = [extrema(points[i,:]) for i in 1:size(points,1)]
+	return AABB(a[1][2],a[1][1],a[2][2],a[2][1],a[3][2],a[3][1])
 end
 
 """
