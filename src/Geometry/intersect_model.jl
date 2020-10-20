@@ -54,12 +54,7 @@ end
 check if point p is in model.
 """
 function inmodel(model)
-#	coordsystem = box_new_coords_system(model)
-	verts,edges,faces = model
-	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
-	coordsystem = [axis_x';axis_y';axis_z']
+	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*model[1]
 	A = boundingbox(newverts)
 	# a = [extrema(newverts[i,:]) for i in 1:3]
