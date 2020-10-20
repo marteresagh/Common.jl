@@ -14,7 +14,9 @@ Average of points.
 """
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
 
-
+"""
+AABB
+"""
 function return_AABB(aabb)
 	#aabb = ([x_min,y_min,z_min],[x_max,y_max,z_max])
 	bb = [[a,b]  for (a,b) in zip(aabb[2],aabb[1])]
@@ -142,7 +144,7 @@ function euler2matrix(x,y,z)
 		M[ 3,2 ] = be + af * d
 		M[ 3,3 ] = a * c
 
-		return M
+		return Lar.approxVal(16).(M)
 
 end
 
@@ -162,6 +164,15 @@ function rotation_matrix_from_vectors(vec1, vec2)
     rotation_matrix = Matrix(Lar.I,3,3) + kmat + kmat^2* ((1 - c) / (s ^ 2))
     return vcat(hcat(rotation_matrix,[0,0,0]),[0.,0.,0.,1.]')
 end
+
+
+"""
+matrice orlata
+"""
+function matrix4(m::Matrix)
+	return vcat(hcat(m,[0,0,0]),[0.,0.,0.,1.]')
+end
+
 
 # function rotoTraslation(planesource,planeref)
 # 	axref, centref = planeref
