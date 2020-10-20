@@ -8,6 +8,17 @@ function apply_matrix(affineMatrix, V)
 	return T
 end
 
+"""
+matrix of rotation
+"""
+function box_new_coords_system(model)
+	verts,edges,faces = model
+	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
+	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
+	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
+	#coordsystem = [axis_x';axis_y';axis_z']
+	return [axis_x';axis_y';axis_z']
+end
 
 """
 Average of points.
