@@ -39,7 +39,8 @@ Axis aligned bounding box
 """
 function boundingbox(points::Lar.Points)::AABB
 	a = [extrema(points[i,:]) for i in 1:size(points,1)]
-	return AABB(a[1][2],a[1][1],a[2][2],a[2][1],a[3][2],a[3][1])
+	b = reverse.(a)
+	return AABB(collect(Iterators.flatten(b))...)
 end
 
 """
@@ -49,8 +50,7 @@ function subtractaverage(points::Lar.Points)
 	m,npoints = size(points)
 	c = centroid(points)
 	affineMatrix = Lar.t(-c...)
-	V = [points; fill(1.0, (1,npoints))]
-	Y = (affineMatrix * V)[1:m,1:npoints]
+	Y = apply_matrix(affineMatrix,points)
 	return c,Y
 end
 
@@ -155,7 +155,7 @@ function euler2matrix(x,y,z)
 		M[ 3,2 ] = be + af * d
 		M[ 3,3 ] = a * c
 
-		return Lar.approxVal(16).(M)
+		return M #Lar.approxVal(16).(M)
 
 end
 

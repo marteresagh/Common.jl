@@ -53,32 +53,6 @@ end
 """
 check if point p is in model.
 """
-# function bb(newverts)
-# 	a = [extrema(newverts[i,:]) for i in 1:3]
-# 	return (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
-# end
-# function inmodel(model)
-# 	verts,edges,faces = model
-# 	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-# 	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-# 	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
-# 	coordsystem = [axis_x';axis_y';axis_z']
-# 	newverts = coordsystem*verts
-# 	a = [extrema(newverts[i,:]) for i in 1:3]
-# 	A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
-#
-# 	function inmodel0(p)
-# 		newp = coordsystem*p
-# 		# 1. - axis x AleftB = A[1,max]<B[1,min]  ArightB = A[1,min]>B[1,max]
-# 		# 2. - axis y AfrontB = A[2,max]<B[2,min]  AbehindB = A[2,min]>B[2,max]
-# 			# 3. - axis z AbottomB = A[3,max]<B[3,min]  AtopB = A[3,min]>B[3,max]
-# 		return (A[2][1]>=newp[1] && A[1][1]<=newp[1]) &&
-# 					 (A[2][2]>=newp[2] && A[1][2]<=newp[2]) &&
-# 					  (A[2][3]>=newp[3] && A[1][3]<=newp[3])
-# 	end
-# 	return inmodel0
-# end
-
 function inmodel(model)
 	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*model[1]
@@ -86,7 +60,7 @@ function inmodel(model)
 	# a = [extrema(newverts[i,:]) for i in 1:3]
 	# A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
 
-	function inmodel0(p)
+	function inmodel0(p::Array{Float64,1})
 		newp = coordsystem*p
 		# 1. - axis x AleftB = A[1,max]<B[1,min]  ArightB = A[1,min]>B[1,max]
 		# 2. - axis y AfrontB = A[2,max]<B[2,min]  AbehindB = A[2,min]>B[2,max]
@@ -110,16 +84,10 @@ teorema degli assi separanti per conoscere l'intersezione di due box.
 function separatingaxis(model,octree::AABB)
 	# le due box
 	V,EV,FV = getmodel(octree)
-	verts,edges,faces = model
-
-	# cambio del sistema di riferimento
-	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
-	coordsystem = [axis_x';axis_y';axis_z']
+	coordsystem = box_new_coords_system(model)
 
 	#nuove coordinate
-	newverts = coordsystem*verts
+	newverts = coordsystem*model[1]
 	newV = coordsystem*V
 
 	#applico AABBdetection

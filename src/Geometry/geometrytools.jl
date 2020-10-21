@@ -9,7 +9,6 @@ function DrawLine(line::Hyperplane, u=0.02)
 	for i in 1:points.n_points
 		p = points.coordinates[:,i] - line.centroid
 		value = Lar.dot(line.direction,p)
-
 		if value > max_value
 			max_value = value
 		end
@@ -17,14 +16,12 @@ function DrawLine(line::Hyperplane, u=0.02)
 			min_value = value
 		end
 	end
-
 	p_min = line.centroid + (min_value - u)*line.direction
 	p_max = line.centroid + (max_value + u)*line.direction
 	V = hcat(p_min,p_max)
 	EV = [[1,2]]
     return V, EV
 end
-
 
 """
 
