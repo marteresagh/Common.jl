@@ -26,5 +26,5 @@ module Common
 	include("Geometry/volume.jl")
 	include("Geometry/neighbors.jl")
 
-	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel
+	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel, NearestNeighbors
 end # module
