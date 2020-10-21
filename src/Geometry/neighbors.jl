@@ -8,8 +8,10 @@ function neighborhood(	kdtree,
 						threshold::Float64,
 						k=10::Int64
 					)
+
 	idxs, dists = NearestNeighbors.knn(kdtree, PC.coordinates[:,seeds], k, false, i -> i in visitedverts)
 
+#TODO da migliorare questa parte
 	neighborhood = Int[]
 
 	for i in 1:length(idxs)

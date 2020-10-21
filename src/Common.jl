@@ -14,7 +14,7 @@ module Common
 	end
 
 	# include struct
-	include("GeometryStruct.jl")
+	include("struct.jl")
 
 	#include all file .jl in other folders
 	include("Geometry/distance.jl")
