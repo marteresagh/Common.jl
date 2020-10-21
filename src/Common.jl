@@ -4,7 +4,9 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-	using NearestNeighbor
+
+	using NearestNeighbors
+
 	# println with flush
 	flushprintln(s...) = begin
 		println(stdout,s...)
