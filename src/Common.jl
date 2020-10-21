@@ -4,7 +4,7 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-
+	using NearestNeighbor
 	# println with flush
 	flushprintln(s...) = begin
 		println(stdout,s...)
@@ -22,6 +22,7 @@ module Common
 	include("Geometry/delaunay.jl")
 	include("Geometry/intersect_model.jl")
 	include("Geometry/volume.jl")
+	include("Geometry/neighbors.jl")
 
 	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel
 end # module
