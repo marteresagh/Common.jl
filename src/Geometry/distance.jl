@@ -25,3 +25,12 @@ end
 # function isclosetoline(p::Array{Float64,1},line::Line,par::Hyperplane)
 # 	return PointClouds.distpointtoline(p,line) < par
 # end
+
+
+function residual(point::Array{Float64,1},hyperplane::Hyperplane)
+	if length(point) == 2
+		return Dist_Point2Line(p, hyperplane)
+	elseif length(point) == 3
+		return Dist_Point2Plane(point, hyperplane)
+	end
+end
