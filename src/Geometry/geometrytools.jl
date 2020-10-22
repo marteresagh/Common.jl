@@ -28,7 +28,7 @@ end
 """
 function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	out = Array{Lar.Struct,1}()
-	for obj in lines
+	for line in lines
 		V,EV = DrawLine(line, u)
 		cell = (V,EV)
 		push!(out, Lar.Struct([cell]))
