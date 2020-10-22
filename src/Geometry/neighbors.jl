@@ -2,7 +2,7 @@
 Create the neighborhood of the i-th point defined in seeds
 """
 function neighborhood(	kdtree,
-	 					points::Lar.points,
+	 					points::Lar.Points,
 		 				seeds::Array{Int64,1},
 						visitedverts::Array{Int64,1},
 						threshold::Float64,
