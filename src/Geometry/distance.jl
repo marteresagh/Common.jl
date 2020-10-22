@@ -27,10 +27,13 @@ end
 # end
 
 
-function residual(point::Array{Float64,1},hyperplane::Hyperplane)
-	if length(point) == 2
-		return Dist_Point2Line(p, hyperplane)
-	elseif length(point) == 3
-		return Dist_Point2Plane(point, hyperplane)
+function residual(hyperplane::Hyperplane)
+	function residual0(point::Array{Float64,1})
+		if length(point) == 2
+			return Common.Dist_Point2Line(point, hyperplane)
+		elseif length(point) == 3
+			return Common.Dist_Point2Plane(point, hyperplane)
+		end
 	end
+	return residual0
 end
