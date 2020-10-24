@@ -6,6 +6,7 @@ module Common
 	Lar = LinearAlgebraicRepresentation
 
 	using NearestNeighbors
+	using Delaunay
 
 	# println with flush
 	flushprintln(s...) = begin
