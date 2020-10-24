@@ -1,3 +1,4 @@
+# TODO controllare con dei test questa funzione
 """
 Create the neighborhood of the i-th point defined in seeds
 """
@@ -9,9 +10,9 @@ function neighborhood(	kdtree,
 						k=10::Int64
 					)
 
-	idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, false, i -> i in visitedverts)
+	idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, true, i -> i in visitedverts)
 
-#TODO da migliorare questa parte
+	#TODO da migliorare questa parte
 	neighborhood = Int[]
 
 	for i in 1:length(idxs)
