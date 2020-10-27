@@ -27,6 +27,7 @@ module Common
 	include("Geometry/intersect_model.jl")
 	include("Geometry/volume.jl")
 	include("Geometry/neighbors.jl")
+	include("Geometry/outliers.jl")
 
 	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel, NearestNeighbors, Statistics
 end # module
