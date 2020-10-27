@@ -7,6 +7,7 @@ version = "0.1.0"
 Delaunay = "07eb4e4e-0c6d-46ef-bc4e-83d5e5d860a9"
 LinearAlgebraicRepresentation = "95167b0c-186a-594b-a231-52369c6de044"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

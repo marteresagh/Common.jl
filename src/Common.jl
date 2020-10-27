@@ -7,6 +7,7 @@ module Common
 
 	using NearestNeighbors
 	using Delaunay
+	using Statistics
 
 	# println with flush
 	flushprintln(s...) = begin
@@ -27,5 +28,5 @@ module Common
 	include("Geometry/volume.jl")
 	include("Geometry/neighbors.jl")
 
-	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel, NearestNeighbors
+	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel, NearestNeighbors, Statistics
 end # module
