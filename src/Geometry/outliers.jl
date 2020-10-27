@@ -23,6 +23,6 @@ function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
 	density,AVGRelDensity = relative_density_points(PC, current_inds, k)
 	mu = Statistics.mean(AVGRelDensity)
 	rho = Statistics.std(AVGRelDensity)
-	outliers = [AVGRelDensity[i]<mu-rho for i in current_inds ]
+	outliers = [AVGRelDensity[i]<mu-rho for i in 1:length(current_inds) ]
 	return current_inds[outliers]
 end
