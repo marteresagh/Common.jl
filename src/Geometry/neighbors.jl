@@ -9,7 +9,8 @@ function neighborhood(	kdtree,
 						threshold::Float64,
 						k=10::Int64
 					)
-
+	@show seeds
+	@show size(points,2)
 	idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, true, i -> i in visitedverts)
 
 	#TODO da migliorare questa parte
