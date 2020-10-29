@@ -1,4 +1,3 @@
-# TODO controllare con dei test questa funzione
 """
 Create the neighborhood of the i-th point defined in seeds
 """

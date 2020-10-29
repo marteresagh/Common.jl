@@ -17,6 +17,7 @@ module Common
 
 	# include struct
 	include("struct.jl")
+	include("keyboard_event.jl")
 
 	#include all file .jl in other folders
 	include("Geometry/distance.jl")
@@ -29,5 +30,6 @@ module Common
 	include("Geometry/neighbors.jl")
 	include("Geometry/outliers.jl")
 
-	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel, NearestNeighbors, Statistics
+	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel,
+	 		NearestNeighbors, Statistics, monitorInput
 end # module
