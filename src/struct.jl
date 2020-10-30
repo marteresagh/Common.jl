@@ -69,3 +69,25 @@ struct Volume
 	position::Array{Float64,1}
 	rotation::Array{Float64,1}
 end
+
+
+"""
+Plane describe by a,b,c,d parameters.
+"""
+struct Plane
+	a::Float64
+	b::Float64
+	c::Float64
+	d::Float64
+
+	matrix::Matrix
+
+	function Plane(a,b,c,d)
+		normal = [a,b,c]
+		centroid = normal*d
+		rot = convert(Matrix,hcat(Lar.nullspace(Matrix(normal')),normal)')
+		matrix = Common.matrix4(rot)
+		matrix[1:3,4] = centroid
+		new(a,b,c,d,matrix)
+	end
+end

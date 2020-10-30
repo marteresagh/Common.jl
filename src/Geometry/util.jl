@@ -1,4 +1,12 @@
 """
+matrice orlata
+"""
+function matrix4(m::Matrix)
+	return vcat(hcat(m,[0,0,0]),[0.,0.,0.,1.]')
+end
+
+
+"""
 Apply affine transformation to points V.
 """
 function apply_matrix(affineMatrix, V)
@@ -174,14 +182,6 @@ function rotation_matrix_from_vectors(vec1, vec2)
     kmat = [0 -v[3] v[2]; v[3] 0 -v[1]; -v[2] v[1] 0]
     rotation_matrix = Matrix(Lar.I,3,3) + kmat + kmat^2* ((1 - c) / (s ^ 2))
     return vcat(hcat(rotation_matrix,[0,0,0]),[0.,0.,0.,1.]')
-end
-
-
-"""
-matrice orlata
-"""
-function matrix4(m::Matrix)
-	return vcat(hcat(m,[0,0,0]),[0.,0.,0.,1.]')
 end
 
 
