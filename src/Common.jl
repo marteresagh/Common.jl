@@ -29,6 +29,7 @@ module Common
 	include("Geometry/volume.jl")
 	include("Geometry/neighbors.jl")
 	include("Geometry/outliers.jl")
+	include("Geometry/double_verts.jl")
 
 	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel,
 	 		NearestNeighbors, Statistics, monitorInput
