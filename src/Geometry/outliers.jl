@@ -1,7 +1,7 @@
 function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
-	points = PC.coordinates
-	kdtree = NearestNeighbors.KDTree(points[:,current_inds])
-	idxs, dists = NearestNeighbors.knn(kdtree, points, k, true)
+	points = PC.coordinates[:,current_inds]
+	kdtree = NearestNeighbors.KDTree(points)
+	idxs, dists = NearestNeighbors.knn(kdtree, points, k+1, true)
 
 	density = Float64[]
 	for i in 1:length(current_inds)
