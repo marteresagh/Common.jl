@@ -1,5 +1,4 @@
-using Base.Cartesian
-import Base.Prehashed
+
 """
 remove double verts
 """

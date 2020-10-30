@@ -9,6 +9,9 @@ module Common
 	using Delaunay
 	using Statistics
 
+	using Base.Cartesian
+	import Base.Prehashed
+	
 	# println with flush
 	flushprintln(s...) = begin
 		println(stdout,s...)
