@@ -22,7 +22,7 @@ direction,centroid = Common.LinearFit(points)
 
 plane = Common.Plane(direction...,Lar.dot(direction,centroid))
 
-T = Common.apply_matrix(Lar.t(-centroid...)*plane.matrix,points)
+T = Common.apply_matrix(Lar.inv(plane.matrix),points)
 
 
 V,(VV,EV,FV) = Lar.cuboid([1,1],true)
@@ -35,9 +35,8 @@ GL.VIEW([
         GL.GLFrame
 ])
 
-inv_matrix = Common.matrix4(convert(Matrix,plane.matrix[1:3,1:3]'))
-inv_matrix[1:3,4] = -plane.matrix[1:3,4]
-W = Common.apply_matrix(inv_matrix*Lar.t(centroid...),V3D)
+
+W = Common.apply_matrix(plane.matrix,V3D)
 
 GL.VIEW([
         Visualization.points(points),

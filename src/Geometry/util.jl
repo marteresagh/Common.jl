@@ -184,17 +184,6 @@ function rotation_matrix_from_vectors(vec1, vec2)
     return vcat(hcat(rotation_matrix,[0,0,0]),[0.,0.,0.,1.]')
 end
 
-#TODO da provare
-"""
-get iverse affine transformation matrix
-"""
-function get_inverse(affine_matrix::Matrix)
-	trasl = affine_matrix[1:3,4]
-	rot = affine_matrix[1:3,1:3]
-	inv = Common.matri4(Lar.inv(rot))
-	inv[1:3,4] = - Lar.inv(rot)*trasl
-	return inv
-end
 
 # function rotoTraslation(planesource,planeref)
 # 	axref, centref = planeref

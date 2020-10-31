@@ -80,7 +80,7 @@ struct Plane
 	c::Float64
 	d::Float64
 
-	matrix::Matrix
+	matrix::Matrix #matrice da 2D al piano
 
 	function Plane(a,b,c,d)
 		normal = [a,b,c]
