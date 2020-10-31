@@ -86,7 +86,7 @@ struct Plane
 		normal = [a,b,c]
 		centroid = normal*d
 		rot = convert(Matrix,hcat(Lar.nullspace(Matrix(normal')),normal)')
-		matrix = Common.matrix4(rot)
+		matrix = Common.matrix4(convert(Matrix,rot'))
 		matrix[1:3,4] = centroid
 		new(a,b,c,d,matrix)
 	end
