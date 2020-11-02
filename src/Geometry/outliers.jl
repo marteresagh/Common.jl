@@ -1,3 +1,6 @@
+"""
+Compute density and relative density of points
+"""
 function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
 	points = PC.coordinates[:,current_inds]
 	npoints = length(current_inds)
@@ -19,6 +22,9 @@ function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k
 	return density,AVGRelDensity
 end
 
+"""
+Return outliers defined by low relative density.
+"""
 function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
 	density,AVGRelDensity = relative_density_points(PC, current_inds, k)
 	mu = Statistics.mean(AVGRelDensity)
