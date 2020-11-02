@@ -11,7 +11,7 @@ module Common
 
 	using Base.Cartesian
 	import Base.Prehashed
-	
+
 	# println with flush
 	flushprintln(s...) = begin
 		println(stdout,s...)
@@ -34,6 +34,7 @@ module Common
 	include("Geometry/outliers.jl")
 	include("Geometry/double_verts.jl")
 
-	export Lar, PointCloud, Hyperplane, AABB, Volume, flushprintln, getmodel,
-	 		NearestNeighbors, Statistics, monitorInput
+	export  PointCloud, Hyperplane, AABB, Volume, Plane, #structs
+			monitorInput, flushprintln, getmodel, #funs
+			NearestNeighbors, Statistics, Lar #modules
 end # module
