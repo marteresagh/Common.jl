@@ -4,12 +4,11 @@ function monitorInput()
 
     inputBuffer = Channel{Char}(100)
 
-    t = @async begin
+    task = @async begin
         while true
-            print("attivo")
             c = read(stdin, Char)
             put!(inputBuffer, c)
         end
     end
-    return inputBuffer, t
+    return inputBuffer, task
 end

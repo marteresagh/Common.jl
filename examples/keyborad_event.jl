@@ -13,4 +13,9 @@ end
 
 @show output
 println("\nPlease have a nice day!")
-Base.throwto(t, InterruptException())
+
+try
+    Base.throwto(t, InterruptException())
+catch y
+
+end
