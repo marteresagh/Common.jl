@@ -1,6 +1,6 @@
 using Common
 
-inputBuffer = monitorInput()
+inputBuffer,t = monitorInput()
 output = Int64[]
 for i in 1:100
     if isready(inputBuffer) && take!(inputBuffer) == 'q'
@@ -13,3 +13,4 @@ end
 
 @show output
 println("\nPlease have a nice day!")
+Base.throwto(t, InterruptException())
