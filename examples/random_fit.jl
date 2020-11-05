@@ -29,6 +29,10 @@ GL.VIEW([
 
 
 # input generation ==================================================== LINE
+npoints = 500
+xslope = 0.5
+off = 1.
+
 xs = 3*rand(npoints)
 ys = Float64[]
 
@@ -38,13 +42,11 @@ for i in 1:npoints
 end
 
 points = convert(Lar.Points, hcat(xs,ys)')
-
+pts,ind = Common.remove_double_verts(points,2)
 # fit
 params2D = Common.LinearFit(points)
-V,EV = Common.DrawLine(Hyperplane(PointCloud(points),params2D...))
 
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
-	GL.GLGrid(V,EV)
-	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
+	GL.GLFrame2
 ]);
