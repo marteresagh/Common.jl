@@ -56,7 +56,7 @@ check if point p is in model.
 function inmodel(model)
 	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*model[1]
-	A = boundingbox(newverts)
+	A = Common.boundingbox(newverts)
 	# a = [extrema(newverts[i,:]) for i in 1:3]
 	# A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
 

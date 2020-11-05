@@ -17,6 +17,10 @@ end
 """
 get model of plane with thickness
 """
+function plane2model(plane::Plane, thickness::Float64, aabb::AABB)
+	plane2model(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
+end
+
 function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)
 	verts,_ = getmodel(aabb)
 	rotation = Common.matrix2euler(rot_mat)
@@ -31,8 +35,4 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 	volume = Volume(scale,position,rotation)
 	model = Common.volume2LARmodel(volume)
 	return model
-end
-
-function plane2model(plane::Plane, thickness::Float64, aabb::AABB)
-	plane2model(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
 end
