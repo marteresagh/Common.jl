@@ -36,3 +36,25 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 	model = Common.volume2LARmodel(volume)
 	return model
 end
+
+
+function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)
+	axis_x = (p2-p1)/Lar.norm(p2-p1)
+	axis_z = Lar.cross(axis_x,axis_y)
+
+	rot_mat = hcat(axis_x,axis_y,axis_z)
+	rotation = Common.matrix2euler(rot_mat)
+
+	V,_ = getmodel(aabb)
+	dists = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]
+
+	center_model = Common.centroid(hcat(p1,p2))
+	position = center_model+(Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2])
+	min,max = extrema(dists)
+
+	scale = [Lar.norm(p2-p1),max-min,thickness]
+
+	volume = Volume(scale,position,rotation)
+	model = Common.volume2LARmodel(volume)
+	return model
+end
