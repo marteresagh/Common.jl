@@ -35,7 +35,6 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 	return model
 end
 
-
 function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)
 	axis = (p2-p1)/Lar.norm(p2-p1)
 	axis_z = Lar.cross(axis,axis_y)

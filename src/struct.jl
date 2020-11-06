@@ -90,4 +90,15 @@ struct Plane
 		matrix[1:3,4] = centroid
 		new(a,b,c,d,matrix)
 	end
+
+	function Plane(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
+		axis = (p2-p1)/Lar.norm(p2-p1)
+		axis_z = Lar.cross(axis,axis_y)
+		axis_z /= Lar.norm(axis_z)
+
+		center_model = Common.centroid(hcat(p1,p2))
+		d = Lar.dot(axis_z,center_model)
+		new(axis_z[1], axis_z[2], axis_z[3], d)
+
+	end
 end
