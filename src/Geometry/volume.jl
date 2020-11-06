@@ -1,7 +1,5 @@
 """
-	volumemodelfromjson(path::String)
-
-Return LAR model of Potree volume tools.
+Return volume model described by position, scale and rotation.
 """
 function volume2LARmodel(volume::Volume)
 	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
@@ -15,7 +13,7 @@ end
 
 
 """
-get model of plane with thickness
+Return model of plane with thickness.
 """
 function plane2model(plane::Plane, thickness::Float64, aabb::AABB)
 	plane2model(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
@@ -39,20 +37,28 @@ end
 
 
 function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)
-	axis_x = (p2-p1)/Lar.norm(p2-p1)
-	axis_z = Lar.cross(axis_x,axis_y)
-
-	rot_mat = hcat(axis_x,axis_y,axis_z)
-	rotation = Common.matrix2euler(rot_mat)
-
-	V,_ = getmodel(aabb)
-	dists = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]
+	axis = (p2-p1)/Lar.norm(p2-p1)
+	axis_z = Lar.cross(axis,axis_y)
+	axis_z /= Lar.norm(axis_z)
+	axis_x = Lar.cross(axis_y,axis_z)
+	axis_x /= Lar.norm(axis_x)
 
 	center_model = Common.centroid(hcat(p1,p2))
-	position = center_model+(Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2])
-	min,max = extrema(dists)
 
-	scale = [Lar.norm(p2-p1),max-min,thickness]
+	rot_mat = hcat(axis_x,axis_y,axis_z)
+	V,_ = getmodel(aabb)
+
+	dists_y = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]
+	min_y,max_y = extrema(dists_y)
+
+	dists_x = [Lar.dot(axis_x,p1),Lar.dot(axis_x,p2)]
+	min_x,max_x = extrema(dists_x)
+
+	scale = [max_x-min_x, max_y-min_y, thickness]
+
+	position = center_model-Lar.dot(rot_mat[:,2],center_model)*rot_mat[:,2]+(Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2])
+
+	rotation = Common.matrix2euler(rot_mat)
 
 	volume = Volume(scale,position,rotation)
 	model = Common.volume2LARmodel(volume)
