@@ -13,11 +13,10 @@ model = getmodel(aabb)
 
 plane = Common.Plane(p1,p2,axis_y)
 
-volume2 = Common.plane2model(plane,thickness,aabb)
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,V'),GL.COLORS[6])
 	GL.GLGrid(volume[1],volume[2])
-	GL.GLGrid(volume2[1],volume2[2])
 	GL.GLGrid(model[1],model[2])
+	Visualization.helper_axis(plane.matrix)...
 	GL.GLFrame
 ]);

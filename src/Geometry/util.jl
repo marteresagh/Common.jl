@@ -16,6 +16,12 @@ function apply_matrix(affineMatrix, V)
 	return T
 end
 
+function apply_matrix(affineMatrix, V::Array{Float64,1})
+	T = reshape(V,3,1)
+	return apply_matrix(affineMatrix, T)
+end
+
+
 """
 matrix of rotation
 """
