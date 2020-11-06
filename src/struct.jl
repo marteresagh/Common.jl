@@ -98,7 +98,7 @@ struct Plane
 
 		center_model = Common.centroid(hcat(p1,p2))
 		d = Lar.dot(axis_z,center_model)
-		new(axis_z[1], axis_z[2], axis_z[3], d)
+		Plane(axis_z[1], axis_z[2], axis_z[3], d)
 
 	end
 end
