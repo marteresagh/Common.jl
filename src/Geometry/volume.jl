@@ -56,7 +56,7 @@ function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{F
 
 	scale = [max_x-min_x, max_y-min_y, thickness]
 
-	position = center_model-Lar.dot(rot_mat[:,2],center_model)*rot_mat[:,2]+(Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2])
+	position = center_model-Lar.dot(rot_mat[:,2],center_model)*rot_mat[:,2]+Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2]
 
 	rotation = Common.matrix2euler(rot_mat)
 
