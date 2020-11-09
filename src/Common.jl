@@ -13,8 +13,8 @@ module Common
 	import Base.Prehashed
 
 	# println with flush
-	flushprintln(s...) = begin
-		println(stdout,s...)
+	function flushprintln(x...)
+		println(join(x, " ")...)
 		flush(stdout)
 	end
 
