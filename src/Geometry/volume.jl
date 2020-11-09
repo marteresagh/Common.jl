@@ -38,6 +38,7 @@ end
 function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)
 	axis = (p2-p1)/Lar.norm(p2-p1)
 	axis_z = Lar.cross(axis,axis_y)
+	@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
 	axis_z /= Lar.norm(axis_z)
 	axis_x = Lar.cross(axis_y,axis_z)
 	axis_x /= Lar.norm(axis_x)

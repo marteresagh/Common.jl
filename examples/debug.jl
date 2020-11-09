@@ -1,7 +1,7 @@
 using Visualization
 using Common
 
-V = [0 4;2. 0; 2 0]
+V = [0 0;0. 0; 2 0]
 aabb = AABB(2,-1,2,-1,2,-1)
 axis_y = [0.,0.,1]
 thickness = 0.02
