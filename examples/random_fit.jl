@@ -38,15 +38,17 @@ ys = Float64[]
 
 
 for i in 1:npoints
-    push!(ys, xs[i]*xslope + off + 0*rand()) # points perturbation
+    push!(ys, xs[i]*xslope + off + 0.1*rand()) # points perturbation
 end
 
 points = convert(Lar.Points, hcat(xs,ys)')
-pts,ind = Common.remove_double_verts(points,2)
+outlier = hcat(points,[4,5])
 # fit
-params2D = Common.LinearFit(points)
+params2D = Common.LinearFit(outlier)
 
+hyperplane = Hyperplane(PointCloud(outlier),params2D...)
 GL.VIEW([
-    GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
+    GL.GLPoints(convert(Lar.Points,outlier'),GL.COLORS[6])
+	Visualization.mesh_lines([hyperplane])...
 	GL.GLFrame2
 ]);

@@ -2,6 +2,7 @@
 PointCloud
 
 struct PointCloud
+	dimension
     n_points
     coordinates
     rgbs
@@ -37,7 +38,7 @@ end
 Dataset for line and plane
 """
 mutable struct Hyperplane
-	points::PointCloud
+	inliers::PointCloud
     direction::Array{Float64,1}
     centroid::Array{Float64,1}
 	Hyperplane(points,direction,centroid) = new(points,direction,centroid)

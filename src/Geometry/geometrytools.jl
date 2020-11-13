@@ -5,7 +5,7 @@ function DrawLine(line::Hyperplane, u=0.02)
 
 	max_value = -Inf
 	min_value = +Inf
-	points = line.points
+	points = line.inliers
 	for i in 1:points.n_points
 		p = points.coordinates[:,i] - line.centroid
 		value = Lar.dot(line.direction,p)
@@ -38,39 +38,39 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	return V,EV
 end
 
-
-"""
-"""
-#TODO da cambiare e farla tipo la line senza triangolazione
-function DrawPlane(plane::Hyperplane, AABB::AABB)
-	V = intersectAABBplane(AABB,plane.direction,plane.centroid)
-	#triangulate vertex projected in plane XY
-	FV = delaunay_triangulation(V[1:2,:])
-	return V, sort.(FV)
-end
-
-"""
-"""
-function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.2)
-	out = Array{Lar.Struct,1}()
-	for obj in planes
-		pp = obj.plane
-		if !isnothing(AABB)
-			V = intersectAABBplane(AABB,pp.normal,pp.centroid)
-		else
-			bb = Lar.boundingbox(obj.points.points).+([-u,-u,-u],[u,u,u])
-			V = intersectAABBplane(bb,pp.normal,pp.centroid)
-		end
-		#triangulate vertex projected in plane XY
-		FV = delaunay_triangulation(V[1:2,:])
-		cell = (V,sort.(FV))
-		push!(out, Lar.Struct([cell]))
-	end
-	out = Lar.Struct( out )
-	V,FV = Lar.struct2lar(out)
-	return V, FV
-end
-
+#
+# """
+# """
+# #TODO da cambiare e farla tipo la line senza triangolazione
+# function DrawPlane(plane::Hyperplane, AABB::AABB)
+# 	V = intersectAABBplane(AABB,plane.direction,plane.centroid)
+# 	#triangulate vertex projected in plane XY
+# 	FV = delaunay_triangulation(V[1:2,:])
+# 	return V, sort.(FV)
+# end
+#
+# """
+# """
+# function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.2)
+# 	out = Array{Lar.Struct,1}()
+# 	for obj in planes
+# 		pp = obj.plane
+# 		if !isnothing(AABB)
+# 			V = intersectAABBplane(AABB,pp.normal,pp.centroid)
+# 		else
+# 			bb = Lar.boundingbox(obj.points.points).+([-u,-u,-u],[u,u,u])
+# 			V = intersectAABBplane(bb,pp.normal,pp.centroid)
+# 		end
+# 		#triangulate vertex projected in plane XY
+# 		FV = delaunay_triangulation(V[1:2,:])
+# 		cell = (V,sort.(FV))
+# 		push!(out, Lar.Struct([cell]))
+# 	end
+# 	out = Lar.Struct( out )
+# 	V,FV = Lar.struct2lar(out)
+# 	return V, FV
+# end
+#
 
 """
 Return LAR model of the aligned axis box defined by `aabb`.
