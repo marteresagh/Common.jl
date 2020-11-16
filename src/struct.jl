@@ -1,12 +1,13 @@
 """
 PointCloud
 
-struct PointCloud
-	dimension
-    n_points
-    coordinates
-    rgbs
-end
+# Fields
+```jldoctest
+dimension::Int8
+n_points::Int64
+coordinates::Lar.Points
+rgbs::Lar.Points
+```
 """
 struct PointCloud
 	dimension::Int8
@@ -22,6 +23,16 @@ end
 
 """
 AxisAlignedBoundingBox
+
+# Fields
+```jldoctest
+x_max::Float64
+x_min::Float64
+y_max::Float64
+y_min::Float64
+z_max::Float64
+z_min::Float64
+```
 """
 mutable struct AABB
     x_max::Float64
@@ -36,6 +47,13 @@ end
 
 """
 Dataset for line and plane
+
+# Fields
+```jldoctest
+inliers::PointCloud
+direction::Array{Float64,1}
+centroid::Array{Float64,1}
+```
 """
 mutable struct Hyperplane
 	inliers::PointCloud
