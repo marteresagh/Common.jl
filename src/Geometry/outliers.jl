@@ -1,8 +1,10 @@
 """
-Compute density and relative density of points
+relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+
+Compute density and relative density of points in PointCloud.
 """
-function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
-	points = PC.coordinates[:,current_inds]
+function relative_density_points(V::Lar.Points, current_inds::Array{Int64,1}, k::Int64)
+	points = V[:,current_inds]
 	npoints = length(current_inds)
 
 	kdtree = NearestNeighbors.KDTree(points)
@@ -20,6 +22,11 @@ function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k
 	AVGRelDensity = [density[i]/(sum(density[idxs[i]])/k) for i in 1:npoints]
 
 	return density,AVGRelDensity
+end
+
+function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+	V = PC.coordinates
+	return relative_density_points(V, current_inds, k)
 end
 
 """

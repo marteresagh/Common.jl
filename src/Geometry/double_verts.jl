@@ -1,6 +1,7 @@
-
 """
-remove double verts
+remove_double_verts(A::AbstractArray{T,2}, dim::Int)
+
+Remove double vertces and return list of indices.
 """
 @generated function remove_double_verts(A::AbstractArray{T,2}, dim::Int) where T
 	quote

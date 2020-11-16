@@ -1,5 +1,3 @@
-
-
 """
 Orthogonal distance point to plane.
 """

@@ -1,3 +1,8 @@
+"""
+delaunay_triangulation(points::Lar.Points)
+
+Delaunay triangulation of points for all dimensions.
+"""
 function delaunay_triangulation(points::Lar.Points)
     V = convert(Lar.Points,points')
     mesh = delaunay(V);
