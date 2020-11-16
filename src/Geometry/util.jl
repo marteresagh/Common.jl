@@ -8,7 +8,7 @@ end
 """
 apply_matrix(affineMatrix::Matrix, V::Lar.Points) -> Lar.Points
 
-Apply affine transformation to points V.
+Apply affine transformation `affineMatrix` to points `V`.
 """
 function apply_matrix(affineMatrix::Matrix, V::Lar.Points)
 	m,n = size(V)
