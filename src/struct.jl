@@ -22,14 +22,13 @@ struct PointCloud
     coordinates::Lar.Points
     rgbs::Lar.Points
 
-
 	PointCloud(coordinates,rgbs) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs)
 	PointCloud(coordinates) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],0,0))
 	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0))
 end
 
 """
-AxisAlignedBoundingBox
+Axis Aligned Bounding Box
 
 # Constructors
 ```jldoctest
@@ -54,7 +53,11 @@ mutable struct AABB
     y_min::Float64
     z_max::Float64
     z_min::Float64
+
+	# 3D
 	AABB(x_max, x_min, y_max, y_min, z_max, z_min) = new(x_max, x_min, y_max, y_min, z_max, z_min)
+
+	# 2D
 	AABB(x_max, x_min, y_max, y_min) = new(x_max, x_min, y_max, y_min, 0, 0)
 end
 
@@ -78,7 +81,11 @@ mutable struct Hyperplane
 	inliers::PointCloud
     direction::Array{Float64,1}
     centroid::Array{Float64,1}
+
+	# with inliers
 	Hyperplane(inliers,direction,centroid) = new(inliers,direction,centroid)
+
+	# without inliers
 	Hyperplane(direction,centroid) = new(PointCloud(),direction,centroid)
 end
 
@@ -94,8 +101,11 @@ rotation::Array{Float64,1}
 ```
 """
 struct Volume
+	# size of box
 	scale::Array{Float64,1}
+	# center of box
 	position::Array{Float64,1}
+	# Euler angle of rotation of box
 	rotation::Array{Float64,1}
 end
 
@@ -126,6 +136,7 @@ struct Plane
 
 	matrix::Matrix #matrice da 2D al piano
 
+	# Hessian form
 	function Plane(a,b,c,d)
 		normal = [a,b,c]
 		centroid = normal*d
@@ -135,6 +146,7 @@ struct Plane
 		new(a,b,c,d,matrix)
 	end
 
+	# described by two points and an axis orthogonal to normal
 	function Plane(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
 		axis = (p2-p1)/Lar.norm(p2-p1)
 		axis_z = Lar.cross(axis,axis_y)
@@ -144,6 +156,6 @@ struct Plane
 		center_model = Common.centroid(hcat(p1,p2))
 		d = Lar.dot(axis_z,center_model)
 		Plane(axis_z[1], axis_z[2], axis_z[3], d)
-
 	end
+
 end
