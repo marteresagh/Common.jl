@@ -5,11 +5,12 @@ function matrix4(m::Matrix)
 	return vcat(hcat(m,[0,0,0]),[0.,0.,0.,1.]')
 end
 
-
 """
+apply_matrix(affineMatrix::Matrix, V::Lar.Points) -> Lar.Points
+
 Apply affine transformation to points V.
 """
-function apply_matrix(affineMatrix, V)
+function apply_matrix(affineMatrix::Matrix, V::Lar.Points)
 	m,n = size(V)
 	W = [V; fill(1.0, (1,n))]
 	T = (affineMatrix * W)[1:m,1:n]
@@ -35,6 +36,8 @@ function box_new_coords_system(model)
 end
 
 """
+centroid(points::Lar.points)
+
 Average of points.
 """
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
@@ -49,6 +52,7 @@ function return_AABB(aabb)
 end
 
 """
+boundingbox(points::Lar.Points) -> AABB
 Axis aligned bounding box
 """
 function boundingbox(points::Lar.Points)::AABB
@@ -103,23 +107,26 @@ function CAT(args)
 	return reduce( (x,y) -> append!(x,y), args; init=[] )
 end
 
-"""
-Check if point is in a aabb
-"""
-function isinbox(aabb,p)
-	min=aabb[1]
-	max=aabb[2]
-	return (  p[1]>=min[1] && p[1]<=max[1] &&
-			  p[2]>=min[2] && p[2]<=max[2] &&
-			   p[3]>=min[3] && p[3]<=max[3] )
-end
+# """
+# isinbox(aabb,p)
+#
+# Check if point `p` is in a  `aabb `.
+# """
+# function isinbox(aabb,p)
+# 	min=aabb[1]
+# 	max=aabb[2]
+# 	return (  p[1]>=min[1] && p[1]<=max[1] &&
+# 			  p[2]>=min[2] && p[2]<=max[2] &&
+# 			   p[3]>=min[3] && p[3]<=max[3] )
+# end
 
 
-
 """
+matrix2euler(rotation::Matrix)
+
 Matrix to euler in XYZ order
 """
-function matrix2euler(rotation)
+function matrix2euler(rotation::Matrix)
 	# rotation 3x3
 	y = Lar.asin( clamp( rotation[1,3], - 1, 1 ) )
 
@@ -139,9 +146,11 @@ end
 
 
 """
-Euler to matrix
+euler2matrix(x::Float64,y::Float64,z::Float64)
+
+Euler to matrix.
 """
-function euler2matrix(x,y,z)
+function euler2matrix(x::Float64,y::Float64,z::Float64)
 
 		M = Matrix{Float64}(Lar.I,3,3)
 
@@ -169,7 +178,7 @@ function euler2matrix(x,y,z)
 		M[ 3,2 ] = be + af * d
 		M[ 3,3 ] = a * c
 
-		return M #Lar.approxVal(16).(M)
+		return M
 
 end
 
