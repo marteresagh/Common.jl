@@ -2,6 +2,7 @@
 PointCloud
 
 # Constructors
+```jldoctest
 PointCloud(coordinates,rgbs)
 PointCloud(coordinates)
 PointCloud()
@@ -59,6 +60,7 @@ end
 
 """
 Dataset for line and plane
+
 # Constructors
 ```jldoctest
 Hyperplane(points,direction,centroid)
@@ -76,7 +78,7 @@ mutable struct Hyperplane
 	inliers::PointCloud
     direction::Array{Float64,1}
     centroid::Array{Float64,1}
-	Hyperplane(points,direction,centroid) = new(points,direction,centroid)
+	Hyperplane(inliers,direction,centroid) = new(inliers,direction,centroid)
 	Hyperplane(direction,centroid) = new(PointCloud(),direction,centroid)
 end
 
