@@ -1,6 +1,12 @@
 """
 PointCloud
 
+# Constructors
+PointCloud(coordinates,rgbs)
+PointCloud(coordinates)
+PointCloud()
+```
+
 # Fields
 ```jldoctest
 dimension::Int8
@@ -23,6 +29,12 @@ end
 
 """
 AxisAlignedBoundingBox
+
+# Constructors
+```jldoctest
+AABB(x_max, x_min, y_max, y_min, z_max, z_min)
+AABB(x_max, x_min, y_max, y_min)
+```
 
 # Fields
 ```jldoctest
@@ -47,6 +59,11 @@ end
 
 """
 Dataset for line and plane
+# Constructors
+```jldoctest
+Hyperplane(points,direction,centroid)
+Hyperplane(direction,centroid)
+```
 
 # Fields
 ```jldoctest
@@ -65,23 +82,14 @@ end
 
 
 """
-{
-   "scale":{
-      "x":1.,
-      "y":1.,
-      "z":1.
-   },
-   "position":{
-   	  "x":0.,
-	  "y":0.,
-	  "z":0.
-   },
-   "rotation":{
-      "x":0.,
-      "y":0.,
-      "z":0.
-   },
-}
+Dataset for line and plane
+
+# Fields
+```jldoctest
+scale::Array{Float64,1}
+position::Array{Float64,1}
+rotation::Array{Float64,1}
+```
 """
 struct Volume
 	scale::Array{Float64,1}
@@ -91,7 +99,22 @@ end
 
 
 """
-Plane describe by a,b,c,d parameters.
+Hessian form of plane.
+
+# Constructors
+```jldoctest
+Plane(a,b,c,d)
+Plane(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
+```
+
+# Fields
+```jldoctest
+a::Float64
+b::Float64
+c::Float64
+d::Float64
+matrix::Matrix
+```
 """
 struct Plane
 	a::Float64
