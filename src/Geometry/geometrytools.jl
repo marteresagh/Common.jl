@@ -39,6 +39,9 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 end
 
 #--------------------TODO da modificare
+"""
+
+"""
 function DrawPlane(plane::Hyperplane, AABB::AABB)
 	V = intersectAABBplane(AABB,plane.direction,plane.centroid)
 	#triangulate vertex projected in plane XY
@@ -47,6 +50,7 @@ function DrawPlane(plane::Hyperplane, AABB::AABB)
 end
 
 """
+
 """
 function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.2)
 	out = Array{Lar.Struct,1}()
