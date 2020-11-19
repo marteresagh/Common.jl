@@ -30,6 +30,8 @@ function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k
 end
 
 """
+outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+
 Return outliers defined by low relative density.
 """
 function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)

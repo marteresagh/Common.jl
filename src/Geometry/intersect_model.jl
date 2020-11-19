@@ -67,13 +67,11 @@ function inmodel(model::Lar.LAR)
 		# 1. - axis x AleftB = A[1,max]<B[1,min]  ArightB = A[1,min]>B[1,max]
 		# 2. - axis y AfrontB = A[2,max]<B[2,min]  AbehindB = A[2,min]>B[2,max]
 			# 3. - axis z AbottomB = A[3,max]<B[3,min]  AtopB = A[3,min]>B[3,max]
-		return  (A.x_max>=newp[1] && A.x_min<=newp[1]) &&
-				(A.y_max>=newp[2] && A.y_min<=newp[2]) &&
-				(A.z_max>=newp[3] && A.z_min<=newp[3])
-		#(A[2][1]>=newp[1] && A[1][1]<=newp[1]) &&
-		# 			 (A[2][2]>=newp[2] && A[1][2]<=newp[2]) &&
-		# 			  (A[2][3]>=newp[3] && A[1][3]<=newp[3])
-	end
+		return isinbox(A,newp)
+		# return  (A.x_max>=newp[1] && A.x_min<=newp[1]) &&
+		# 		(A.y_max>=newp[2] && A.y_min<=newp[2]) &&
+		# 		(A.z_max>=newp[3] && A.z_min<=newp[3])
+		end
 
 	return inmodel0
 end
