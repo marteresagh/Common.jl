@@ -155,7 +155,12 @@ struct Plane
 
 		center_model = Common.centroid(hcat(p1,p2))
 		d = Lar.dot(axis_z,center_model)
-		Plane(axis_z[1], axis_z[2], axis_z[3], d)
+
+		rot = convert(Matrix,hcat(Lar.nullspace(Matrix(axis_z')),axis_z)')
+		matrix = Common.matrix4(convert(Matrix,rot'))
+		matrix[1:3,4] = p1
+
+		new(axis_z[1], axis_z[2], axis_z[3], d, matrix)
 	end
 
 end
