@@ -26,14 +26,14 @@ end
 orthonormal basis
 """
 function orthonormal_basis(a,b,c)
-	axis_z = [a, b, c]
-	axis_x = [0, -c, b]
-	axis_y = Lar.cross(axis_x,axis_z)
+	w = [a, b, c]
+	v = [c, 0, a]
+	u = Lar.cross(v,w)
 
-	axis_x /= Lar.norm(axis_x)
-	axis_y /= Lar.norm(axis_y)
-	axis_z /= Lar.norm(axis_z)
-	return hcat(axis_x, axis_y,axis_z)
+	u /= Lar.norm(u)
+	v /= Lar.norm(v)
+	w /= Lar.norm(w)
+	return hcat(u, v, w)
 end
 
 """
