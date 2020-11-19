@@ -77,7 +77,10 @@ function boundingbox(points::Lar.Points)::AABB
 end
 
 """
+subtractaverage(points::Lar.Points)
+
 Compute the average of the data points and traslate data.
+Return vector of traslation and new data.
 """
 function subtractaverage(points::Lar.Points)
 	m,npoints = size(points)
