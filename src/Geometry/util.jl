@@ -23,7 +23,7 @@ function apply_matrix(affineMatrix, V::Array{Float64,1})
 end
 
 """
-orthonormal basis
+Create orthonormal basis from a given vector.
 """
 function orthonormal_basis(a,b,c)
 	w = [a, b, c]
@@ -33,7 +33,7 @@ function orthonormal_basis(a,b,c)
 	u /= Lar.norm(u)
 	v /= Lar.norm(v)
 	w /= Lar.norm(w)
-	return hcat(u, v, w)
+	return [u';v';w'] # by row
 end
 
 """

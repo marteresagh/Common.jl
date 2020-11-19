@@ -140,8 +140,8 @@ struct Plane
 	function Plane(a,b,c,d)
 		normal = [a,b,c]
 		centroid = normal*d
-		rot = convert(Matrix,hcat(Lar.nullspace(Matrix(normal')),normal)')
-		matrix = Common.matrix4(convert(Matrix,rot'))
+		rot = Matrix(orthonormal_basis(a,b,c)')
+		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = centroid
 		new(a,b,c,d,matrix)
 	end
