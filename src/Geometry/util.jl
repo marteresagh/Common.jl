@@ -22,6 +22,19 @@ function apply_matrix(affineMatrix, V::Array{Float64,1})
 	return apply_matrix(affineMatrix, T)
 end
 
+"""
+orthonormal basis
+"""
+function orthonormal_basis(a,b,c)
+	axis_z = [a, b, c]
+	axis_x = [0, -c, b]
+	axis_y = Lar.cross(axis_x,axis_z)
+
+	axis_x /= Lar.norm(axis_x)
+	axis_y /= Lar.norm(axis_y)
+	axis_z /= Lar.norm(axis_z)
+	return [axis_x'; axis_y';axis_z']
+end
 
 """
 matrix of rotation

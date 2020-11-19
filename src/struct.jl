@@ -152,11 +152,13 @@ struct Plane
 		axis_z = Lar.cross(axis,axis_y)
 		@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
 		axis_z /= Lar.norm(axis_z)
+		axis_x = Lar.cross(axis_y,axis_z)
+		axis_x /= Lar.norm(axis_x)
 
 		center_model = Common.centroid(hcat(p1,p2))
 		d = Lar.dot(axis_z,center_model)
 
-		rot = convert(Matrix,hcat(Lar.nullspace(Matrix(axis_z')),axis_z)')
+		rot = [axis_x'; axis_y'; axis_z']
 		matrix = Common.matrix4(convert(Matrix,rot'))
 		matrix[1:3,4] = p1
 
