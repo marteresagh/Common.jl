@@ -33,7 +33,7 @@ function orthonormal_basis(a,b,c)
 	axis_x /= Lar.norm(axis_x)
 	axis_y /= Lar.norm(axis_y)
 	axis_z /= Lar.norm(axis_z)
-	return [axis_x'; axis_y';axis_z']
+	return hcat(axis_x, axis_y,axis_z)
 end
 
 """
