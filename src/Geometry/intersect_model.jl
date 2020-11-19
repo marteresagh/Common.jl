@@ -51,9 +51,11 @@ end
 
 
 """
-check if point p is in model.
+inmodel(model)(p)
+
+Check if point `p` is in `model`.
 """
-function inmodel(model)
+function inmodel(model::Lar.LAR)
 	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*model[1]
 	A = Common.boundingbox(newverts)
@@ -77,11 +79,10 @@ function inmodel(model)
 end
 
 
-
 """
 teorema degli assi separanti per conoscere l'intersezione di due box.
 """
-function separatingaxis(model,octree::AABB)
+function separatingaxis(model::Lar.LAR,octree::AABB)
 	# le due box
 	V,EV,FV = getmodel(octree)
 	coordsystem = box_new_coords_system(model)
@@ -105,7 +106,7 @@ A model and an AABB intersection:
  - 2 -> model contains AABB
 """
 
-function modelsdetection(model,octree::AABB)
+function modelsdetection(model::Lar.LAR,octree::AABB)
 	verts,edges,faces = model
 	aabbmodel = Common.boundingbox(verts)
 	if Common.AABBdetection(aabbmodel,octree)

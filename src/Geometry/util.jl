@@ -23,7 +23,7 @@ function apply_matrix(affineMatrix, V::Array{Float64,1})
 end
 
 """
-Create orthonormal basis from a given vector.
+Create orthonormal basis from a given vector `a,b,c`.
 """
 function orthonormal_basis(a,b,c)
 	w = [a, b, c]
