@@ -15,7 +15,7 @@ function neighborhood(	kdtree,
 						visitedverts::Array{Int64,1},
 						threshold::Float64,
 						k=10::Int64
-					)
+					 )
 
 	idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, true, i -> i in visitedverts)
 
