@@ -1,5 +1,9 @@
 """
 PointCloud
+ - dimension: point cloud dimension,
+ - n_points: number of points,
+ - coordinates: points position
+ - rgbs: points color
 
 # Constructors
 ```jldoctest
@@ -10,10 +14,10 @@ PointCloud()
 
 # Fields
 ```jldoctest
-dimension::Int8
-n_points::Int64
-coordinates::Lar.Points
-rgbs::Lar.Points
+dimension	::Int8
+n_points	::Int64
+coordinates	::Lar.Points
+rgbs		::Lar.Points
 ```
 """
 struct PointCloud
@@ -63,18 +67,21 @@ end
 
 """
 Dataset for line and plane
+ - inliers:	points on hyperplane
+ - direction: versor
+ - centroid: point
 
 # Constructors
 ```jldoctest
-Hyperplane(points,direction,centroid)
+Hyperplane(inliers,direction,centroid)
 Hyperplane(direction,centroid)
 ```
 
 # Fields
 ```jldoctest
-inliers::PointCloud
-direction::Array{Float64,1}
-centroid::Array{Float64,1}
+inliers		::PointCloud
+direction	::Array{Float64,1}
+centroid	::Array{Float64,1}
 ```
 """
 mutable struct Hyperplane
@@ -91,11 +98,14 @@ end
 
 
 """
-Dataset for line and plane
+Volume
+- scale: size of box
+- position: position of center
+- rotation: Euler angle of rotation
 
 # Fields
 ```jldoctest
-scale::Array{Float64,1}
+scale	::Array{Float64,1}
 position::Array{Float64,1}
 rotation::Array{Float64,1}
 ```

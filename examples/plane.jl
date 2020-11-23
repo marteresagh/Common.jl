@@ -11,11 +11,6 @@ octree = getmodel(aabb)
 plane = Common.Plane(p1,p2,axis_y)
 volume = Common.plane2model(p1,p2,axis_y,thickness,aabb)
 
-plane = Common.Plane(-0.7071067811865476, 0.7071067811865476, 0.0, -0.7071067811865477)
-volume = Common.plane2model(plane,thickness,aabb)
-
-matrix = Common.orthonormal_basis(-0.7071067811865476, 0.7071067811865476, 0.0)
-
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,p1'),GL.COLORS[1])
 	GL.GLPoints(convert(Lar.Points,p2'),GL.COLORS[2])
