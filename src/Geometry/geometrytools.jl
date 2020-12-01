@@ -2,7 +2,6 @@
 
 """
 function DrawLine(line::Hyperplane, u=0.02)
-
 	max_value = -Inf
 	min_value = +Inf
 	points = line.inliers
