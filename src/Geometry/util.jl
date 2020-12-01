@@ -1,4 +1,9 @@
 """
+Angle between two vectors
+"""
+@inline angle_between_vectors(a,b) = Lar.acos(Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b)))
+
+"""
 matrice orlata
 """
 function matrix4(m::Matrix)
