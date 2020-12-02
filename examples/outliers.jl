@@ -2,7 +2,7 @@ using Common
 using Visualization
 using FileManager
 
-source = "examples/muriAngolo.las"
+source = "examples/las/polyline.las"
 PC = FileManager.las2pointcloud(source)
 PC2D = PointCloud(PC.coordinates[1:2,:])
 k = 10
