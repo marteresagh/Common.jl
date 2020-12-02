@@ -29,7 +29,7 @@ struct PointCloud
 
 	PointCloud(coordinates,rgbs,normals) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,normals)
 	PointCloud(coordinates,rgbs) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,reshape([],0,0))
-	PointCloud(coordinates) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],0,0))
+	PointCloud(coordinates) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],0,0),reshape([],0,0))
 	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0),reshape([],0,0))
 end
 
