@@ -25,10 +25,12 @@ struct PointCloud
     n_points::Int64
     coordinates::Lar.Points
     rgbs::Lar.Points
+	normals::Lar.Points
 
-	PointCloud(coordinates,rgbs) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs)
+	PointCloud(coordinates,rgbs,normals) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,normals)
+	PointCloud(coordinates,rgbs) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,reshape([],0,0))
 	PointCloud(coordinates) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],0,0))
-	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0))
+	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0),reshape([],0,0))
 end
 
 """
