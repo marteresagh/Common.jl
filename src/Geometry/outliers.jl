@@ -1,9 +1,9 @@
 """
-relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+	relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
 
 Compute density and relative density of points in PointCloud.
 """
-function relative_density_points(V::Lar.Points, current_inds::Array{Int64,1}, k::Int64)
+function relative_density_points(V::Lar.Points, current_inds::Array{Int64,1}, k::Int64)::Tuple{Array{Float64,1},Array{Float64,1}}
 	points = V[:,current_inds]
 	npoints = length(current_inds)
 
@@ -30,11 +30,11 @@ function relative_density_points(PC::PointCloud, current_inds::Array{Int64,1}, k
 end
 
 """
-outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+	outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
 
 Return outliers defined by low relative density.
 """
-function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)
+function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)::Array{Int64,1}
 	density,AVGRelDensity = relative_density_points(PC, current_inds, k)
 	mu = Statistics.mean(AVGRelDensity)
 	rho = Statistics.std(AVGRelDensity)

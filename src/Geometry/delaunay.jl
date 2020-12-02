@@ -1,9 +1,9 @@
 """
-delaunay_triangulation(points::Lar.Points)
+    delaunay_triangulation(points::Lar.Points) -> Lar.Cells
 
-Delaunay triangulation of points in all dimensions.
+Delaunay triangulation of points in d-dimensional Euclidean space.
 """
-function delaunay_triangulation(points::Lar.Points)
+function delaunay_triangulation(points::Lar.Points)::Lar.Cells
     V = convert(Lar.Points,points')
     mesh = delaunay(V);
     DT = [mesh.simplices[c,:] for c in 1:size(mesh.simplices,1)]

@@ -1,7 +1,9 @@
 """
-Return verteces of the intersection of a `plane` and an `AABB`.
+	intersectAABBplane(AABB::AABB, normal, centroid) -> Lar.Points
+
+Return verteces of the intersection of a plane, described by `normal` and `centroid`, and an `AABB`.
 """
-function intersectAABBplane(AABB::AABB, normal, centroid)
+function intersectAABBplane(AABB::AABB, normal, centroid)::Lar.Points
 
     function pointint(i,j,lambda,allverteces)
         return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
@@ -31,6 +33,8 @@ end
 
 
 """
+	AABBdetection(A::AABB,B::AABB) -> Bo
+	ol
 Compute collision detection of two AABB.
 """
 function AABBdetection(A::AABB,B::AABB)::Bool
@@ -51,7 +55,7 @@ end
 
 
 """
-inmodel(model)(p)
+	inmodel(model::Lar.LAR)(p::Array{Float64,1}) -> Bool
 
 Check if point `p` is in `model`.
 """
@@ -78,10 +82,14 @@ end
 
 
 """
-teorema degli assi separanti per conoscere l'intersezione di due box.
+	separatingaxis(model::Lar.LAR,octree::AABB) -> Bool
+
+The separating axis theorem (SAT) says that:
+Two convex objects do not overlap if there exists a line (called axis) onto which the two objects' projections do not overlap.
 """
-function separatingaxis(model::Lar.LAR,octree::AABB)
-	# le due box
+function separatingaxis(model::Lar.LAR,octree::AABB)::Bool
+	# https://en.wikipedia.org/wiki/Hyperplane_separation_theorem
+	# due box
 	V,EV,FV = getmodel(octree)
 	coordsystem = box_new_coords_system(model)
 
@@ -98,13 +106,15 @@ end
 
 
 """
-A model and an AABB intersection:
+	modelsdetection(model::Lar.LAR,AABB::AABB) -> 0, 1, 2
+
+A `model` and an `AABB` intersection:
  - 0 -> model not intersect AABB
  - 1 -> model intersect but not contains AABB
  - 2 -> model contains AABB
 """
 
-function modelsdetection(model::Lar.LAR,octree::AABB)
+function modelsdetection(model::Lar.LAR,octree::AABB)::Int
 	verts,edges,faces = model
 	aabbmodel = Common.boundingbox(verts)
 	if Common.AABBdetection(aabbmodel,octree)

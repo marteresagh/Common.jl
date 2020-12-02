@@ -1,4 +1,6 @@
 """
+	Fit_Line(points::Lar.Points) -> direction, centroid
+
 Returns best line fitting `points`.
 Line description:
 - direction
@@ -23,6 +25,8 @@ function Fit_Line(points::Lar.Points)
 end
 
 """
+	Fit_Line(points::Lar.Points) -> normal, centroid
+
 Returns best plane fitting `points`.
 Line description:
 - normal
@@ -72,6 +76,12 @@ function Fit_Plane(points::Lar.Points)
 	return normal, centroid
 end
 
+
+"""
+	LinearFit(points::Lar.Points) -> axis, centroid
+
+Returns best model, plane or line, fitting `points`.
+"""
 function LinearFit(points::Lar.Points)
 	if size(points,1) == 2
 		return Fit_Line(points)

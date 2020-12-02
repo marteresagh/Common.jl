@@ -1,7 +1,7 @@
 """
-remove_double_verts(A::AbstractArray{T,2}, dim::Int)
+	remove_double_verts(A::AbstractArray{T,2}, dim::Int) -> verts_without_duplicates, indices
 
-Remove double vertces and return list of indices.
+Remove double vertces and return the new set of verteces and list of indices.
 """
 @generated function remove_double_verts(A::AbstractArray{T,2}, dim::Int) where T
 	quote
@@ -72,17 +72,3 @@ Remove double vertces and return list of indices.
         (@nref 2 A d->d == dim ? sort!(uniquerows) : (axes(A, d))) , uniquerows
 	end
 end
-
-
-
-#
-# a=[1 1 2 3 4;2 2 3 4 5]
-# new_verts,idx = remove_double_verts(a,2)
-
-# duplicated(x) = foldl(
-#   (d,y)->(x[y,:] in d[1] ? (d[1],push!(d[2],y)) : (push!(d[1],x[y,:]),d[2])),
-#   (Set(Any[]), Vector{Int}());
-#   init = 1:size(x,1))
-#
-# x = rand(1:2,5,2)
-# duplicated(x)

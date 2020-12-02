@@ -1,7 +1,9 @@
 """
+	volume2LARmodel(volume::Volume) -> Lar.LAR
+
 Return volume model described by position, scale and rotation.
 """
-function volume2LARmodel(volume::Volume)
+function volume2LARmodel(volume::Volume)::Lar.LAR
 	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
 	scalematrix = Lar.s(volume.scale...)
 	rot = Common.matrix4(Common.euler2matrix(volume.rotation...))
@@ -13,13 +15,15 @@ end
 
 
 """
-Return model of plane with thickness.
+	plane2model(plane::Plane, thickness::Float64, aabb::AABB) -> Lar.LAR
+
+Return volume model of `plane` with `thickness`, limited in `aabb`.
 """
-function plane2model(plane::Plane, thickness::Float64, aabb::AABB)
+function plane2model(plane::Plane, thickness::Float64, aabb::AABB)::Lar.LAR
 	plane2model(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
 end
 
-function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)
+function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
 	verts,_ = getmodel(aabb)
 	rotation = Common.matrix2euler(rot_mat)
 	center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
@@ -35,7 +39,12 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 	return model
 end
 
-function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)
+"""
+	 plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> Lar.LAR
+
+Return volume model of `plane` with `thickness` described by two points, `p1` and `p2`, and an up vector, `axis_y`, limited in `aabb` and between the two points.
+"""
+function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)::Lar.LAR
 	axis = (p2-p1)/Lar.norm(p2-p1)
 	axis_z = Lar.cross(axis,axis_y)
 	@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"

@@ -31,7 +31,7 @@ function neighborhood(	kdtree::NNTree{V},
 end
 
 """
-normals
+DA finire
 """
 function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 	kdtree = Common.KDTree(points)

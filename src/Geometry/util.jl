@@ -3,6 +3,26 @@ Angle between two vectors
 """
 @inline angle_between_vectors(a,b) = Lar.acos(Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b)))
 
+
+"""
+Return LAR model of the aligned axis box defined by `aabb`.
+"""
+function boxmodel_from_aabb(aabb::AABB)
+	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
+		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
+		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
+	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
+	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
+	return V,EV,FV
+end
+
+"""
+"""
+function getmodel(bbin::AABB)
+	return boxmodel_from_aabb(bbin)
+end
+
+
 """
 matrice orlata
 """
@@ -11,7 +31,7 @@ function matrix4(m::Matrix)
 end
 
 """
-apply_matrix(affineMatrix::Matrix, V::Lar.Points) -> Lar.Points
+	apply_matrix(affineMatrix::Matrix, V::Lar.Points) -> Lar.Points
 
 Apply affine transformation `affineMatrix` to points `V`.
 """
@@ -28,7 +48,7 @@ function apply_matrix(affineMatrix, V::Array{Float64,1})
 end
 
 """
-orthonormal_basis(a,b,c)
+	orthonormal_basis(a,b,c)
 
 Create orthonormal basis from a given vector `a,b,c`.
 """
@@ -56,7 +76,7 @@ function box_new_coords_system(model)
 end
 
 """
-centroid(points::Lar.points)
+	centroid(points::Lar.points)
 
 Average of points.
 """
@@ -72,8 +92,9 @@ function return_AABB(aabb)
 end
 
 """
-boundingbox(points::Lar.Points) -> AABB
-Axis aligned bounding box
+	boundingbox(points::Lar.Points) -> AABB
+
+Axis aligned bounding box.
 """
 function boundingbox(points::Lar.Points)::AABB
 	a = [extrema(points[i,:]) for i in 1:size(points,1)]
@@ -82,7 +103,7 @@ function boundingbox(points::Lar.Points)::AABB
 end
 
 """
-subtractaverage(points::Lar.Points)
+	subtractaverage(points::Lar.Points)
 
 Compute the average of the data points and traslate data.
 Return vector of traslation and new data.
@@ -131,7 +152,7 @@ function CAT(args)
 end
 
 """
-isinbox(aabb,p)
+	isinbox(aabb::AABB,p::Array{Float64,1})
 
 Check if point `p` is in a `aabb `.
 """
@@ -143,7 +164,7 @@ end
 
 
 """
-matrix2euler(rotation::Matrix)
+	matrix2euler(rotation::Matrix)
 
 Matrix to euler in XYZ order
 """
@@ -162,12 +183,13 @@ function matrix2euler(rotation::Matrix)
 		z = 0
 
 	end
+
 	return [x,y,z]
 end
 
 
 """
-euler2matrix(x::Float64,y::Float64,z::Float64)
+	euler2matrix(x::Float64,y::Float64,z::Float64)
 
 Euler to matrix.
 """
