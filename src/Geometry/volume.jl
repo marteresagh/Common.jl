@@ -73,3 +73,25 @@ function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{F
 	model = Common.volume2LARmodel(volume)
 	return model
 end
+
+"""
+	boxmodel_from_aabb(aabb::AABB) -> Lar.LAR
+
+Return LAR model of the aligned axis box defined by `aabb`.
+"""
+function boxmodel_from_aabb(aabb::AABB)::Lar.LAR
+	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
+		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
+		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
+	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
+	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
+	return V,EV,FV
+end
+
+#interface
+"""
+	getmodel(bbin::AABB) -> Lar.LAR
+"""
+function getmodel(bbin::AABB)::Lar.LAR
+	return boxmodel_from_aabb(bbin)
+end
