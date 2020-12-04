@@ -4,9 +4,11 @@ PointCloud
  - n_points: number of points,
  - coordinates: points position
  - rgbs: points color
+ - normals: normal of points
 
 # Constructors
 ```jldoctest
+PointCloud(coordinates,rgbs,normals)
 PointCloud(coordinates,rgbs)
 PointCloud(coordinates)
 PointCloud()
