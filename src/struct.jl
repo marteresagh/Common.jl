@@ -22,7 +22,7 @@ coordinates	::Lar.Points
 rgbs		::Lar.Points
 ```
 """
-struct PointCloud
+mutable struct PointCloud
 	dimension::Int8
     n_points::Int64
     coordinates::Lar.Points
