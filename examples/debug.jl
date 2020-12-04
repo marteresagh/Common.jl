@@ -4,7 +4,7 @@ points = rand(3,10000)
 kdtree = Common.KDTree(points)
 seeds = [1]
 visitedverts = Int[]
-threshold = 3.
+threshold = Common.estimate_threshold(PointCloud(points),k)
 k = 30
 
 function neighborhood(	kdtree::Common.NNTree{V},
@@ -29,12 +29,12 @@ function neighborhood(	kdtree::Common.NNTree{V},
 end
 
 @time N = neighborhood(	kdtree,
-points,
-seeds,
-visitedverts,
-threshold,
-k
-)
+						points,
+						seeds,
+						visitedverts,
+						threshold,
+						k
+						)
 
 
 function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
@@ -56,4 +56,6 @@ function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 end
 
 using BenchmarkTools
-@btime normals = Common.compute_normals(points,threshold,k)
+@btime
+
+normals = Common.compute_normals(points,threshold,k)
