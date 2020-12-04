@@ -37,7 +37,7 @@ function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 	kdtree = Common.KDTree(points)
 	normals = similar(points)
 
-	for i in 1:size(points,2)
+	Threads.@threads for i in 1:size(points,2)
 		N = Common.neighborhood(kdtree,points,[i],Int[],threshold,k)
 
 		if length(N)>=3 # not isolated point

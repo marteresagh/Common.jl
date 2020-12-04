@@ -1,24 +1,59 @@
 using Common
 
-npoints = 1000
-xslope = 0.5
-yslope = 0.
-off = 1.
+points = rand(3,10000)
+kdtree = Common.KDTree(points)
+seeds = [1]
+visitedverts = Int[]
+threshold = 3.
+k = 30
 
-xs = 3*rand(npoints)
-ys = 4*rand(npoints)
-zs = Float64[]
+function neighborhood(	kdtree::Common.NNTree{V},
+	points::Lar.Points,
+	seeds::Array{Int64,1},
+	visitedverts::Array{Int64,1},
+	threshold::Float64,
+	k=10::Int64
+	) where V <: AbstractVector
 
-for i in 1:npoints
-    push!(zs, xs[i]*xslope + ys[i]*yslope + off + rand()) # points perturbation
+
+	@time idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, true, i -> i in visitedverts)
+
+	neighborhood = Int[]
+
+	for i in 1:length(idxs)
+		filter = [dist<=threshold for dist in dists[i]] # remove too distant points
+		union!(neighborhood,idxs[i][filter])
+	end
+
+	return neighborhood
 end
 
-points = convert(Lar.Points, hcat(xs,ys,zs)')
+@time N = neighborhood(	kdtree,
+points,
+seeds,
+visitedverts,
+threshold,
+k
+)
 
-normals = Common.compute_normals(points,0.1,10)
 
-GL.VIEW([
-    GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
-	GL.GLGrid(V,FV)
-	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
-]);
+function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
+	kdtree = Common.KDTree(points)
+	normals = similar(points)
+
+	Threads.@threads for i in 1:size(points,2)
+		N = Common.neighborhood(kdtree,points,[i],Int[],threshold,k)
+
+		if length(N)>=3 # not isolated point
+			normal,_ = Common.LinearFit(points[:,N])
+			normals[:,i] = normal
+		else # isolated point
+			normals[:,i] = [0.,0.,0.]
+		end
+
+	end
+	return normals
+end
+
+using BenchmarkTools
+@btime normals = Common.compute_normals(points,threshold,k)

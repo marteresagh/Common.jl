@@ -41,3 +41,15 @@ function outliers(PC::PointCloud, current_inds::Array{Int64,1}, k::Int64)::Array
 	outliers = [AVGRelDensity[i]<mu-rho for i in 1:length(current_inds) ]
 	return current_inds[outliers]
 end
+
+"""
+	estimate_threshold(PC::PointCloud, k::Int64)
+"""
+function estimate_threshold(PC::PointCloud, k::Int64)
+	density, _ = Common.relative_density_points(PC.coordinates, collect(1:PC.n_points), 2*k)
+	dist = map(x->1/x,density)
+	mu = Statistics.mean(dist)
+	rho = Statistics.std(dist)
+	threshold = mu + rho
+	return threshold
+end
