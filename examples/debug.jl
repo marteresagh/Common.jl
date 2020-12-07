@@ -5,7 +5,7 @@ kdtree = Common.KDTree(points)
 seeds = [1]
 visitedverts = Int[]
 threshold = Common.estimate_threshold(PointCloud(points),k)
-k = 30
+k = 10
 
 function neighborhood(	kdtree::Common.NNTree{V},
 	points::Lar.Points,
