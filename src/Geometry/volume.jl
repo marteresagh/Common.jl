@@ -33,7 +33,7 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 	x_range = extrema(newverts[1,:])
 	y_range = extrema(newverts[2,:])
 	#extrema of newverts x e y
-	scale = [x_range[2]-x_range[1],y_range[2]-y_range[1],thickness]
+	scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
 	volume = Volume(scale,position,rotation)
 	model = Common.volume2LARmodel(volume)
 	return model
