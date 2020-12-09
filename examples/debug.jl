@@ -1,61 +1,28 @@
 using Common
-
-points = rand(3,10000)
-kdtree = Common.KDTree(points)
-seeds = [1]
-visitedverts = Int[]
-threshold = Common.estimate_threshold(PointCloud(points),k)
-k = 10
-
-function neighborhood(	kdtree::Common.NNTree{V},
-	points::Lar.Points,
-	seeds::Array{Int64,1},
-	visitedverts::Array{Int64,1},
-	threshold::Float64,
-	k=10::Int64
-	) where V <: AbstractVector
+using Visualization
 
 
-	@time idxs, dists = NearestNeighbors.knn(kdtree, points[:,seeds], k, true, i -> i in visitedverts)
+volume = Volume([1,1.,1],[0,0,0.],[0.,0,0])
+model = Common.volume2LARmodel(volume)
+aabb = AABB(0.5,-0.5,0.5,-0.5,0.5,-0.5)
+T,ET,FT = getmodel(aabb)
 
-	neighborhood = Int[]
+plane = Plane(0,1,0,0)
+normal = [0,1.,0]
+centroid = normal*0
+rot = Matrix(Common.orthonormal_basis(0,1.,0)')
+matrix = Common.matrix4(rot)
+matrix[1:3,4] = centroid
+model = Common.plane2model(plane, 1., aabb)
+matrix = Common.box_new_coords_system(model)
 
-	for i in 1:length(idxs)
-		filter = [dist<=threshold for dist in dists[i]] # remove too distant points
-		union!(neighborhood,idxs[i][filter])
-	end
+V,EV,FV = model
 
-	return neighborhood
-end
-
-@time N = neighborhood(	kdtree,
-						points,
-						seeds,
-						visitedverts,
-						threshold,
-						k
-						)
-
-
-function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
-	kdtree = Common.KDTree(points)
-	normals = similar(points)
-
-	Threads.@threads for i in 1:size(points,2)
-		N = Common.neighborhood(kdtree,points,[i],Int[],threshold,k)
-
-		if length(N)>=3 # not isolated point
-			normal,_ = Common.LinearFit(points[:,N])
-			normals[:,i] = normal
-		else # isolated point
-			normals[:,i] = [0.,0.,0.]
-		end
-
-	end
-	return normals
-end
-
-using BenchmarkTools
-@btime
-
-normals = Common.compute_normals(points,threshold,k)
+GL.VIEW(
+    [
+    GL.GLGrid(V,EV),
+    #GL.GLGrid(T,ET),
+    Visualization.helper_axis(Common.matrix4(matrix))...,
+    #GL.GLFrame
+    ]
+)

@@ -36,7 +36,13 @@ Create orthonormal basis from a given vector `a,b,c`.
 """
 function orthonormal_basis(a,b,c)
 	w = [a, b, c]
-	v = [c, 0, a]
+
+	if a == 0. && c == 0.
+		v = [0,c,b]
+	else 
+		v = [c, 0, a]
+	end
+
 	u = Lar.cross(v,w)
 
 	u /= Lar.norm(u)
@@ -51,8 +57,8 @@ matrix of rotation
 function box_new_coords_system(model)
 	verts,edges,faces = model
 	axis_x = (verts[:,5]-verts[:,1])/Lar.norm(verts[:,5]-verts[:,1])
-	axis_y = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
-	axis_z = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
+	axis_y = (verts[:,3]-verts[:,1])/Lar.norm(verts[:,3]-verts[:,1])
+	axis_z = (verts[:,2]-verts[:,1])/Lar.norm(verts[:,2]-verts[:,1])
 	#coordsystem = [axis_x';axis_y';axis_z']
 	return [axis_x';axis_y';axis_z']
 end
