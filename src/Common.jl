@@ -29,7 +29,7 @@ module Common
 	include("Geometry/geometrytools.jl")
 	include("Geometry/delaunay.jl")
 	include("Geometry/intersect_model.jl")
-	include("Geometry/volume.jl")
+	include("Geometry/get_model.jl")
 	include("Geometry/neighbors.jl")
 	include("Geometry/outliers.jl")
 	include("Geometry/double_verts.jl")

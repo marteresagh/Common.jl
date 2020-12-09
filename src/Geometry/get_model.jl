@@ -1,3 +1,19 @@
+#interface
+"""
+	getmodel(bbin::AABB) -> Lar.LAR
+"""
+function getmodel(bbin::AABB)::Lar.LAR
+	return boxmodel_from_aabb(bbin)
+end
+
+"""
+	getmodel(volume::Volume) -> Lar.LAR
+"""
+function getmodel(volume::Volume)::Lar.LAR
+	return volume2LARmodel(volume::Volume)
+end
+
+
 """
 	volume2LARmodel(volume::Volume) -> Lar.LAR
 
@@ -88,12 +104,4 @@ function boxmodel_from_aabb(aabb::AABB)::Lar.LAR
 	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
 	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
 	return V,EV,FV
-end
-
-#interface
-"""
-	getmodel(bbin::AABB) -> Lar.LAR
-"""
-function getmodel(bbin::AABB)::Lar.LAR
-	return boxmodel_from_aabb(bbin)
 end
