@@ -35,11 +35,12 @@ end
 Create orthonormal basis from a given vector `a,b,c`.
 """
 function orthonormal_basis(a,b,c)
+	# https://www.mathworks.com/matlabcentral/answers/72631-create-orthonormal-basis-from-a-given-vector
 	w = [a, b, c]
 
 	if a == 0. && c == 0.
 		v = [0,c,b]
-	else 
+	else
 		v = [c, 0, a]
 	end
 
