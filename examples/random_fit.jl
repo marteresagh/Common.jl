@@ -57,11 +57,10 @@ GL.VIEW([
 # input generation ==================================================== CIRCLE
 npoints = 500
 radius = 3.
-
+center = [0.,0.]
 
 xs = Float64[]
 ys = Float64[]
-
 
 for i in 1:npoints
 	angle = 2*pi*rand()
@@ -69,7 +68,7 @@ for i in 1:npoints
     push!(ys, radius*sin(angle)+0.1*rand()) # points perturbation
 end
 
-points = convert(Lar.Points, hcat(xs,ys)')
+points = Common.apply_matrix(Lar.t(center...),convert(Lar.Points, hcat(xs,ys)'))
 
 # fit
 params2D = Common.Fit_Circle(points)

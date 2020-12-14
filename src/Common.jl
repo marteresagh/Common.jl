@@ -34,7 +34,7 @@ module Common
 	include("Geometry/outliers.jl")
 	include("Geometry/double_verts.jl")
 
-	export  PointCloud, Hyperplane, AABB, Volume, Plane, #structs
+	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
 			monitorInput, flushprintln, getmodel, #funs
 			NearestNeighbors, Statistics, Lar #modules
 end # module
