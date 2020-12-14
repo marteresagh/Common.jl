@@ -52,3 +52,32 @@ GL.VIEW([
 	Visualization.mesh_lines([hyperplane])...
 	GL.GLFrame2
 ]);
+
+
+# input generation ==================================================== CIRCLE
+npoints = 500
+radius = 3.
+
+
+xs = Float64[]
+ys = Float64[]
+
+
+for i in 1:npoints
+	angle = 2*pi*rand()
+	push!(xs, radius*cos(angle)+0.1*rand())
+    push!(ys, radius*sin(angle)+0.1*rand()) # points perturbation
+end
+
+points = convert(Lar.Points, hcat(xs,ys)')
+
+# fit
+params2D = Common.Fit_Circle(points)
+
+circle = Hypersphere(PointCloud(points),params2D...)
+
+GL.VIEW([
+    GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
+	# Visualization.mesh_lines([hyperplane])...
+	GL.GLFrame2
+]);

@@ -102,6 +102,37 @@ end
 
 
 """
+Dataset for hypersphere
+ - inliers:	points on hypersphere
+ - center: center of hypersphere
+ - radius: radius of hypersphere
+
+# Constructors
+```jldoctest
+Hypersphere(inliers,center,radius) = new(inliers,center,radius)
+Hypersphere(center,radius) = new(PointCloud(),center,radius)
+```
+
+# Fields
+```jldoctest
+inliers		::PointCloud
+center		::Array{Float64,1}
+radius		::Float64
+```
+"""
+mutable struct Hypersphere
+	inliers::PointCloud
+    center::Array{Float64,1}
+	radius::Float64
+
+	# with inliers
+	Hypersphere(inliers,center,radius) = new(inliers,center,radius)
+
+	# without inliers
+	Hypersphere(center,radius) = new(PointCloud(),center,radius)
+end
+
+"""
 Volume
 - scale: size of box
 - position: position of center
