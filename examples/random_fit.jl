@@ -55,9 +55,9 @@ GL.VIEW([
 
 
 # input generation ==================================================== CIRCLE
-npoints = 500
+npoints = 10
 radius = 3.
-center = [0.,0.]
+center = [3.,2.]
 
 xs = Float64[]
 ys = Float64[]
@@ -73,10 +73,10 @@ points = Common.apply_matrix(Lar.t(center...),convert(Lar.Points, hcat(xs,ys)'))
 # fit
 params2D = Common.Fit_Circle(points)
 
-circle = Common.Hypersphere(PointCloud(points),params2D...)
+circle = Hypersphere(PointCloud(points),params2D...)
 
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
-	Visualization.mesh_circle([circle])...
+	Visualization.mesh_circles([circle])...
 	GL.GLFrame2
 ]);

@@ -36,3 +36,16 @@ function residual(hyperplane::Hyperplane)
 	end
 	return residual0
 end
+
+"""
+	residual(hypersphere::Hypersphere)(point::Array{Float64,1})
+
+Dreturn distance `point` to `hypersphere`.
+"""
+function residual(hypersphere::Hypersphere)
+	function residual0(point::Array{Float64,1})
+		rp = Lar.norm(point-hypersphere.center)
+		return Lar.abs(rp-hypersphere.radius)
+	end
+	return residual0
+end

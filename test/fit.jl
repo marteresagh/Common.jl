@@ -29,3 +29,29 @@
 	end
 
 end
+
+
+@testset "Hypersphere" begin
+
+	@testset "residual" begin
+		circle = Hypersphere([0.0,0.0],4.)
+		@test Common.residual(circle)([3.0,0.0]) == 1.0
+		@test Common.residual(circle)([6.0,0.0]) == 2.0
+
+		circle = Hypersphere([1.0,3.0],4.)
+		@test Common.residual(circle)([1.0,0.0]) == 1.0
+	end
+
+	@testset "2D" begin
+		points = [ 5.05603   5.5785    3.18581  5.97245   1.04468   0.557196  0.224191   3.31071    1.30733   0.303726;
+ 					-0.184657  0.466595  4.99424  2.40567  -0.275239  0.258532  0.86207   -0.983866  -0.476869  3.31534 ]
+
+		# fit
+		C, R = Common.Fit_Circle(points)
+
+		@test isapprox(C,[3.,2.]; atol = 1.e2)
+		@test isapprox(R,3.; atol = 1.e2)
+	end
+
+
+end
