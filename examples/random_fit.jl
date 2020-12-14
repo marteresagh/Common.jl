@@ -73,10 +73,10 @@ points = Common.apply_matrix(Lar.t(center...),convert(Lar.Points, hcat(xs,ys)'))
 # fit
 params2D = Common.Fit_Circle(points)
 
-circle = Hypersphere(PointCloud(points),params2D...)
+circle = Common.Hypersphere(PointCloud(points),params2D...)
 
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
-	# Visualization.mesh_lines([hyperplane])...
+	Visualization.mesh_circle([circle])...
 	GL.GLFrame2
 ]);
