@@ -28,18 +28,13 @@ end
 function get_boundary_edges(V::Lar.Points,FV::Lar.Cells)
 	EV = convert(Array{Array{Int64,1},1}, collect(Set(cat(map(FV2EV,FV)))))
 
-	# M_0 = K(VV)
 	M_1 = K(EV)
 	M_2 = K(FV)
 
-	# ∂_1 = M_0 * M_1'
-	∂_2 = (M_1 * M_2') .÷ 2 #	.÷ sum(M_1,dims=2)
-	# s = sum(M_2,dims=2)
-	# ∂_3 = (M_2 * M_3')
-	# ∂_3 = ∂_3 ./	s
-	# ∂_3 = ∂_3 .÷ 1	#	.÷ sum(M_2,dims=2)
+	∂_2 = (M_1 * M_2') .÷ 2
 
 	S1 = sum(∂_2,dims=2)
+
 	inner = [k for k=1:length(S1) if S1[k]==2]
 	outer = setdiff(collect(1:length(EV)), inner)
 	return EV[outer]
