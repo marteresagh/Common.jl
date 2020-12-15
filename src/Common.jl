@@ -4,6 +4,7 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
+	using SparseArrays
 
 	using NearestNeighbors
 	using Delaunay
