@@ -1,3 +1,10 @@
+function K( CV )
+	I = vcat( [ [k for h in CV[k]] for k=1:length(CV) ]...)
+	J = vcat(CV...)
+	Vals = [1 for k=1:length(I)]
+	return sparse(I,J,Vals)
+end
+
 function FV2EV( v )
 	edges = [
 		[v[1], v[2]], [v[1], v[3]], [v[2], v[3]]]
