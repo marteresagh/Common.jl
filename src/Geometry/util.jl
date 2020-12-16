@@ -247,3 +247,22 @@ end
 # 	planesource = PointClouds.planefit(V)
 # 	return PointClouds.rotoTraslation(planesource,planeref)
 # end
+
+
+"""
+proiezioni
+"""
+function projection(e,v)
+	p = v - Lar.dot(e,v)*e
+	return p
+end
+
+function points_projection_on_plane(V::Lar.Points,plane::Hyperplane)
+	N = plane.direction
+	C = plane.centroid
+	npoints = size(V,2)
+	for i in 1:npoints
+		V[:,i] = projection(N, V[:,i] - C) + C
+	end
+	return convert(Lar.Points,V)
+end
