@@ -24,9 +24,8 @@ function CV2EV( v )
 end
 
 
-
 function get_boundary_edges(V::Lar.Points,FV::Lar.Cells)
-	EV = convert(Array{Array{Int64,1},1}, collect(Set(cat(map(FV2EV,FV)))))
+	EV = convert(Array{Array{Int64,1},1}, collect(Set(CAT(map(FV2EV,FV)))))
 
 	M_1 = K(EV)
 	M_2 = K(FV)

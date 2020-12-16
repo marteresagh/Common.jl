@@ -1,7 +1,7 @@
 using Common
 using Visualization
 
-points = rand(2,1000000)
+points = rand(2,100000)
 
 FV = Common.delaunay_triangulation(points)
 
