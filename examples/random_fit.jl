@@ -11,7 +11,7 @@ ys = 4*rand(npoints)
 zs = Float64[]
 
 for i in 1:npoints
-    push!(zs, xs[i]*xslope + ys[i]*yslope + off + rand()) # points perturbation
+    push!(zs, xs[i]*xslope + ys[i]*yslope + off + 0.0*rand()) # points perturbation
 end
 
 points = convert(Lar.Points, hcat(xs,ys,zs)')
@@ -20,9 +20,13 @@ points = convert(Lar.Points, hcat(xs,ys,zs)')
 params3D = Common.LinearFit(points)
 aabb = Common.boundingbox(points)
 V,FV = Common.DrawPlane(Hyperplane(params3D...),aabb)
+normal = params3D[1]
+centroid = params3D[2]
+plane = Plane(normal,centroid)
+plane1 = Plane(params3D[1]...,Lar.dot(params3D[2],params3D[1]))
 
 GL.VIEW([
-    GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
+    GL.GLPoints(convert(Lar.Points,Common.apply_matrix(plane.matrix,points)'),GL.COLORS[6])
 	GL.GLGrid(V,FV)
 	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
 ]);
