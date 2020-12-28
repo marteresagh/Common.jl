@@ -5,6 +5,7 @@ module Common
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
 	using SparseArrays
+	using LightGraphs
 
 	using NearestNeighbors
 	using Delaunay
@@ -24,6 +25,7 @@ module Common
 	include("keyboard_event.jl")
 
 	#include all file .jl in other folders
+	# geometry
 	include("Geometry/distance.jl")
 	include("Geometry/fit.jl")
 	include("Geometry/util.jl")
@@ -34,9 +36,11 @@ module Common
 	include("Geometry/neighbors.jl")
 	include("Geometry/outliers.jl")
 	include("Geometry/double_verts.jl")
-	include("Geometry/boundary.jl")
+	# graph
+	include("Graph/graph.jl")
+	include("Graph/boundary.jl")
 
 	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
 			monitorInput, flushprintln, getmodel, #funs
-			NearestNeighbors, Statistics, Lar #modules
+			NearestNeighbors, Statistics, Lar, LightGraphs #modules
 end # module

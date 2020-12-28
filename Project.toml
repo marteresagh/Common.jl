@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 Delaunay = "07eb4e4e-0c6d-46ef-bc4e-83d5e5d860a9"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
 LinearAlgebraicRepresentation = "95167b0c-186a-594b-a231-52369c6de044"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
