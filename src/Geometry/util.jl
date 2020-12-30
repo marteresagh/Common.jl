@@ -3,7 +3,10 @@
 
 Angle between two vectors.
 """
-@inline angle_between_vectors(a,b) = Lar.acos(Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b)))
+angle_between_vectors(a,b) = begin
+	ag = Lar.acos(Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b)))
+	return min(ag, pi-ag)
+end
 
 """
 matrice orlata
