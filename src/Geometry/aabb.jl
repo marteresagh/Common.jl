@@ -1,4 +1,3 @@
-
 """
 AABB
 """
@@ -50,7 +49,7 @@ end
 """
 	isinbox(aabb::AABB,p::Array{Float64,1})
 
-Check if point `p` is in a `aabb `.
+Check if point `p` is in a `aabb`.
 """
 function isinbox(aabb::AABB,p::Array{Float64,1})
 	return (  p[1]>=aabb.x_min && p[1]<=aabb.x_max &&
