@@ -70,3 +70,8 @@ function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.
 	return V, FV
 end
 #--------------------
+
+
+function lines_intersection(l1::Hyperplane,l2::Hyperplane)
+
+end

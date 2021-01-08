@@ -36,6 +36,7 @@ module Common
 	include("Geometry/neighbors.jl")
 	include("Geometry/outliers.jl")
 	include("Geometry/double_verts.jl")
+	include("Geometry/aabb.jl")
 	# graph
 	include("Graph/graph.jl")
 	include("Graph/boundary.jl")

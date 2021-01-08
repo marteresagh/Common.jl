@@ -75,26 +75,6 @@ Average of points.
 centroid(points::Union{Lar.Points,Array{Float64,1}}) = (sum(points,dims=2)/size(points,2))[:,1]
 
 """
-AABB
-"""
-function return_AABB(aabb)
-	#aabb = ([x_min,y_min,z_min],[x_max,y_max,z_max])
-	bb = [[a,b]  for (a,b) in zip(aabb[2],aabb[1])]
-	return AABB(vcat(bb...)...)
-end
-
-"""
-	boundingbox(points::Lar.Points) -> AABB
-
-Axis aligned bounding box.
-"""
-function boundingbox(points::Lar.Points)::AABB
-	a = [extrema(points[i,:]) for i in 1:size(points,1)]
-	b = reverse.(a)
-	return AABB(collect(Iterators.flatten(b))...)
-end
-
-"""
 	subtractaverage(points::Lar.Points)
 
 Compute the average of the data points and traslate data.
@@ -141,17 +121,6 @@ matchcolumn(a,B) = findfirst(j->all(i->a[i] == B[i,j],1:size(B,1)),1:size(B,2))
 """
 function CAT(args)
 	return reduce( (x,y) -> append!(x,y), args; init=[] )
-end
-
-"""
-	isinbox(aabb::AABB,p::Array{Float64,1})
-
-Check if point `p` is in a `aabb `.
-"""
-function isinbox(aabb::AABB,p::Array{Float64,1})
-	return (  p[1]>=aabb.x_min && p[1]<=aabb.x_max &&
-			  p[2]>=aabb.y_min && p[2]<=aabb.y_max &&
-			   p[3]>=aabb.z_min && p[3]<=aabb.z_max )
 end
 
 
