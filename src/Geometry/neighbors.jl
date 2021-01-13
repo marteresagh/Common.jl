@@ -30,9 +30,25 @@ function neighborhood(	kdtree::NNTree{V},
 	return neighborhood
 end
 
+
 """
-DA finire
+	consistent_seeds(PC::PointCloud, given_seeds::Lar.Points) -> idxs::Array{Int64,1}
+
+Return .
 """
+function consistent_seeds(PC::PointCloud)
+	kdtree = KDTree(PC.coordinates)
+	function consistent_seeds0(given_seed::Array{Float64,1})::Int64
+		idx, dist = NearestNeighbors.nn(kdtree,given_seed)
+		return idx
+	end
+	return consistent_seeds0
+end
+
+"""
+#TODO
+"""
+#TODO migliorare la procedura
 function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 	kdtree = Common.KDTree(points)
 	normals = similar(points)

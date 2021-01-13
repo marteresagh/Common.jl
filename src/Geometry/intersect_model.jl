@@ -123,7 +123,7 @@ function modelsdetection(model::Lar.LAR,octree::AABB)::Int
 		# 2. octree esterno return 0
 		# 3. octree intersecato ma non contenuto return 1
 		Voctree,EVoctree,FVoctree = getmodel(octree)
-		test = inmodel(model).([Voctree[:,i] for i in 1:size(Voctree,2)])
+		test = inmodel(model).([c[:] for c in eachcol(Voctree)])
 		if test == ones(size(Voctree,2))
 			return 2 # full model
 		elseif !separatingaxis(model, octree)
