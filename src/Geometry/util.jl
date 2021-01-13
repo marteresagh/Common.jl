@@ -4,6 +4,10 @@
 Angle between two vectors.
 """
 angle_between_vectors(a,b) = begin
+	value = Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b))
+	if isapprox(value,1.0)
+		value = 1.0
+	end
 	ag = Lar.acos(Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b)))
 	return min(ag, pi-ag)
 end
