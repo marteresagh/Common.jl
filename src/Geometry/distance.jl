@@ -49,3 +49,12 @@ function residual(hypersphere::Hypersphere)
 	end
 	return residual0
 end
+
+
+"""
+Return index of point in points with minor residual.
+"""
+function minresidual(points::Lar.Points, hyperplane::Hyperplane)
+	res = Common.residual(hyperplane).( [c[:] for c in eachcol(points)])
+	return findmin(res)[2]
+end
