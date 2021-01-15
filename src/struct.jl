@@ -187,7 +187,7 @@ struct Plane
 		d = Lar.dot(normal,centroid)
 		rot = Matrix(Common.orthonormal_basis(normal...))
 		matrix = Common.matrix4(rot)
-		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-centroid)
+		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
 		new(a,b,c,d,matrix)
 	end
 
@@ -197,7 +197,7 @@ struct Plane
 		centroid = normal*d
 		rot = Matrix(orthonormal_basis(a,b,c))
 		matrix = Common.matrix4(rot)
-		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-centroid)
+		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
 		new(a,b,c,d,matrix)
 	end
 
@@ -220,4 +220,11 @@ struct Plane
 		new(axis_z[1], axis_z[2], axis_z[3], d, matrix)
 	end
 
+	function Plane(volume::Volume)
+		rot = Common.euler2matrix(volume.rotation...)
+		axis_z = rot[3,:]
+		matrix = Common.matrix4(rot)
+		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
+		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position), matrix)
+	end
 end

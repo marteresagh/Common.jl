@@ -1,28 +1,6 @@
 """
+	DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 
-"""
-function DrawLine(line::Hyperplane, u=0.02)
-	max_value = -Inf
-	min_value = +Inf
-	points = line.inliers
-	for i in 1:points.n_points
-		p = points.coordinates[:,i] - line.centroid
-		value = Lar.dot(line.direction,p)
-		if value > max_value
-			max_value = value
-		end
-		if value < min_value
-			min_value = value
-		end
-	end
-	p_min = line.centroid + (min_value - u)*line.direction
-	p_max = line.centroid + (max_value + u)*line.direction
-	V = hcat(p_min,p_max)
-	EV = [[1,2]]
-    return V, EV
-end
-
-"""
 
 """
 function DrawLines(line::Hyperplane, u=0.02)
@@ -59,7 +37,7 @@ end
 #--------------------TODO da modificare
 """
 """
-#TODO da cambiare e farla tipo la line senza triangolazione
+#TODO da cambiare togliere triangolazione
 function DrawPlane(plane::Hyperplane, AABB::AABB)
 	V = intersectAABBplane(AABB,plane.direction,plane.centroid)
 	#triangulate vertex projected in plane XY
@@ -87,10 +65,4 @@ function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.
 	out = Lar.Struct( out )
 	V,FV = Lar.struct2lar(out)
 	return V, FV
-end
-#--------------------
-
-
-function lines_intersection(l1::Hyperplane,l2::Hyperplane)
-
 end

@@ -1,9 +1,9 @@
 """
-	angle_between_vectors(a,b)
+	angle_between_directions(a,b)
 
-Angle between two vectors.
+Return minimun angle between two directions.
 """
-angle_between_vectors(a,b) = begin
+function angle_between_directions(a,b)
 	value = Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b))
 	if isapprox(value,1.0)
 		value = 1.0

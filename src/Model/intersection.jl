@@ -135,3 +135,11 @@ function modelsdetection(model::Lar.LAR,octree::AABB)::Int
 		return 0 # no intersection
 	end
 end
+
+
+#--------------------
+
+
+function lines_intersection(l1::Hyperplane,l2::Hyperplane)
+
+end

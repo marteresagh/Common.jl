@@ -1,5 +1,20 @@
 """
-	getmodel(volume::Volume) -> Lar.LAR
+	getmodel(aabb::AABB) -> model::Lar.LAR
+
+Return LAR model of the aligned axis box defined by `aabb`.
+"""
+function getmodel(aabb::AABB)::Lar.LAR
+	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
+		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
+		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
+	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
+	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
+	return V,EV,FV
+end
+
+
+"""
+	getmodel(volume::Volume) -> model::Lar.LAR
 
 Return volume model described by position, scale and rotation.
 """
@@ -14,7 +29,7 @@ function getmodel(volume::Volume)::Lar.LAR
 end
 
 """
-	getmodel(plane::Plane, thickness::Float64, aabb::AABB) -> Lar.LAR
+	getmodel(plane::Plane, thickness::Float64, aabb::AABB) -> model::Lar.LAR
 
 Return volume model of `plane` with `thickness`, limited in `aabb`.
 """
@@ -41,7 +56,7 @@ function getmodel(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::
 end
 
 """
-	 getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> Lar.LAR
+	 getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> model::Lar.LAR
 
 Return volume model of `plane` with `thickness` described by two points, `p1` and `p2`, and an up vector, `axis_y`, limited in `aabb` and between the two points.
 """
@@ -73,18 +88,4 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 	volume = Volume(scale,position,rotation)
 	model = Common.getmodel(volume)
 	return model
-end
-
-"""
-	getmodel(aabb::AABB) -> Lar.LAR
-
-Return LAR model of the aligned axis box defined by `aabb`.
-"""
-function getmodel(aabb::AABB)::Lar.LAR
-	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
-		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
-		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]
-	EV = [[1, 2],  [3, 4], [5, 6],  [7, 8],  [1, 3],  [2, 4],  [5, 7],  [6, 8],  [1, 5],  [2, 6],  [3, 7],  [4, 8]]
-	FV = [[1, 2, 3, 4],  [5, 6, 7, 8],  [1, 2, 5, 6],  [3, 4, 7, 8],  [1, 3, 5, 7],  [2, 4, 6, 8]]
-	return V,EV,FV
 end

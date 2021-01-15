@@ -24,7 +24,6 @@ module Common
 	include("struct.jl")
 	include("keyboard_event.jl")
 
-	#include all file .jl in other folders
 	# features
 	include("Features/neighbors.jl")
 	include("Features/estimation.jl")
@@ -36,12 +35,13 @@ module Common
 	include("Geometry/util.jl")
 	include("Geometry/tools.jl")
 	include("Geometry/delaunay.jl")
-	include("Geometry/intersect_model.jl")
-	include("Geometry/getmodel.jl")
 	include("Geometry/aabb.jl")
 	# graph
 	include("Graph/graph.jl")
 	include("Graph/boundary.jl")
+	# model
+	include("Model/intersection.jl")
+	include("Model/getmodel.jl")
 
 	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
 			monitorInput, flushprintln, getmodel, #funs
