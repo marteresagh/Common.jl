@@ -28,6 +28,7 @@ end
 function DrawLines(line::Hyperplane, u=0.02)
 	DrawLines([line], u)
 end
+
 function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	out = Array{Lar.Struct,1}()
 	for line in lines

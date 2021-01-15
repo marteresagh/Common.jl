@@ -34,7 +34,7 @@ module Common
 	include("Geometry/residual.jl")
 	include("Geometry/fit.jl")
 	include("Geometry/util.jl")
-	include("Geometry/geometrytools.jl")
+	include("Geometry/tools.jl")
 	include("Geometry/delaunay.jl")
 	include("Geometry/intersect_model.jl")
 	include("Geometry/getmodel.jl")
