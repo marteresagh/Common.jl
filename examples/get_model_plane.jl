@@ -9,7 +9,7 @@ p2 = [2., 3. , 2.]
 octree = getmodel(aabb)
 
 plane = Common.Plane(p1,p2,axis_y)
-volume = Common.plane2model(p1,p2,axis_y,thickness,aabb)
+volume = Common.getmodel(p1,p2,axis_y,thickness,aabb)
 
 GL.VIEW([
     # GL.GLPoints(convert(Lar.Points,p1'),GL.COLORS[1])

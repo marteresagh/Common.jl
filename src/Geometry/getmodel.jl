@@ -1,25 +1,9 @@
-#interface
-"""
-	getmodel(bbin::AABB) -> Lar.LAR
-"""
-function getmodel(bbin::AABB)::Lar.LAR
-	return boxmodel_from_aabb(bbin)
-end
-
 """
 	getmodel(volume::Volume) -> Lar.LAR
-"""
-function getmodel(volume::Volume)::Lar.LAR
-	return volume2LARmodel(volume::Volume)
-end
-
-
-"""
-	volume2LARmodel(volume::Volume) -> Lar.LAR
 
 Return volume model described by position, scale and rotation.
 """
-function volume2LARmodel(volume::Volume)::Lar.LAR
+function getmodel(volume::Volume)::Lar.LAR
 	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
 	scalematrix = Lar.s(volume.scale...)
 	rot = Common.matrix4(Common.euler2matrix(volume.rotation...))
@@ -29,17 +13,16 @@ function volume2LARmodel(volume::Volume)::Lar.LAR
 	return T,EV,FV
 end
 
-
 """
-	plane2model(plane::Plane, thickness::Float64, aabb::AABB) -> Lar.LAR
+	getmodel(plane::Plane, thickness::Float64, aabb::AABB) -> Lar.LAR
 
 Return volume model of `plane` with `thickness`, limited in `aabb`.
 """
-function plane2model(plane::Plane, thickness::Float64, aabb::AABB)::Lar.LAR
-	plane2model(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
+function getmodel(plane::Plane, thickness::Float64, aabb::AABB)::Lar.LAR
+	getmodel(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
 end
 
-function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
+function getmodel(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
 	verts,_ = getmodel(aabb)
 	rotation = Common.matrix2euler(rot_mat)
 	center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
@@ -53,16 +36,16 @@ function plane2model(rot_mat::Matrix, constant::Float64, thickness::Float64, aab
 
 	scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
 	volume = Volume(scale,position,rotation)
-	model = Common.volume2LARmodel(volume)
+	model = Common.getmodel(volume)
 	return model
 end
 
 """
-	 plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> Lar.LAR
+	 getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> Lar.LAR
 
 Return volume model of `plane` with `thickness` described by two points, `p1` and `p2`, and an up vector, `axis_y`, limited in `aabb` and between the two points.
 """
-function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)::Lar.LAR
+function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)::Lar.LAR
 	axis = (p2-p1)/Lar.norm(p2-p1)
 	axis_z = Lar.cross(axis,axis_y)
 	@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
@@ -88,16 +71,16 @@ function plane2model(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{F
 	rotation = Common.matrix2euler(rot_mat)
 
 	volume = Volume(scale,position,rotation)
-	model = Common.volume2LARmodel(volume)
+	model = Common.getmodel(volume)
 	return model
 end
 
 """
-	boxmodel_from_aabb(aabb::AABB) -> Lar.LAR
+	getmodel(aabb::AABB) -> Lar.LAR
 
 Return LAR model of the aligned axis box defined by `aabb`.
 """
-function boxmodel_from_aabb(aabb::AABB)::Lar.LAR
+function getmodel(aabb::AABB)::Lar.LAR
 	V = [	aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_min  aabb.x_max  aabb.x_max  aabb.x_max  aabb.x_max;
 		 	aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max  aabb.y_min  aabb.y_min  aabb.y_max  aabb.y_max;
 		 	aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max  aabb.z_min  aabb.z_max ]

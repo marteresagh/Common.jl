@@ -106,7 +106,7 @@ function Fit_Circle(points::Lar.Points)
 	M00 = 0.
 	M01 = 0.
 	M11 = 0.
-	R=[0.,0.]
+	R = [0.,0.]
 
 	for i in 1:npoints
 		Y = points[:,i]-C

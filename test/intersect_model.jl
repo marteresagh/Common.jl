@@ -45,7 +45,7 @@
 
 		@testset "Rotated box and AABB" begin
 			volume = Volume([1.,1.,1.],[0.,0.,0.],[0,0,pi/4])
-			model = Common.volume2LARmodel(volume)
+			model = Common.getmodel(volume)
 
 			octree = AABB(1.5,0.7,1.5,0.7,1.5,0.7)
 			@test Common.modelsdetection(model,octree) == 0

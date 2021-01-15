@@ -44,25 +44,3 @@ function consistent_seeds(PC::PointCloud)
 	end
 	return consistent_seeds0
 end
-
-"""
-#TODO
-"""
-#TODO migliorare la procedura
-function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
-	kdtree = Common.KDTree(points)
-	normals = similar(points)
-
-	Threads.@threads for i in 1:size(points,2)
-		N = Common.neighborhood(kdtree,points,[i],Int[],threshold,k)
-
-		if length(N)>=3 # not isolated point
-			normal,_ = Common.LinearFit(points[:,N])
-			normals[:,i] = normal
-		else # isolated point
-			normals[:,i] = [0.,0.,0.]
-		end
-
-	end
-	return normals
-end
