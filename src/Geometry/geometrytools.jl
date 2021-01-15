@@ -25,11 +25,29 @@ end
 """
 
 """
+function DrawLines(line::Hyperplane, u=0.02)
+	DrawLines([line], u)
+end
 function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	out = Array{Lar.Struct,1}()
 	for line in lines
-		V,EV = DrawLine(line, u)
-		cell = (V,EV)
+		max_value = -Inf
+		min_value = +Inf
+		points = line.inliers
+		for i in 1:points.n_points
+			p = points.coordinates[:,i] - line.centroid
+			value = Lar.dot(line.direction,p)
+			if value > max_value
+				max_value = value
+			end
+			if value < min_value
+				min_value = value
+			end
+		end
+		p_min = line.centroid + (min_value - u)*line.direction
+		p_max = line.centroid + (max_value + u)*line.direction
+		V = hcat(p_min,p_max)
+		cell = (V,[[1,2]])
 		push!(out, Lar.Struct([cell]))
 	end
 	out = Lar.Struct( out )
