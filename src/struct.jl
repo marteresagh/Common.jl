@@ -222,8 +222,9 @@ struct Plane
 
 	function Plane(volume::Volume)
 		rot = Common.euler2matrix(volume.rotation...)
-		axis_z = rot[3,:]
-		matrix = Common.matrix4(rot)
+		@show rot
+		axis_z = rot[:,3]
+		matrix = Common.matrix4(convert(Matrix,rot'))
 		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
 		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position), matrix)
 	end
