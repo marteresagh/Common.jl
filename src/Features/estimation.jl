@@ -24,15 +24,17 @@ end
 
 
 """
-Corners detection
+#TODO
+compute_curvatures
 """
+#TODO da migliorare
 function compute_curvatures(INPUT_PC::PointCloud, par::Float64, threshold::Float64, current_inds = collect(1:INPUT_PC.n_points)::Array{Int64,1})
 	points = INPUT_PC.coordinates[:, current_inds]
 	npoints = size(points,2)
 	corners = fill(false,npoints)
 	curvs = fill(0.,npoints)
 	balltree = Common.BallTree(points)
-	for i in 1:npoints
+	Threads.@threads for i in 1:npoints
 		# TODO verificare che i vicini ci siano e che il valore della curvatura non sia NaN
 		N = Common.inrange(balltree, points[:,i], par, true) # usare un parametro abbastanza grande
 		centroid = Common.centroid(points[:,N])
