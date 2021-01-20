@@ -51,3 +51,36 @@ GL.VIEW([
 	GL.GLGrid(points,FV,GL.COLORS[12],1.0)
 	#GL.GLFrame2
 ]);
+
+
+#### VOLUME
+function getmodel0(volume::Volume)::Lar.LAR
+	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
+	scalematrix = Lar.s(volume.scale...)
+	rot = Common.matrix4(Common.euler2matrix(volume.rotation...))
+	trasl = Lar.t(volume.position...)
+	affine = trasl*rot*scalematrix
+	T = Common.apply_matrix(affine,V)
+	return T,EV,FV
+end
+
+vol = Volume([36.681, 35.501, 41.960],[295486.644, 4781263.248, 296.334],[-0.144, 0.224, -0.588])
+V,EV,FV = getmodel0(vol)
+
+bbin = "C:/Users/marte/Documents/GEOWEB/wrapper_file/JSON/volume_COLOMBELLA.json"
+V1,EV1,FV1 = FileManager.getmodel(bbin)
+GL.VIEW([
+	GL.GLGrid(Common.apply_matrix(Lar.t(-Common.centroid(V)...),V),EV,GL.COLORS[12],1.0)
+	GL.GLGrid(Common.apply_matrix(Lar.t(-Common.centroid(V)...),V1),EV1,GL.COLORS[2],1.0)
+	GL.GLFrame
+]);
+
+
+
+angles = [-0.144, 0.224, -0.588]
+Common.euler2matrix(angles...)
+
+
+
+
+RotXYZ(angles...)
