@@ -28,7 +28,7 @@ module Common
 	include("Features/neighbors.jl")
 	include("Features/estimation.jl")
 	include("Features/double_verts.jl")
-	include("Features/outliers.jl")
+	include("Features/density.jl")
 	# geometry
 	include("Geometry/residual.jl")
 	include("Geometry/fit.jl")

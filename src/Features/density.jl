@@ -46,7 +46,13 @@ end
 	estimate_threshold(PC::PointCloud, k::Int64)
 """
 function estimate_threshold(PC::PointCloud, k::Int64)
-	density, _ = Common.relative_density_points(PC.coordinates, collect(1:PC.n_points), 2*k)
+	points = PC.coordinates
+	return estimate_threshold(points, k)
+end
+
+
+function estimate_threshold(points::Lar.Points, k::Int64)
+	density, _ = Common.relative_density_points(points, collect(1:size(points,2)), k)
 	dist = map(x->1/x,density)
 	mu = Statistics.mean(dist)
 	rho = Statistics.std(dist)
