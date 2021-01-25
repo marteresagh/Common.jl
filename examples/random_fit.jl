@@ -26,7 +26,7 @@ V,FV = Common.DrawPlanes(Hyperplane(PointCloud(points),params3D...), Common.boun
 
 GL.VIEW([
 	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
-	GL.GLPoints(convert(Lar.Points,points_flat'),GL.COLORS[1])
+	# GL.GLPoints(convert(Lar.Points,points_flat'),GL.COLORS[1])
 	GL.GLGrid(V,FV)
 	Visualization.helper_axis(Lar.inv(plane.matrix))
 	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
