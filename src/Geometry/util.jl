@@ -46,12 +46,16 @@ function orthonormal_basis(a,b,c)
 	w = [a, b, c]
 
 	if a == 0. && c == 0.
-		v = [0,c,b]
+		v = [0,-c,b]
 	else
-		v = [c, 0, a]
+		v = [-c, 0, a]
 	end
 
 	u = Lar.cross(v,w)
+
+	@assert Lar.dot(w,v) ≈ 0.
+	@assert Lar.dot(w,u) ≈ 0.
+	@assert Lar.dot(u,v) ≈ 0.
 
 	u /= Lar.norm(u)
 	v /= Lar.norm(v)

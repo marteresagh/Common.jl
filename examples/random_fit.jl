@@ -19,15 +19,16 @@ points = convert(Lar.Points, hcat(xs,ys,zs)')
 # fit
 params3D = Common.LinearFit(points)
 aabb = Common.boundingbox(points)
-V,FV = Common.DrawPlane(Hyperplane(params3D...),aabb)
-normal = params3D[1]
-centroid = params3D[2]
-plane = Plane(normal,centroid)
-plane1 = Plane(params3D[1]...,Lar.dot(params3D[2],params3D[1]))
+plane = Plane(params3D[1],params3D[2])
+points_flat = Common.apply_matrix(plane.matrix,points)
+
+V,FV = Common.DrawPlanes(Hyperplane(PointCloud(points),params3D...), Common.boundingbox(points))
 
 GL.VIEW([
-    GL.GLPoints(convert(Lar.Points,Common.apply_matrix(plane.matrix,points)'),GL.COLORS[6])
+	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
+	GL.GLPoints(convert(Lar.Points,points_flat'),GL.COLORS[1])
 	GL.GLGrid(V,FV)
+	Visualization.helper_axis(Lar.inv(plane.matrix))
 	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
 ]);
 
