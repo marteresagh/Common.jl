@@ -76,15 +76,12 @@ end
 #
 # #
 # #TODO da cambiare togliere triangolazione
-function DrawPlane(plane::Hyperplane, AABB::AABB)
-	V = intersectAABBplane(AABB,plane.direction,plane.centroid)
-	#triangulate vertex projected in plane XY
-	FV = delaunay_triangulation(V[1:2,:])
-	return V, sort.(FV)
+"""
+"""
+function DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing}, u=0.2)
+	DrawPlanes([plane],AABB, u)
 end
 
-"""
-"""
 function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.2)
 	out = Array{Lar.Struct,1}()
 	for obj in planes
