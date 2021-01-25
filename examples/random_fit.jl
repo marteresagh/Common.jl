@@ -2,8 +2,8 @@ using Common, Visualization
 
 # input generation ==================================================== PLANE
 npoints = 1000
-xslope = 0.5
-yslope = 0.
+xslope = rand()
+yslope = rand()
 off = 1.
 
 xs = 3*rand(npoints)

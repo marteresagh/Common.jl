@@ -1,12 +1,15 @@
 """
-	DrawLines(lines::Array{Hyperplane,1}, u=0.2)
-
+	DrawLines(line::Hyperplane, u=0.02)
 
 """
 function DrawLines(line::Hyperplane, u=0.02)
 	DrawLines([line], u)
 end
 
+"""
+	DrawLines(lines::Array{Hyperplane,1}, u=0.2)
+
+"""
 function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	out = Array{Lar.Struct,1}()
 	for line in lines
@@ -34,13 +37,18 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	return V,EV
 end
 
-#--------------------TODO da modificare
 """
+	DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
+
 """
-function DrawPlanes(plane::Hyperplane, AABB::AABB)
+function  DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
 	DrawPlanes([plane], AABB)
 end
 
+"""
+	DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing})
+
+"""
 function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing})
 	out = Array{Lar.Struct,1}()
 	bb = deepcopy(AABB)

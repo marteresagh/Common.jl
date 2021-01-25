@@ -53,9 +53,9 @@ function orthonormal_basis(a,b,c)
 
 	u = Lar.cross(v,w)
 
-	@assert Lar.dot(w,v) ≈ 0.
-	@assert Lar.dot(w,u) ≈ 0.
-	@assert Lar.dot(u,v) ≈ 0.
+	# @assert Lar.dot(w,v) ≈ 0. "Dot product = $(Lar.dot(w,v))"
+	# @assert Lar.dot(w,u) ≈ 0. "Dot product = $(Lar.dot(w,u))"
+	# @assert Lar.dot(u,v) ≈ 0. "Dot product = $(Lar.dot(u,v))"
 
 	u /= Lar.norm(u)
 	v /= Lar.norm(v)
