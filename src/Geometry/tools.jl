@@ -37,6 +37,7 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	return V,EV
 end
 #
+# TODO da riprovare 
 # """
 # 	DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
 #
@@ -75,7 +76,7 @@ end
 # end
 #
 # #
-# #TODO da cambiare togliere triangolazione
+#
 """
 """
 function DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing}, u=0.2)
