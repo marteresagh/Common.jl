@@ -150,8 +150,20 @@ struct Volume
 	scale::Array{Float64,1}
 	# center of box
 	position::Array{Float64,1}
-	# Euler angle of rotation of box
-	rotation::Array{Float64,1}
+	# Euler angles of box
+	euler_angles::Array{Float64,1}
+	# rotation matrix
+	rotation::Matrix
+
+	function Volume(scale::Array{Float64,1}, position::Array{Float64,1}, euler_angles::Array{Float64,1})
+		rotation = Common.euler2matrix(euler_angles...)
+		return new(scale,position,euler_angles,rotation)
+	end
+
+	function Volume(scale::Array{Float64,1}, position::Array{Float64,1}, rotation::Matrix )
+		euler_angles = Common.matrix2euler(rotation)
+		return new(scale,position,euler_angles,rotation)
+	end
 end
 
 
@@ -221,7 +233,7 @@ struct Plane
 	end
 
 	function Plane(volume::Volume)
-		rot = Common.euler2matrix(volume.rotation...)
+		rot = Common.euler2matrix(volume.euler_angles...)
 		@show rot
 		axis_z = rot[:,3]
 		matrix = Common.matrix4(convert(Matrix,rot'))

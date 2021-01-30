@@ -215,7 +215,7 @@ end
 # function rotoTraslation(planesource,planeref)
 # 	axref, centref = planeref
 # 	axsour, centsour = planesource
-# 	rotation_matrix = PointClouds.rotation_matrix_from_vectors(axref,axsour)
+# 	rotation_matrix = PointClouds.euler_matrix_from_vectors(axref,axsour)
 #
 # 	rototrasl = Lar.t(centref...)*rotation_matrix'*Lar.t(-centsour...)
 # 	return rototrasl
