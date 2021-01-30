@@ -21,7 +21,7 @@ Return volume model described by position, scale and rotation.
 function getmodel(volume::Volume)::Lar.LAR
 	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
 	scalematrix = Lar.s(volume.scale...)
-	rot = Common.matrix4(volume.rotation)
+	rot = Common.matrix4(Common.euler2matrix(volume.rotation...))
 	trasl = Lar.t(volume.position...)
 	affine = trasl*rot*scalematrix
 	T = Common.apply_matrix(affine,V)
@@ -70,6 +70,7 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 	center_model = Common.centroid(hcat(p1,p2))
 
 	rot_mat = hcat(axis_x,axis_y,axis_z)
+	#TODO aggiungere controllo determinante
 	V,_ = getmodel(aabb)
 
 	dists_y = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]

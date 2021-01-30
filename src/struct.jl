@@ -151,19 +151,7 @@ struct Volume
 	# center of box
 	position::Array{Float64,1}
 	# Euler angles of box
-	euler_angles::Array{Float64,1}
-	# rotation matrix
 	rotation::Matrix
-
-	function Volume(scale::Array{Float64,1}, position::Array{Float64,1}, euler_angles::Array{Float64,1})
-		rotation = Common.euler2matrix(euler_angles...)
-		return new(scale,position,euler_angles,rotation)
-	end
-
-	function Volume(scale::Array{Float64,1}, position::Array{Float64,1}, rotation::Matrix )
-		euler_angles = Common.matrix2euler(rotation)
-		return new(scale,position,euler_angles,rotation)
-	end
 end
 
 
@@ -226,6 +214,7 @@ struct Plane
 		d = Lar.dot(axis_z,center_model)
 
 		rot = [axis_x'; axis_y'; axis_z']
+		# TODO aggiungere il controllo sul determinante
 		matrix = Common.matrix4(convert(Matrix,rot))
 		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-p1)
 
@@ -233,8 +222,7 @@ struct Plane
 	end
 
 	function Plane(volume::Volume)
-		rot = Common.euler2matrix(volume.euler_angles...)
-		@show rot
+		rot = Common.euler2matrix(volume.rotation...)
 		axis_z = rot[:,3]
 		matrix = Common.matrix4(convert(Matrix,rot'))
 		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
