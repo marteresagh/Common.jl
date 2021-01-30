@@ -21,7 +21,7 @@ Return volume model described by position, scale and rotation.
 function getmodel(volume::Volume)::Lar.LAR
 	V,(VV,EV,FV,CV) = Lar.apply(Lar.t(-0.5,-0.5,-0.5),Lar.cuboid([1,1,1],true))
 	scalematrix = Lar.s(volume.scale...)
-	rot = Common.matrix4(Common.euler2matrix(volume.euler_angles...))
+	rot = Common.matrix4(volume.rotation)
 	trasl = Lar.t(volume.position...)
 	affine = trasl*rot*scalematrix
 	T = Common.apply_matrix(affine,V)
@@ -39,7 +39,6 @@ end
 
 function getmodel(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
 	verts,_ = getmodel(aabb)
-	rotation = Common.matrix2euler(rot_mat)
 	center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
 	quota = rot_mat[:,3]*constant
 
@@ -50,7 +49,7 @@ function getmodel(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::
 	y_range = extrema(newverts[2,:])
 
 	scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
-	volume = Volume(scale,position,rotation)
+	volume = Volume(scale,position,rot_mat)
 	model = Common.getmodel(volume)
 	return model
 end
@@ -83,9 +82,7 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 
 	position = center_model-Lar.dot(rot_mat[:,2],center_model)*rot_mat[:,2]+Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2]
 
-	rotation = Common.matrix2euler(rot_mat)
-
-	volume = Volume(scale,position,rotation)
+	volume = Volume(scale,position,rot_mat)
 	model = Common.getmodel(volume)
 	return model
 end
