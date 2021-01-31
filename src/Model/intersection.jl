@@ -33,8 +33,8 @@ end
 
 
 """
-	AABBdetection(A::AABB,B::AABB) -> Bo
-	ol
+	AABBdetection(A::AABB,B::AABB) -> Bool
+	
 Compute collision detection of two AABB.
 """
 function AABBdetection(A::AABB,B::AABB)::Bool

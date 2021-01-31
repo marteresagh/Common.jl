@@ -5,10 +5,7 @@ Return minimun angle between two directions.
 """
 function angle_between_directions(a,b)
 	value = Lar.dot(a,b)/(Lar.norm(a)*Lar.norm(b))
-	if isapprox(value,1.0)
-		value = 1.0
-	end
-	ag = Lar.acos(value)
+	ag = Lar.acos(clamp(value,-1.,1.))
 	return min(ag, pi-ag)
 end
 

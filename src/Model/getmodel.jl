@@ -70,7 +70,9 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 	center_model = Common.centroid(hcat(p1,p2))
 
 	rot_mat = hcat(axis_x,axis_y,axis_z)
-	#TODO aggiungere controllo determinante
+
+	@assert isapprox(Lar.det(rot_mat),1) "Basis orientation not right-handed"
+
 	V,_ = getmodel(aabb)
 
 	dists_y = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]

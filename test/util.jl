@@ -23,4 +23,10 @@
 		@test euler ≈ angles
 	end
 
+	@testset "orthonormal basis" begin
+		versore = [-0.8118179363447104, -0.6121680290248144, 0.6306343699009158]
+		M = Common.orthonormal_basis(versore...)
+		@test isapprox(Lar.det(M),1)
+	end
+
 end

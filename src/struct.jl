@@ -214,7 +214,8 @@ struct Plane
 		d = Lar.dot(axis_z,center_model)
 
 		rot = [axis_x'; axis_y'; axis_z']
-		# TODO aggiungere il controllo sul determinante
+
+		@assert isapprox(Lar.det(rot_mat),1) "Basis orientation not right-handed"
 		matrix = Common.matrix4(convert(Matrix,rot))
 		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-p1)
 
