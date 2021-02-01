@@ -63,9 +63,8 @@ Oriented Bounding Box
 """
 function oriented_boundingbox(points::Lar.Points)
 	function PCA(points::Lar.Points)
-
 		npoints = size(points,2)
-		@assert npoints>=3 "linefit: at least 2 points needed"
+		@assert npoints>=3 "PCA: at least 2 points needed"
 		centroid = Common.centroid(points)
 
 		C = zeros(3,3)
@@ -78,19 +77,23 @@ function oriented_boundingbox(points::Lar.Points)
 		eigvectors = Lar.eigvecs(C)
 		R = eigvectors[:,[3,2,1]]
 		if Lar.det(R)<0
-			@show "negativo"
 			R[:,3]=-R[:,3]
 		end
+		R[:,1] /= Lar.norm(R[:,1])
+		R[:,2] /= Lar.norm(R[:,2])
+		R[:,3] /= Lar.norm(R[:,3])
 		return centroid, R
 	end
 
-	center,R = PCA(points)
-	V = Common.apply_matrix(Common.matrix4(Lar.inv(R)),points)
-	x_range = extrema(V[1,:])
-	y_range = extrema(V[2,:])
-	z_range = extrema(V[3,:])
-	extent = [x_range[2]-x_range[1],y_range[2]-y_range[1],z_range[2]-z_range[1]]
+	center_,R = PCA(points)
 
-	return Volume(extent,center,Common.matrix2euler(R))
+	V = Common.apply_matrix(Common.matrix4(Lar.inv(R)),Common.apply_matrix(Lar.t(-center_...),points))
+	aabb = Common.boundingbox(V)
+
+	center_aabb = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
+	center = Common.apply_matrix(Common.matrix4(R),center_aabb) + center_
+	extent = [aabb.x_max - aabb.x_min,aabb.y_max - aabb.y_min, aabb.z_max - aabb.z_min]
+
+	return Volume(extent,vcat(center...),Common.matrix2euler(R))
 
 end
