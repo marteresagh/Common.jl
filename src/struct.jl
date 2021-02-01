@@ -151,7 +151,7 @@ struct Volume
 	# center of box
 	position::Array{Float64,1}
 	# Euler angles of box
-	rotation::Matrix
+	rotation::Array{Float64,1}
 end
 
 
