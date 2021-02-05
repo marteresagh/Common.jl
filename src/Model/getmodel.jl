@@ -34,24 +34,23 @@ end
 Return volume model of `plane` with `thickness`, limited in `aabb`.
 """
 function getmodel(plane::Plane, thickness::Float64, aabb::AABB)::Lar.LAR
-	getmodel(plane.matrix[1:3,1:3],plane.d,thickness,aabb)
+	getmodel(Lar.inv(plane.matrix[1:3,1:3]),plane.d,thickness,aabb)
 end
 
-function getmodel(rot_mat::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
+function getmodel(basis::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
 	verts,_ = getmodel(aabb)
 	center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
-	quota = rot_mat[:,3]*constant
+	quota = basis[:,3]*constant
 
-	position = center_model+(quota-Lar.dot(rot_mat[:,3],center_model)*rot_mat[:,3])
-	newverts = rot_mat'*verts
+	position = center_model+(quota-Lar.dot(basis[:,3],center_model)*basis[:,3])
+	newverts = basis'*verts
 	#extrema of newverts x e y
 	x_range = extrema(newverts[1,:])
 	y_range = extrema(newverts[2,:])
 
 	scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
-	volume = Volume(scale,position,rot_mat)
-	model = Common.getmodel(volume)
-	return model
+	volume = Volume(scale,position,Common.matrix2euler(basis))
+	return Common.getmodel(volume)
 end
 
 """
