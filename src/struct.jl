@@ -179,17 +179,19 @@ struct Plane
 	c::Float64
 	d::Float64
 
-	matrix::Matrix #matrice rototraslazione dal piano al piano cartesiano 2D
+	matrix::Matrix #::Matrix4 rototraslazione dal piano al piano cartesiano 2D
+	basis::Matrix #::Matrix3 base del piano
 
 	# Hessian form
 	function Plane(normal::Array{Float64,1},centroid::Array{Float64,1})
 		normal /= Lar.norm(normal)
 		a,b,c = normal
 		d = Lar.dot(normal,centroid)
-		rot = Lar.inv(Matrix(Common.orthonormal_basis(normal...)))
+		basis = Common.orthonormal_basis(normal...)
+		rot = Lar.inv(basis)
 		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
-		new(a,b,c,d,matrix)
+		new(a, b, c, d, matrix, basis)
 	end
 
 
@@ -197,10 +199,11 @@ struct Plane
 		normal = [a,b,c]
 		normal /= Lar.norm(normal)
 		centroid = normal*d
-		rot = Lar.inv(Matrix(orthonormal_basis(a,b,c)))
+		basis = orthonormal_basis(a,b,c)
+		rot = Lar.inv(basis)
 		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
-		new(a,b,c,d,matrix)
+		new(a, b, c, d, matrix, basis)
 	end
 
 	# described by two points and an axis orthogonal to normal
@@ -215,14 +218,14 @@ struct Plane
 		matrix = Common.matrix4(convert(Matrix,rot))
 		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-p1)
 
-		new(axis_z[1], axis_z[2], axis_z[3], d, matrix)
+		new(axis_z[1], axis_z[2], axis_z[3], d, matrix, basis)
 	end
 
 	function Plane(volume::Volume)
-		rot = Common.euler2matrix(volume.rotation...)
+		basis = Common.euler2matrix(volume.rotation...)
 		axis_z = rot[:,3]
-		matrix = Common.matrix4(convert(Matrix,rot'))
+		matrix = Common.matrix4(convert(Matrix,basis'))
 		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
-		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position), matrix)
+		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position), matrix, basis)
 	end
 end
