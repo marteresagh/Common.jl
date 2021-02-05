@@ -183,6 +183,7 @@ struct Plane
 
 	# Hessian form
 	function Plane(normal::Array{Float64,1},centroid::Array{Float64,1})
+		normal /= Lar.norm(normal)
 		a,b,c = normal
 		d = Lar.dot(normal,centroid)
 		rot = Lar.inv(Matrix(Common.orthonormal_basis(normal...)))
@@ -194,6 +195,7 @@ struct Plane
 
 	function Plane(a,b,c,d)
 		normal = [a,b,c]
+		normal /= Lar.norm(normal)
 		centroid = normal*d
 		rot = Lar.inv(Matrix(orthonormal_basis(a,b,c)))
 		matrix = Common.matrix4(rot)
