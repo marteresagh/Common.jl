@@ -185,7 +185,7 @@ struct Plane
 	function Plane(normal::Array{Float64,1},centroid::Array{Float64,1})
 		a,b,c = normal
 		d = Lar.dot(normal,centroid)
-		rot = Matrix(Common.orthonormal_basis(normal...))
+		rot = Lar.inv(Matrix(Common.orthonormal_basis(normal...)))
 		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
 		new(a,b,c,d,matrix)
@@ -195,7 +195,7 @@ struct Plane
 	function Plane(a,b,c,d)
 		normal = [a,b,c]
 		centroid = normal*d
-		rot = Matrix(orthonormal_basis(a,b,c))
+		rot = Lar.inv(Matrix(orthonormal_basis(a,b,c)))
 		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
 		new(a,b,c,d,matrix)
@@ -203,19 +203,13 @@ struct Plane
 
 	# described by two points and an axis orthogonal to normal
 	function Plane(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
-		axis = (p2-p1)/Lar.norm(p2-p1)
-		axis_z = Lar.cross(axis,axis_y)
-		@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
-		axis_z /= Lar.norm(axis_z)
-		axis_x = Lar.cross(axis_y,axis_z)
-		axis_x /= Lar.norm(axis_x)
+		basis = orthonormal_basis(p1, p2, axis_y)
+		axis_z = basis[:,3]
 
 		center_model = Common.centroid(hcat(p1,p2))
 		d = Lar.dot(axis_z,center_model)
 
-		rot = [axis_x'; axis_y'; axis_z']
-
-		@assert isapprox(Lar.det(rot_mat),1) "Basis orientation not right-handed"
+		rot = Lar.inv(basis)
 		matrix = Common.matrix4(convert(Matrix,rot))
 		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-p1)
 

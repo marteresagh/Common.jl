@@ -60,19 +60,12 @@ end
 Return volume model of `plane` with `thickness` described by two points, `p1` and `p2`, and an up vector, `axis_y`, limited in `aabb` and between the two points.
 """
 function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB)::Lar.LAR
-	axis = (p2-p1)/Lar.norm(p2-p1)
-	axis_z = Lar.cross(axis,axis_y)
-	@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
-	axis_z /= Lar.norm(axis_z)
-	axis_x = Lar.cross(axis_y,axis_z)
-	axis_x /= Lar.norm(axis_x)
+	rot_mat = orthonormal_basis(p1, p2, axis_y)
+	axis_x = rot_mat[:,1]
+	axis_y = rot_mat[:,2]
+	axis_z = rot_mat[:,3]
 
 	center_model = Common.centroid(hcat(p1,p2))
-
-	rot_mat = hcat(axis_x,axis_y,axis_z)
-
-	@assert isapprox(Lar.det(rot_mat),1) "Basis orientation not right-handed"
-
 	V,_ = getmodel(aabb)
 
 	dists_y = [Lar.dot(axis_y,V[:,i]) for i in 1:size(V,2)]
@@ -85,7 +78,6 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 
 	position = center_model-Lar.dot(rot_mat[:,2],center_model)*rot_mat[:,2]+Lar.dot(rot_mat[:,2],Common.centroid(V))*rot_mat[:,2]
 
-	volume = Volume(scale,position,rot_mat)
-	model = Common.getmodel(volume)
-	return model
+	volume = Volume(scale,position,Common.matrix2euler(rot_mat))
+	return Common.getmodel(volume)
 end

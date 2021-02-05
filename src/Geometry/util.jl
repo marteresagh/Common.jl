@@ -57,8 +57,27 @@ function orthonormal_basis(a,b,c)
 	u /= Lar.norm(u)
 	v /= Lar.norm(v)
 	w /= Lar.norm(w)
-	return [u';v';w'] # by row
+	return hcat(u,v,w) # by column
 end
+
+
+function orthonormal_basis(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
+	axis = (p2-p1)/Lar.norm(p2-p1)
+	axis_y /= Lar.norm(axis_y)
+	axis_z = Lar.cross(axis,axis_y)
+	@assert axis_z != [0.,0.,0.] "not a plane: $p1, $p2 collinear to $axis_y"
+	axis_z /= Lar.norm(axis_z)
+	axis_x = Lar.cross(axis_y,axis_z)
+	axis_x /= Lar.norm(axis_x)
+
+	rot = hcat(axis_x, axis_y, axis_z)
+
+	if Lar.det(rot)<0
+		rot[:,3] = -rot[:,3]
+	end
+	return rot
+end
+
 
 """
 matrix of rotation
