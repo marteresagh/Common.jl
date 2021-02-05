@@ -22,8 +22,7 @@ GL.VIEW([
 	GL.GLFrame
 ]);
 
-volume = Volume(2*rand(3),rand(3),2*pi*rand(3))
-@show volume.scale
+volume = Volume([1,1,0.1],rand(3),2*pi*rand(3))
 plane = Plane(volume)
 p_model = Common.getmodel(volume)
 
