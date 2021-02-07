@@ -37,7 +37,7 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	return V,EV
 end
 #
-# TODO da riprovare 
+# TODO da riprovare
 # """
 # 	DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
 #
