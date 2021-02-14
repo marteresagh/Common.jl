@@ -13,17 +13,20 @@ points = INPUT_PC.coordinates
 # plane fitting
 normal, centroid = Common.LinearFit(points)
 
-plane = Plane(normal, centroid)
+plane1 = Plane(normal, centroid)
 
 GL.VIEW([
-	GL.GLPoints(convert(Lar.Points,Common.apply_matrix(plane.matrix,points)[1:2,:]'),GL.COLORS[2]),
-	GL.GLFrame2
+	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[1]),
+	GL.GLPoints(convert(Lar.Points,Common.apply_matrix(plane1.matrix,points)'),GL.COLORS[4]),
+	GL.GLFrame
 ])
 
 # PCA
-centroid, R = Common.PCA(points)
+
+plane2 = Plane(points)
 
 GL.VIEW([
-	GL.GLPoints(convert(Lar.Points,Common.apply_matrix(Common.matrix4(R),points)[1:2,:]'),GL.COLORS[2]),
-	GL.GLFrame2
+	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[1]),
+	GL.GLPoints(convert(Lar.Points,Common.apply_matrix(plane2.matrix,points)'),GL.COLORS[4]),
+	GL.GLFrame
 ])
