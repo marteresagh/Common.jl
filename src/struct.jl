@@ -216,7 +216,7 @@ struct Plane
 
 		rot = Lar.inv(basis)
 		matrix = Common.matrix4(convert(Matrix,rot))
-		matrix[1:3,4] = Common.apply_matrix(convert(Matrix,matrix),-p1)
+		matrix[1:3,4] = Common.apply_matrix(matrix,-p1)
 
 		new(axis_z[1], axis_z[2], axis_z[3], d, matrix, basis)
 	end
@@ -228,4 +228,13 @@ struct Plane
 		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
 		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position), matrix, basis)
 	end
+
+	function Plane(points::Lar.Points)
+		centroid, basis = Common.PCA(points)
+		rot = Lar.inv(basis)
+		matrix = Common.matrix4(rot)
+		matrix[1:3,4] = Common.apply_matrix(matrix,-centroid)
+		new(basis[1,3],basis[2,3],basis[3,3], Lar.dot(centroid,basis[:,3]), matrix, basis)
+	end
+
 end

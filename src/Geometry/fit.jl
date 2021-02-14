@@ -1,3 +1,26 @@
+function PCA(points::Lar.Points)
+	npoints = size(points,2)
+	@assert npoints>=3 "PCA: at least 2 points needed"
+	centroid = Common.centroid(points)
+
+	C = zeros(3,3)
+	for i in 1:npoints
+		diff = points[:,i] - centroid
+		C += diff*diff'
+	end
+
+	#Lar.eigvals(C)
+	eigvectors = Lar.eigvecs(C)
+	R = eigvectors[:,[3,2,1]]
+	if Lar.det(R)<0
+		R[:,3]=-R[:,3]
+	end
+	R[:,1] /= Lar.norm(R[:,1])
+	R[:,2] /= Lar.norm(R[:,2])
+	R[:,3] /= Lar.norm(R[:,3])
+	return centroid, R
+end
+
 """
 	Fit_Line(points::Lar.Points) -> direction, centroid
 
