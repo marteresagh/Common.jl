@@ -5,10 +5,13 @@ module Common
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
 	using SparseArrays
-	using LightGraphs
 
+	using LightGraphs
 	using NearestNeighbors
+
 	using Delaunay
+	using QHull
+
 	using Statistics
 
 	using Base.Cartesian
@@ -30,7 +33,7 @@ module Common
 	include("Features/estimation.jl")
 	include("Features/neighbors.jl")
 	# geometry
-	include("Geometry/aabb.jl")
+	include("Geometry/boundingbox.jl")
 	include("Geometry/delaunay.jl")
 	include("Geometry/fit.jl")
 	include("Geometry/residual.jl")

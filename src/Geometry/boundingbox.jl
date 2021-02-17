@@ -74,3 +74,30 @@ function oriented_boundingbox(points::Lar.Points)
 	return Volume(extent,vcat(center...),Common.matrix2euler(R))
 
 end
+
+function ch_oriented_boundingbox(points)
+	R = nothing
+	volume_value_min = Inf
+	convex_hull = QHull.chull(convert(Lar.Points,points'))
+	for face in convex_hull.simplices
+		plane = Plane(points[:,face])
+		rotate_points = Common.apply_matrix(plane.matrix, points)
+		aabb = Common.boundingbox(rotate_points)
+		volume_value = (aabb.x_max-aabb.x_min)*(aabb.y_max-aabb.y_min)*(aabb.z_max-aabb.z_min)
+		if volume_value_min > volume_value
+			volume_value_min = volume_value
+			R = plane.basis
+		end
+	end
+
+	center_ = Common.centroid(points)
+
+	V = Common.apply_matrix(Common.matrix4(Lar.inv(R)),Common.apply_matrix(Lar.t(-center_...),points))
+	aabb = Common.boundingbox(V)
+
+	center_aabb = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
+	center = Common.apply_matrix(Common.matrix4(R),center_aabb) + center_
+	extent = [aabb.x_max - aabb.x_min,aabb.y_max - aabb.y_min, aabb.z_max - aabb.z_min]
+
+	return Volume(extent,vcat(center...),Common.matrix2euler(R))
+end

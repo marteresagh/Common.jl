@@ -1,50 +1,28 @@
 using Common
 using Visualization
+using FileManager
 
-function PCA(points::Lar.Points)
+n_points = 10000
+x = rand(1:10)*rand(n_points)
+y = rand(1:10)*rand(n_points)
+z = rand(1:10)*rand(n_points)
 
-    npoints = size(points,2)
-    @assert npoints>=3 "linefit: at least 2 points needed"
-    centroid = Common.centroid(points)
+points = vcat(x',y',z')
+rot = Lar.r(0,2*pi*rand(),0)*Lar.r(0,0,2*pi*rand())*Lar.r(2*pi*rand(),0,0)
+points = Common.apply_matrix(rot,points)
 
-    C = zeros(3,3)
-    for i in 1:npoints
-        diff = points[:,i] - centroid
-        C += diff*diff'
-    end
+cen = Common.centroid(points)
 
-    #Lar.eigvals(C)
-    eigvectors = Lar.eigvecs(C)
-    R = eigvectors[:,[3,2,1]]
-    if Lar.det(R)<0
-        R[:,3]=-R[:,3]
-    end
-    R[:,1] /= Lar.norm(R[:,1])
-    R[:,2] /= Lar.norm(R[:,2])
-    R[:,3] /= Lar.norm(R[:,3])
-    return centroid, R
-end
 
-function my_OrientedBB(points::Lar.Points)
+vol_old = Common.oriented_boundingbox(points)
+obb_model_old = getmodel(vol_old)
 
-	center_,R = PCA(points)
-
-	V = Common.apply_matrix(Common.matrix4(Lar.inv(R)),Common.apply_matrix(Lar.t(-center_...),points))
-	aabb = Common.boundingbox(V)
-
-	center_aabb = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
-	center = Common.apply_matrix(Common.matrix4(R),center_aabb) + center_
-	extent = [aabb.x_max - aabb.x_min,aabb.y_max - aabb.y_min, aabb.z_max - aabb.z_min]
-
-	return Volume(extent,vcat(center...),Common.matrix2euler(R))
-
-end
-
-##########à esempio
-
-M = Common.orthonormal_basis(1,1,1)
+vol = Common.ch_oriented_boundingbox(points)
+obb_model = getmodel(vol)
 
 GL.VIEW([
-	Visualization.helper_axis(Common.matrix4(M))...,
-	GL.GLAxis(GL.Point3d(-1,-1,-1),GL.Point3d(0,0,0))
+    GL.GLPoints(convert(Lar.Points,Common.apply_matrix(Lar.t(-cen...),points)')),
+    GL.GLGrid(Common.apply_matrix(Lar.t(-cen...),obb_model[1]),obb_model[2],GL.COLORS[2],1.0),
+	GL.GLGrid(Common.apply_matrix(Lar.t(-cen...),obb_model_old[1]),obb_model_old[2],GL.COLORS[3],1.0),
+    GL.GLFrame,
 ])
