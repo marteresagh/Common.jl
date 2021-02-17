@@ -1,8 +1,9 @@
 using Common
 using Visualization
 using FileManager
+using BenchmarkTools
 
-n_points = 10000
+n_points = 100000
 x = rand(1:10)*rand(n_points)
 y = rand(1:10)*rand(n_points)
 z = rand(1:10)*rand(n_points)
@@ -12,7 +13,6 @@ rot = Lar.r(0,2*pi*rand(),0)*Lar.r(0,0,2*pi*rand())*Lar.r(2*pi*rand(),0,0)
 points = Common.apply_matrix(rot,points)
 
 cen = Common.centroid(points)
-
 
 vol_old = Common.oriented_boundingbox(points)
 obb_model_old = getmodel(vol_old)

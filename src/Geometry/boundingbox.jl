@@ -101,3 +101,29 @@ function ch_oriented_boundingbox(points)
 
 	return Volume(extent,vcat(center...),Common.matrix2euler(R))
 end
+
+
+
+function basis_minimum_OBB_2D(points)
+	R = nothing
+	area_value_min = Inf
+	convex_hull = QHull.chull(convert(Lar.Points,points'))
+	for edge in convex_hull.simplices
+		x_axis,centroid = Common.LinearFit(points[:,edge])
+		y_axis = Lar.cross([x_axis...,0.],[0,0,1.])
+		y_axis/=Lar.norm(y_axis)
+		matrix = vcat(x_axis',y_axis[1:2]')
+		if Lar.det(matrix)<0
+			matrix = matrix[[2,1],:]
+		end
+		matrix = vcat(hcat(matrix,[0,0]),[0.,0.,1.]')
+		rotate_points = Common.apply_matrix(matrix, points)
+		aabb = Common.boundingbox(rotate_points)
+		area_value = (aabb.x_max-aabb.x_min)*(aabb.y_max-aabb.y_min)
+		if area_value_min > area_value
+			area_value_min = area_value
+			R = Lar.inv(matrix)
+		end
+	end
+	return R
+end

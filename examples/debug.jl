@@ -2,8 +2,9 @@ using Common
 using Visualization
 using FileManager
 
-# filename= "C:/Users/marte/Documents/GEOWEB/pointcloud_XZ_PLANE_SLICE_AT_QUOTE_15.4525_WITH_THICKNESS_0.05.las"
-filename = "C:/Users/marte/Documents/GEOWEB/wrapper_file/sezioni/sezione_AMPHI_z39_5cm.las"
+filename= "C:/Users/marte/Documents/GEOWEB/pointcloud_XZ_PLANE_SLICE_AT_QUOTE_15.4525_WITH_THICKNESS_0.05.las"
+
+filename = "C:/Users/marte/Documents/GEOWEB/wrapper_file/sezioni/Sezione_z250.las"
 INPUT_PC = FileManager.source2pc(filename,1)
 
 # GL.VIEW([
@@ -50,5 +51,19 @@ R = Test_rotazione(a,b,c,d,points)
 
 GL.VIEW([
 	GL.GLPoints(convert(Lar.Points,Common.apply_matrix(R,points)[1:2,:]'),GL.COLORS[2]),
+	GL.GLFrame2
+])
+
+
+normal,centroid = Common.LinearFit(points)
+plane = Plane(normal,centroid)
+points2D = Common.apply_matrix(plane.matrix,points)[1:2,:]
+R = Common.basis_minimum_OBB_2D(points2D)
+points2D_finali = Common.apply_matrix(Common.matrix4(Lar.inv(R))*plane.matrix,points)[1:2,:]
+
+GL.VIEW([
+	#GL.GLPoints(convert(Lar.Points,points2D'),GL.COLORS[1]),
+	GL.GLPoints(convert(Lar.Points,INPUT_PC.coordinates'),GL.COLORS[2]),
+	GL.GLPoints(convert(Lar.Points,points2D_finali'),GL.COLORS[12]),
 	GL.GLFrame2
 ])
