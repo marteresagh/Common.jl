@@ -20,7 +20,7 @@ end
 
 
 function makes_direct(g,s)
-	dg = LightGraphs.DiGraph(size(V,2))
+	dg = LightGraphs.DiGraph(nv(g))
 	parents = zeros(Int, nv(g))
 	parents[s] = s
 	seen = zeros(Bool, nv(g))
