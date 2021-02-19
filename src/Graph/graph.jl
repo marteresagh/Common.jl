@@ -19,12 +19,8 @@ function model2graph(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.Simp
 end
 
 
-function makes_direct(V,EV,s)
+function makes_direct(g,s)
 	dg = LightGraphs.DiGraph(size(V,2))
-	g = LightGraphs.SimpleGraph(size(V,2))
-	for ev in EV
-		add_edge!(g,ev[1],ev[2])
-	end
 	parents = zeros(Int, nv(g))
 	parents[s] = s
 	seen = zeros(Bool, nv(g))
