@@ -4,12 +4,15 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
+	import Lar.triangulate2d
+	
 	using SparseArrays
 
 	using LightGraphs
 	using NearestNeighbors
 
 	using Delaunay
+	using Triangulate
 	using QHull
 
 	using Statistics
@@ -27,6 +30,8 @@ module Common
 	include("struct.jl")
 	include("keyboard_event.jl")
 
+	# delaunay
+	include("Delaunay/delaunay.jl")
 	# features
 	include("Features/density.jl")
 	include("Features/double_verts.jl")
@@ -34,7 +39,6 @@ module Common
 	include("Features/neighbors.jl")
 	# geometry
 	include("Geometry/boundingbox.jl")
-	include("Geometry/delaunay.jl")
 	include("Geometry/fit.jl")
 	include("Geometry/residual.jl")
 	include("Geometry/rotations.jl")

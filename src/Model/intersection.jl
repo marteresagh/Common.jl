@@ -34,7 +34,7 @@ end
 
 """
 	AABBdetection(A::AABB,B::AABB) -> Bool
-	
+
 Compute collision detection of two AABB.
 """
 function AABBdetection(A::AABB,B::AABB)::Bool
@@ -138,6 +138,20 @@ end
 
 
 #--------------------
+
+function planes_intersect(a::Plane,b::Plane)
+	a_vec = [a.a,a.b,a.c]
+	b_vec = [b.a,b.b,b.c]
+
+	aXb_vec = Lar.cross(a_vec, b_vec)
+	aXb_vec /= Lar.norm(aXb_vec)
+	@show aXb_vec
+
+	A = vcat(a_vec', b_vec', aXb_vec')
+	d = reshape([a.d, b.d, 0.],3,1)
+	p_inter = A\d
+	return p_inter, aXb_vec # point, direction of line intersection
+end
 
 
 function lines_intersection(l1::Hyperplane,l2::Hyperplane)

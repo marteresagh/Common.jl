@@ -22,8 +22,6 @@ GL.VIEW([
 	GL.GLFrame2
 ])
 
-
-
 normal,centroid = Common.LinearFit(points)
 plane = Plane(normal,centroid)
 points2D = Common.apply_matrix(plane.matrix,points)[1:2,:]
@@ -34,5 +32,32 @@ GL.VIEW([
 	#GL.GLPoints(convert(Lar.Points,points2D'),GL.COLORS[1]),
 	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[2]),
 	GL.GLPoints(convert(Lar.Points,points2D_finali'),GL.COLORS[12]),
+	GL.GLFrame
+])
+
+
+## intersezioni tra piani
+function planes_intersect(a::Plane,b::Plane)
+	a_vec = [a.a,a.b,a.c]
+	b_vec = [b.a,b.b,b.c]
+
+	aXb_vec = Lar.cross(a_vec, b_vec)
+	aXb_vec /= Lar.norm(aXb_vec)
+	@show aXb_vec
+
+	A = vcat(a_vec', b_vec', aXb_vec')
+	d = reshape([a.d, b.d, 0.],3,1)
+	p_inter = A\d
+	return p_inter,  (p_inter + aXb_vec)
+end
+
+
+a, b = Plane(2, 1, 3, 4), Plane(3, -1, 4, 6)
+p1,p2 = planes_intersect(a, b)
+V = hcat([2,0,0],[9,1,-5])
+W = hcat(p1,p2)
+GL.VIEW([
+	GL.GLGrid(V,[[1,2]],GL.COLORS[1],1.0),
+	GL.GLGrid(W,[[1,2]],GL.COLORS[2],1.0),
 	GL.GLFrame
 ])
