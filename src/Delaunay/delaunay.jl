@@ -46,8 +46,8 @@ function LinearAlgebraicRepresentation.triangulate2d(V::Lar.Points, EV::Lar.Cell
     return innertriangles
 end
 
-
-triin=Triangulate.TriangulateIO()
-triin.pointlist=hcat(unique([ Cdouble[rand(1:raster)/raster, rand(1:raster)/raster] for i in 1:n])...)
-(triout, vorout)=triangulate("pcQ", triin)
-display(triout)
+#
+# triin=Triangulate.TriangulateIO()
+# triin.pointlist=hcat(unique([ Cdouble[rand(1:raster)/raster, rand(1:raster)/raster] for i in 1:n])...)
+# (triout, vorout)=triangulate("pcQ", triin)
+# display(triout)
