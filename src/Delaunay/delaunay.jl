@@ -20,7 +20,7 @@ end
 Delaunay triangulation of points in d-dimensional Euclidean space.
 Lar interface of Delaunay.jl.
 """
-function Lar.triangulate2d(V::Lar.points, EV::Lar.Cells)
+function LinearAlgebraicRepresentation.triangulate2d(V::Lar.Points, EV::Lar.Cells)
     # data for Constrained Delaunay Triangulation (CDT)
     points = convert(Array{Float64,2}, V')
 	points_map = Array{Int64,1}(collect(1:1:size(points)[1]))

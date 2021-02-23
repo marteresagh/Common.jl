@@ -4,8 +4,8 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-	import Lar.triangulate2d
-	
+	import LinearAlgebraicRepresentation.triangulate2d
+
 	using SparseArrays
 
 	using LightGraphs
