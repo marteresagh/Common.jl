@@ -20,7 +20,9 @@ function box_intersects_plane(box::Union{AABB,Volume}, normal::Array{Float64,1},
 			push!(vertexpolygon,pointint(i,j,lambda,allverteces))
 		end
 	end
-	return hcat(vertexpolygon...)
+
+	V_int = hcat(vertexpolygon...)
+	return Common.remove_double_verts(V_int, 2)[1]
 end
 
 

@@ -1,16 +1,8 @@
 """
-	DrawLines(line::Hyperplane, u=0.02)
+	DrawLines(lines::Array{Hyperplane,1})
 
 """
-function DrawLines(line::Hyperplane, u=0.02)
-	DrawLines([line], u)
-end
-
-"""
-	DrawLines(lines::Array{Hyperplane,1}, u=0.2)
-
-"""
-function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
+function DrawLines(lines::Array{Hyperplane,1})
 	out = Array{Lar.Struct,1}()
 	for line in lines
 		max_value = -Inf
@@ -26,8 +18,8 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 				min_value = value
 			end
 		end
-		p_min = line.centroid + (min_value - u)*line.direction
-		p_max = line.centroid + (max_value + u)*line.direction
+		p_min = line.centroid + (min_value)*line.direction
+		p_max = line.centroid + (max_value)*line.direction
 		V = hcat(p_min,p_max)
 		cell = (V,[[1,2]])
 		push!(out, Lar.Struct([cell]))
@@ -36,87 +28,61 @@ function DrawLines(lines::Array{Hyperplane,1}, u=0.2)
 	V,EV = Lar.struct2lar(out)
 	return V,EV
 end
-#
-# TODO da riprovare
-# """
-# 	DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
-#
-# """
-# function  DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing})
-# 	DrawPlanes([plane], AABB)
-# end
-#
-# """
-# 	DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing})
-#
-# """
-# function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing})
-# 	out = Array{Lar.Struct,1}()
-# 	bb = deepcopy(AABB)
-# 	for obj in planes
-# 		plane = Plane(obj.direction,obj.centroid)
-# 		points = obj.inliers.coordinates
-# 		if isnothing(AABB)
-# 			bb = Common.boundingbox(points)
-# 		end
-# 		points_flat = Common.apply_matrix(plane.matrix,points)
-# 		extrema_x = extrema(points_flat[1,:])
-# 		extrema_y = extrema(points_flat[2,:])
-# 		extrema_z = extrema(points_flat[3,:])
-# 		Vol = Volume([extrema_x[2]-extrema_x[1],extrema_y[2]-extrema_y[1],extrema_z[2]-extrema_z[1]],obj.centroid,Common.matrix2euler(Lar.inv(plane.matrix)))
-# 		#triangulate vertex projected in plane XY
-# 		V,EV,FV = getmodel(Vol)
-# 		# FV = Common.delaunay_triangulation(V[1:2,:])
-# 		cell = (V,sort.(FV))
-# 		push!(out, Lar.Struct([cell]))
-# 	end
-# 	out = Lar.Struct( out )
-# 	V,FV = Lar.struct2lar(out)
-# 	return V,FV
-# end
-#
-# #
-#
-"""
-"""
-function DrawPlanes(plane::Hyperplane, AABB::Union{AABB,Nothing}, u=0.2)
-	DrawPlanes([plane],AABB, u)
+function DrawLines(line::Hyperplane)
+	DrawLines([line])
 end
 
-function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.2)
+
+"""
+DrawPlanes
+"""
+function DrawPlanes(planes::Array{Hyperplane,1}; box_oriented=true)
 	out = Array{Lar.Struct,1}()
 	for obj in planes
-		if !isnothing(AABB)
-			V = box_intersects_plane(AABB,obj.direction,obj.centroid)
-		else
-			bb = Lar.boundingbox(obj.inliers.coordinates).+([-u,-u,-u],[u,u,u])
-			bb = Common.return_AABB(bb)
-			V = Common.box_intersects_plane(bb,obj.direction,obj.centroid)
-		end
-		#triangulate vertex projected in plane XY
 		plane = Plane(obj.direction,obj.centroid)
-		FV = Common.delaunay_triangulation(Common.apply_matrix(plane.matrix,V)[1:2,:])
-		cell = (V,sort.(FV))
+		if box_oriented
+			box = Common.ch_oriented_boundingbox(obj.inliers.coordinates)
+		else
+			box = Common.boundingbox(obj.inliers.coordinates)
+		end
+		cell = getmodel(plane,box)
 		push!(out, Lar.Struct([cell]))
 	end
 	out = Lar.Struct( out )
-	V,FV = Lar.struct2lar(out)
-	return V, FV
+	V, EV, FV = Lar.struct2lar(out)
+	return V, EV, FV
+end
+function DrawPlanes(plane::Hyperplane; box_oriented=true)
+	return DrawPlanes([plane],box_oriented=box_oriented)
 end
 
 
-function DrawPlanes(planes::Array{Plane,1}, AABB::AABB)
+function DrawPlanes(planes::Array{Hyperplane,1}, box::Union{AABB,Volume})
 	out = Array{Lar.Struct,1}()
-	for plane in planes
-		direction = [plane.a,plane.b,plane.c]
-		centroid = direction*plane.d
-		V = box_intersects_plane(AABB,direction,centroid)
-		#triangulate vertex projected in plane XY
-		FV = Common.delaunay_triangulation(Common.apply_matrix(plane.matrix,V)[1:2,:])
-		cell = (V,sort.(FV))
+	for obj in planes
+		plane = Plane(obj.direction,obj.centroid)
+		cell = getmodel(plane,box)
 		push!(out, Lar.Struct([cell]))
 	end
 	out = Lar.Struct( out )
-	V,FV = Lar.struct2lar(out)
-	return V, FV
+	V, EV, FV = Lar.struct2lar(out)
+	return V, EV, FV
+end
+function DrawPlanes(plane::Hyperplane, box::Union{AABB,Volume})
+	return DrawPlanes([plane],box)
+end
+
+
+function DrawPlanes(planes::Array{Plane,1}, box::Union{AABB,Volume})
+	out = Array{Lar.Struct,1}()
+	for plane in planes
+		cell = getmodel(plane, box)
+		push!(out, Lar.Struct([cell]))
+	end
+	out = Lar.Struct( out )
+	V, EV, FV = Lar.struct2lar(out)
+	return V, EV, FV
+end
+function DrawPlanes(plane::Plane, box::Union{AABB,Volume})
+	DrawPlanes([plane],box)
 end

@@ -80,3 +80,16 @@ function getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Floa
 	volume = Volume(scale,position,Common.matrix2euler(rot_mat))
 	return Common.getmodel(volume)
 end
+
+"""
+	 getmodel(plane::Plane,box::Union{AABB,Volume} ) -> model::Lar.LAR
+
+Return LAR model of `plane` intersecting `box`.
+"""
+function getmodel(plane::Plane,box::Union{AABB,Volume} )::Lar.LAR
+	V = Common.box_intersects_plane(box, plane.normal, plane.centroid)
+	points2D = Common.apply_matrix(plane.matrix,V)[1:2,:]
+	FV = Common.delaunay_triangulation(points2D)
+	EV = Common.get_boundary_edges(points2D,FV)
+	return V,EV,FV
+end
