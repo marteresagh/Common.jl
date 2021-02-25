@@ -87,11 +87,11 @@ function DrawPlanes(planes::Array{Hyperplane,1}, AABB::Union{AABB,Nothing}, u=0.
 	out = Array{Lar.Struct,1}()
 	for obj in planes
 		if !isnothing(AABB)
-			V = intersectAABBplane(AABB,obj.direction,obj.centroid)
+			V = box_intersects_plane(AABB,obj.direction,obj.centroid)
 		else
 			bb = Lar.boundingbox(obj.inliers.coordinates).+([-u,-u,-u],[u,u,u])
 			bb = Common.return_AABB(bb)
-			V = Common.intersectAABBplane(bb,obj.direction,obj.centroid)
+			V = Common.box_intersects_plane(bb,obj.direction,obj.centroid)
 		end
 		#triangulate vertex projected in plane XY
 		plane = Plane(obj.direction,obj.centroid)
@@ -110,7 +110,7 @@ function DrawPlanes(planes::Array{Plane,1}, AABB::AABB)
 	for plane in planes
 		direction = [plane.a,plane.b,plane.c]
 		centroid = direction*plane.d
-		V = intersectAABBplane(AABB,direction,centroid)
+		V = box_intersects_plane(AABB,direction,centroid)
 		#triangulate vertex projected in plane XY
 		FV = Common.delaunay_triangulation(Common.apply_matrix(plane.matrix,V)[1:2,:])
 		cell = (V,sort.(FV))

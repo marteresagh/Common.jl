@@ -1,29 +1,17 @@
 using Common
 using Visualization
 
-V = rand(2,10)
+normal = rand(3)
+centroid = rand(3)
 
-FV = Common.delaunay_triangulation(V)
+vol = Volume([5,3,2.],[0,0,0.],[pi/3,0,0])
+V_int = Common.box_intersects_plane(vol, normal, centroid)
 
-EV = Common.get_boundary_edges(V::Lar.Points,FV::Lar.Cells)
+V_p,FV_p = Common.DrawPlanes([Plane(normal,centroid)], Common.boundingbox(V))
 
+V,EV,FV = getmodel(vol)
 GL.VIEW([
-	GL.GLPoints(convert(Lar.Points,V'),GL.COLORS[6])
+	GL.GLPoints(convert(Lar.Points,V_int'))
 	GL.GLGrid(V,EV)
-])
-
-
-trias = Lar.triangulate2d(V,EV)
-
-
-# triin=Triangulate.TriangulateIO()
-# triin.pointlist=V
-# triin.segmentlist=hcat(EV...)
-# (triout, vorout)=triangulate("pcQ", triin)
-# trias = Array{Int64,1}[c[:] for c in eachcol(triout.trianglelist)]
-
-GL.VIEW([
-	GL.GLPoints(convert(Lar.Points,V'),GL.COLORS[6])
-	GL.GLGrid(V,convert(Array{Array{Int64,1},1}, collect(Set(Common.CAT(map(Common.FV2EV,trias)))))
-)
+	GL.GLGrid(V_p,FV_p)
 ])

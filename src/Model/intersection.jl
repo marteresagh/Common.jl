@@ -1,35 +1,27 @@
 """
-	intersectAABBplane(AABB::AABB, normal, centroid) -> Lar.Points
+	box_intersects_plane(AABB::AABB, normal, centroid) -> Lar.Points
 
 Return verteces of the intersection of a plane, described by `normal` and `centroid`, and an `AABB`.
 """
-function intersectAABBplane(AABB::AABB, normal, centroid)::Lar.Points
+function box_intersects_plane(box::Union{AABB,Volume}, normal::Array{Float64,1}, centroid::Array{Float64,1})
 
-    function pointint(i,j,lambda,allverteces)
-        return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
-    end
+	function pointint(i,j,lambda,allverteces)
+		return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
+	end
 
-	coordAABB = [AABB.x_min AABB.x_max; AABB.y_min AABB.y_max; AABB.z_min AABB.z_max ]
+	V,EV,FV = getmodel(box)
 
-    allverteces = []
-    for x in coordAABB[1,:]
-        for y in coordAABB[2,:]
-            for z in coordAABB[3,:]
-                push!(allverteces,[x,y,z])
-            end
-        end
-    end
+	allverteces = [c[:] for c in eachcol(V)]
 
-    vertexpolygon = []
-    for (i,j) in Lar.larGridSkeleton([1,1,1])(1)
-        lambda = (Lar.dot(normal,centroid)-Lar.dot(normal,allverteces[i]))/Lar.dot(normal,allverteces[j]-allverteces[i])
-        if lambda>=0 && lambda<=1
-            push!(vertexpolygon,pointint(i,j,lambda,allverteces))
-        end
-    end
-    return hcat(vertexpolygon...)
+	vertexpolygon = []
+	for (i,j) in EV
+		lambda = (Lar.dot(normal,centroid)-Lar.dot(normal,allverteces[i]))/Lar.dot(normal,allverteces[j]-allverteces[i])
+		if lambda>=0 && lambda<=1
+			push!(vertexpolygon,pointint(i,j,lambda,allverteces))
+		end
+	end
+	return hcat(vertexpolygon...)
 end
-
 
 
 """
