@@ -151,3 +151,18 @@ end
 function lines_intersection(l1::Hyperplane,l2::Hyperplane)
 
 end
+
+function models_intersection(V,EV,FV)
+	copEV = Lar.coboundary_0(EV::Lar.Cells);
+	copFE = Lar.coboundary_1(V, FV::Lar.Cells, EV::Lar.Cells);
+	W = convert(Lar.Points, V');
+
+	rV, rcopEV, rcopFE = Lar.Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
+
+	triangulated_faces = Lar.triangulate(rV, [rcopEV, rcopFE]);
+	FVs = convert(Array{Lar.Cells}, triangulated_faces);
+	indx = findall(x->x==0, length.(FVs))
+	deleteat!(FVs, indx...)
+
+	V = convert(Lar.Points, rV');
+return V, FVs
