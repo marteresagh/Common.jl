@@ -164,4 +164,5 @@ function models_intersection(V,EV,FV)
 	deleteat!(FVs, indx...)
 
 	V = convert(Lar.Points, rV');
-return V, FVs
+	return V, FVs
+end
