@@ -139,7 +139,6 @@ function planes_intersect(a::Plane,b::Plane)
 
 	aXb_vec = Lar.cross(a_vec, b_vec)
 	aXb_vec /= Lar.norm(aXb_vec)
-	@show aXb_vec
 
 	A = vcat(a_vec', b_vec', aXb_vec')
 	d = reshape([a.d, b.d, 0.],3,1)
