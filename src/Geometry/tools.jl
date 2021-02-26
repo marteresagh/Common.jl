@@ -62,7 +62,7 @@ function DrawPlanes(planes::Array{Hyperplane,1}, box::Union{AABB,Volume})
 	for obj in planes
 		plane = Plane(obj.direction,obj.centroid)
 		cell = getmodel(plane,box)
-		push!(out, Lar.Struct([cell]))
+		push!(out, Lar.Struct([cell])) # triangles cells
 	end
 	out = Lar.Struct( out )
 	V, EV, FV = Lar.struct2lar(out)
@@ -77,7 +77,7 @@ function DrawPlanes(planes::Array{Plane,1}, box::Union{AABB,Volume})
 	out = Array{Lar.Struct,1}()
 	for plane in planes
 		cell = getmodel(plane, box)
-		push!(out, Lar.Struct([cell]))
+		push!(out, Lar.Struct([cell])) # triangles cells
 	end
 	out = Lar.Struct( out )
 	V, EV, FV = Lar.struct2lar(out)
@@ -96,7 +96,7 @@ function DrawPatches(planes::Array{Plane,1}, boxes::Array{Union{AABB,Volume},1})
 		plane = planes[i]
 		box = boxes[i]
 		V,EV,FV = getmodel(plane, box)
-		push!(out, Lar.Struct([(V,EV, union(FV...))]))
+		push!(out, Lar.Struct([(V,EV, union(FV...))])) # unique cells
 	end
 	out = Lar.Struct( out )
 	V, EV, FV = Lar.struct2lar(out)
