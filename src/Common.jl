@@ -42,7 +42,6 @@ module Common
 	include("Geometry/fit.jl")
 	include("Geometry/residual.jl")
 	include("Geometry/rotations.jl")
-	include("Geometry/tools.jl")
 	include("Geometry/util.jl")
 	# graph
 	include("Graph/boundary.jl")
@@ -50,6 +49,8 @@ module Common
 	# model
 	include("Model/getmodel.jl")
 	include("Model/intersection.jl")
+	# tools
+	include("Tools/tools.jl")
 
 	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
 			monitorInput, flushprintln, getmodel, #funs

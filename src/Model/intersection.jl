@@ -160,8 +160,9 @@ function models_intersection(V,EV,FV)
 
 	triangulated_faces = Lar.triangulate(rV, [rcopEV, rcopFE]);
 	FVs = convert(Array{Lar.Cells}, triangulated_faces);
+
 	indx = findall(x->x==0, length.(FVs))
-	deleteat!(FVs, indx...)
+	deleteat!(FVs, indx)
 
 	V = convert(Lar.Points, rV');
 	return V, FVs

@@ -90,13 +90,13 @@ end
 """
 Draw linear patches
 """
-function DrawPatches(planes::Array{Plane,1}, boxes::Array{Union{AABB,Volume},1})
+function DrawPatches(planes::Array{Plane,1}, boxes::Union{Array{AABB,1},Array{Volume,1}})
 	out = Array{Lar.Struct,1}()
 	for i in 1:length(planes)
 		plane = planes[i]
 		box = boxes[i]
 		V,EV,FV = getmodel(plane, box)
-		push!(out, Lar.Struct([(V,EV, union(FV...))])) # unique cells
+		push!(out, Lar.Struct([(V,EV,[union(FV...)])])) # unique cells
 	end
 	out = Lar.Struct( out )
 	V, EV, FV = Lar.struct2lar(out)
