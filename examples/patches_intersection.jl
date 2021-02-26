@@ -12,6 +12,7 @@ z = Plane([1,0,0.],6*rand(3))
 aabb = AABB(10,-10,10,-10,10,-10)
 
 planes = [p,q,r,s,t,u,v,z]
+
 aabbs = fill(aabb,length(planes))
 
 rV,rEV,rFV = Common.DrawPatches(planes, aabbs)
