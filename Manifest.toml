@@ -256,9 +256,9 @@ deps = ["Libdl"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [[LinearAlgebraicRepresentation]]
-deps = ["DataStructures", "Distributed", "IntervalTrees", "LinearAlgebra", "NearestNeighbors", "Revise", "SparseArrays", "Triangle"]
-git-tree-sha1 = "c84a56e8f348b23da20f2b516ff4ff25c43c3ab3"
-repo-rev = "master"
+deps = ["DataStructures", "Distributed", "IntervalTrees", "LinearAlgebra", "NearestNeighbors", "SparseArrays", "Triangle"]
+git-tree-sha1 = "9ed5600a0a50b497155fb48f18eee0aa5c7ceb83"
+repo-rev = "a64be52c3708a6697cffbb43c7c4825997e8ea77"
 repo-url = "https://github.com/cvdlab/LinearAlgebraicRepresentation.jl"
 uuid = "95167b0c-186a-594b-a231-52369c6de044"
 version = "1.0.0"
