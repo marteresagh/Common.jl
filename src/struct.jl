@@ -218,7 +218,7 @@ struct Plane
 		d = Lar.dot(axis_z,center_model)
 
 		rot = Lar.inv(basis)
-		matrix = Common.matrix4(convert(Matrix,rot))
+		matrix = Common.matrix4(rot)
 		matrix[1:3,4] = Common.apply_matrix(matrix,-p1)
 
 		new(axis_z[1], axis_z[2], axis_z[3], d,[axis_z[1], axis_z[2], axis_z[3]],center_model, matrix, basis)
@@ -227,7 +227,7 @@ struct Plane
 	function Plane(volume::Volume)
 		basis = Common.euler2matrix(volume.rotation...)
 		axis_z = basis[:,3]
-		matrix = Common.matrix4(convert(Matrix,basis'))
+		matrix = Common.matrix4(permutedims(basis))
 		matrix[1:3,4] = Common.apply_matrix(matrix,-volume.position)
 		new(axis_z[1], axis_z[2], axis_z[3], Lar.dot(axis_z,volume.position),[axis_z[1], axis_z[2], axis_z[3]],volume.position, matrix, basis)
 	end

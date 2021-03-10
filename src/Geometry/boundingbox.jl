@@ -78,7 +78,7 @@ end
 function ch_oriented_boundingbox(points)
 	R = nothing
 	volume_value_min = Inf
-	convex_hull = QHull.chull(convert(Lar.Points,points'))
+	convex_hull = QHull.chull(permutedims(points))
 	for face in convex_hull.simplices
 		plane = Plane(points[:,face])
 		rotate_points = Common.apply_matrix(plane.matrix, points)
@@ -107,7 +107,7 @@ end
 function basis_minimum_OBB_2D(points)
 	R = nothing
 	area_value_min = Inf
-	convex_hull = QHull.chull(convert(Lar.Points,points'))
+	convex_hull = QHull.chull(permutedims(points))
 	for edge in convex_hull.simplices
 		x_axis,centroid = Common.LinearFit(points[:,edge])
 		y_axis = Lar.cross([x_axis...,0.],[0,0,1.])

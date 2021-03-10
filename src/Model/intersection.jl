@@ -147,14 +147,41 @@ function planes_intersect(a::Plane,b::Plane)
 end
 
 
-function lines_intersection(l1::Hyperplane,l2::Hyperplane)
-
+function lines_intersection(line1::Hyperplane,line2::Hyperplane)
+	l1 = [line1.centroid,line1.centroid+line1.direction]
+	l2 = [line2.centroid,line2.centroid+line2.direction]
+	return lines_intersection(l1,l2)
 end
 
-function models_intersection(V,EV,FV)
-	copEV = Lar.coboundary_0(EV::Lar.Cells);
-	copFE = Lar.coboundary_1(V, FV::Lar.Cells, EV::Lar.Cells);
-	W = convert(Lar.Points, V');
+
+function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{Float64,1},1})
+	# line = [[x1,y1],[x2,y2]] start_point, end_point
+	#http://www.pdas.com/lineint.html
+	x1,y1,x2,y2 = vcat(line1...)
+	x3,y3,x4,y4 = vcat(line2...)
+
+	a1 = y2-y1;
+	b1 = x1-x2;
+	c1 = x2*y1 - x1*y2;  #{ a1*x + b1*y + c1 = 0 is line 1 }
+
+	a2 = y4-y3;
+	b2 = x3-x4;
+	c2 = x4*y3 - x3*y4;  #{ a2*x + b2*y + c2 = 0 is line 2 }
+
+	denom = a1*b2 - a2*b1;
+	if denom == 0
+		return nothing
+	end
+
+	x = (b1*c2 - b2*c1)/denom;
+	y = (a2*c1 - a1*c2)/denom;
+	return [x,y]
+end
+
+function models_intersection(V::Lar.Points,EV::Lar.Cells,FV::Lar.Cells)
+	copEV = Lar.coboundary_0(EV)
+	copFE = Lar.coboundary_1(V, FV, EV)
+	W = permutedims(V)
 
 	rV, rcopEV, rcopFE = Lar.Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
 
@@ -164,6 +191,6 @@ function models_intersection(V,EV,FV)
 	indx = findall(x->x==0, length.(FVs))
 	deleteat!(FVs, indx)
 
-	V = convert(Lar.Points, rV');
+	V = permutedims(rV)
 	return V, FVs
 end

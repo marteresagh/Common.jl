@@ -7,7 +7,7 @@ Lar interface of Delaunay.jl.
 function delaunay_triangulation(points::Lar.Points)::Lar.Cells
     centroid = Common.centroid(points)
     T = Common.apply_matrix(Lar.t(-centroid...),points)
-    V = convert(Lar.Points,T')
+    V = permutedims(T)
     mesh = delaunay(V);
     DT = [mesh.simplices[c,:] for c in 1:size(mesh.simplices,1)]
     return sort.(DT)
@@ -36,7 +36,7 @@ end
 """
 function LinearAlgebraicRepresentation.triangulate2d(V::Lar.Points, EV::Lar.Cells)
     # data for Constrained Delaunay Triangulation (CDT)
-    points = convert(Array{Float64,2}, V')
+    points = permutedims(V)
 	# points_map = Array{Int64,1}(collect(1:1:size(points)[1]))
     # edges_list = convert(Array{Int64,2}, hcat(EV...)')
     # edge_boundary = [true for k=1:size(edges_list,1)] ## dead code !!
