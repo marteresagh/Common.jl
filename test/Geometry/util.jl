@@ -16,13 +16,6 @@
 		@test Common.matchcolumn(a,B) == 1
 	end
 
-	@testset "matrix-euler" begin
-		angles = [0,pi/4,pi/2]
-		M = Common.euler2matrix(angles...)
-		euler = Common.matrix2euler(M)
-		@test euler ≈ angles
-	end
-
 	@testset "orthonormal basis" begin
 		versore = [-0.8118179363447104, -0.6121680290248144, 0.6306343699009158]
 		M = Common.orthonormal_basis(versore...)

@@ -1,7 +1,7 @@
 """
 AABB
 """
-function return_AABB(aabb)
+function return_AABB(aabb)::AABB
 	#aabb = ([x_min,y_min,z_min],[x_max,y_max,z_max])
 	bb = [[a,b]  for (a,b) in zip(aabb[2],aabb[1])]
 	return AABB(vcat(bb...)...)
@@ -51,7 +51,7 @@ end
 
 Check if point `p` is in a `aabb`.
 """
-function isinbox(aabb::AABB,p::Array{Float64,1})
+function isinbox(aabb::AABB,p::Array{Float64,1})::Bool
 	return (  p[1]>=aabb.x_min && p[1]<=aabb.x_max &&
 			  p[2]>=aabb.y_min && p[2]<=aabb.y_max &&
 			   p[3]>=aabb.z_min && p[3]<=aabb.z_max )
@@ -59,9 +59,9 @@ end
 
 
 """
-Oriented Bounding Box
+	oriented_boundingbox(points::Lar.Points)
 """
-function oriented_boundingbox(points::Lar.Points)
+function oriented_boundingbox(points::Lar.Points)::Volume
 	center_,R = Common.PCA(points)
 
 	V = Common.apply_matrix(Common.matrix4(Lar.inv(R)),Common.apply_matrix(Lar.t(-center_...),points))
@@ -75,11 +75,14 @@ function oriented_boundingbox(points::Lar.Points)
 
 end
 
-function ch_oriented_boundingbox(points)
+"""
+	ch_oriented_boundingbox(points::Lar.Points)
+"""
+function ch_oriented_boundingbox(points::Lar.Points)::Volume
 	R = nothing
 	volume_value_min = Inf
 	convex_hull = QHull.chull(permutedims(points))
-	for face in convex_hull.simplices
+	for face in convex_hull.simplices # TODO non per ogni faccia triangolare ma per ogni faccia planare
 		plane = Plane(points[:,face])
 		rotate_points = Common.apply_matrix(plane.matrix, points)
 		aabb = Common.boundingbox(rotate_points)
@@ -103,8 +106,10 @@ function ch_oriented_boundingbox(points)
 end
 
 
-
-function basis_minimum_OBB_2D(points)
+"""
+	basis_minimum_OBB_2D(points::Lar.Points)
+"""
+function basis_minimum_OBB_2D(points::Lar.Points)
 	R = nothing
 	area_value_min = Inf
 	convex_hull = QHull.chull(permutedims(points))
