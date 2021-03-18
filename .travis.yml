@@ -1,0 +1,18 @@
+language: julia
+os:
+  - osx
+julia:
+  - 1.4
+branches:
+  only:
+    - master
+notifications:
+  email: false
+jobs:
+  include:
+    - stage: "Test"
+      julia: 1.4
+      os: osx
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/cvdlab/LinearAlgebraicRepresentation.jl")); Pkg.instantiate();  Pkg.add(PackageSpec(path=pwd()))'
+      after_success: skip
