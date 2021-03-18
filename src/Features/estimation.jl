@@ -1,8 +1,7 @@
 
 """
-#TODO
+	compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 """
-#TODO migliorare la procedura
 function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 	kdtree = Common.KDTree(points)
 	normals = zeros(size(points))
@@ -14,13 +13,12 @@ function compute_normals(points::Lar.Points, threshold::Float64, k::Int64)
 			normal,_ = Common.LinearFit(points[:,N])
 			normals[:,i] = normal
 		catch y
-			
+
 		end
 
 	end
 	return normals
 end
-
 
 
 """

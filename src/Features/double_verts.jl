@@ -3,7 +3,7 @@
 
 Remove double vertces and return the new set of verteces and list of indices.
 """
-@generated function remove_double_verts(A::AbstractArray{T,2}, dim::Int) where T
+@generated function remove_double_verts(A::AbstractArray{T,2}, dim=2::Int) where T
 	quote
         1 <= dim <= 2 || return copy(A)
 
