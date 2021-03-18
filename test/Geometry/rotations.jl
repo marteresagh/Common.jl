@@ -5,9 +5,9 @@
 		euler = Common.matrix2euler(rotation)
 		@test euler ≈ [pi/3, 0, 0]
 
-		rotation = Lar.r(0, pi/4, 0)
+		rotation = Lar.r(0, pi/2, 0)
 		euler = Common.matrix2euler(rotation)
-		@test euler ≈ [0, pi/4, 0]
+		@test euler ≈ [0, pi/2, 0]
 
 		rotation = Lar.r(0, 0, pi/12)
 		euler = Common.matrix2euler(rotation)
