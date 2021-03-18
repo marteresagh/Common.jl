@@ -52,23 +52,23 @@
 		end
 	end
 
-	@testset "oriented_boundingbox" begin
-		V = [1. 2. 1. 2. 1. 2. 1. 2.;
-			1. 1. 2. 2. 1. 1. 2. 2.;
-			1. 1. 1. 1. 5. 5. 5. 5.]
-
-		obb = Common.ch_oriented_boundingbox(V)
-		@test obb.scale == [4.096024004965141, 1.5112539678134782, 1.0]
-		@test obb.position == [1.5, 1.5, 3.0]
-		@test obb.rotation ==  [1.5707963267948966, 0.0, 1.4404951309212262]
-
-		obb2 = Common.oriented_boundingbox(V)
-		@test obb2.scale == [4.0, 1.0, 1.0]
-		@test obb2.position == [1.5, 1.5, 3.0]
-		@test obb2.rotation == [0.0, -1.5707963267948966, 0.0]
-
-		# TODO da rivedere ch_oriented il volume non è proprio quello minimo che mi aspetto
-		#vol1 = prod(obb.scale)
-		#vol2 = prod(obb2.scale)
-	end
+	# @testset "oriented_boundingbox" begin
+	# 	V = [1. 2. 1. 2. 1. 2. 1. 2.;
+	# 		1. 1. 2. 2. 1. 1. 2. 2.;
+	# 		1. 1. 1. 1. 5. 5. 5. 5.]
+	#
+	# 	obb = Common.ch_oriented_boundingbox(V)
+	# 	@test obb.scale == [4.096024004965141, 1.5112539678134782, 1.0]
+	# 	@test obb.position == [1.5, 1.5, 3.0]
+	# 	@test obb.rotation ==  [1.5707963267948966, 0.0, 1.4404951309212262]
+	#
+	# 	obb2 = Common.oriented_boundingbox(V)
+	# 	@test obb2.scale == [4.0, 1.0, 1.0]
+	# 	@test obb2.position == [1.5, 1.5, 3.0]
+	# 	@test obb2.rotation == [0.0, -1.5707963267948966, 0.0]
+	#
+	# 	# TODO da rivedere ch_oriented il volume non è proprio quello minimo che mi aspetto
+	# 	#vol1 = prod(obb.scale)
+	# 	#vol2 = prod(obb2.scale)
+	# end
 end
