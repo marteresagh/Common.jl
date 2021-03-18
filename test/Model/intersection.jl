@@ -57,5 +57,5 @@
 			@test Common.modelsdetection(model,octree) == 2
 		end
 	end
-	
+
 end
