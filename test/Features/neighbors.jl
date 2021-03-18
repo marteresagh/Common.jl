@@ -20,8 +20,8 @@
                     0.0 5.0 2.0 0.0 0.0 0.0 0.0 7.0 0.0 4.0 ]
 
         given_seeds = [  0.2 1.0 2.0 3.0 ;
-                        1.1 0.2 0.1 0.1 ;
-                        0.0 5.1 2.1 0.0  ]
+                         1.1 0.2 0.1 0.1 ;
+                         0.0 5.1 2.1 0.0  ]
 
         seeds = Common.consistent_seeds(PointCloud(points)).([c[:] for c in eachcol(given_seeds)])
 
