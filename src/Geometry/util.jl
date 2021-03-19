@@ -29,7 +29,7 @@ function apply_matrix(affineMatrix::Matrix, V::Lar.Points)
 end
 
 function apply_matrix(affineMatrix, V::Array{Float64,1})
-	T = reshape(V,3,1)
+	T = reshape(V,length(V),1)
 	return apply_matrix(affineMatrix, T)
 end
 
