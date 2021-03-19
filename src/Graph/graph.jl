@@ -1,3 +1,6 @@
+"""
+	model2graph_edge2edge(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.SimpleGraph{Int64}
+"""
 function model2graph_edge2edge(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.SimpleGraph{Int64}
     M1 = Lar.characteristicMatrix(EV)
 	EE = (M1*M1').%2
@@ -9,7 +12,9 @@ function model2graph_edge2edge(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleG
 	return graph
 end
 
-
+"""
+	model2graph(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.SimpleGraph{Int64}
+"""
 function model2graph(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.SimpleGraph{Int64}
 	graph = SimpleGraph(size(V,2))
 	for ev in EV
@@ -18,7 +23,9 @@ function model2graph(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.Simp
 	return graph
 end
 
-
+"""
+	model2graph(V::Lar.Points,EV::Lar.Cells)::LightGraphs.SimpleGraphs.SimpleGraph{Int64}
+"""
 function makes_direct(g,s)
 	dg = LightGraphs.DiGraph(nv(g))
 	parents = zeros(Int, nv(g))
