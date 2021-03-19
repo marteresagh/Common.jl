@@ -26,6 +26,11 @@ module Common
 		flush(stdout)
 	end
 
+	function flushprint(x...)
+		print(join(x, " ")...)
+		flush(stdout)
+	end
+
 	# include struct
 	include("struct.jl")
 	include("keyboard_event.jl")
