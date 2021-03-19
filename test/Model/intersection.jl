@@ -92,4 +92,23 @@
 		end
 	end
 
+	@testset "planes_intersection" begin
+		a = Plane(1.,0.,0.,0.)
+		b = Plane(0.,0.,1.,0.)
+		centroid,direction = Common.planes_intersection(a,b)
+		@test direction == [0.,-1.,0.]
+		@test centroid == [0.,0.,0.]
+	end
+
+	@testset "lines_intersection" begin
+		line1 = Hyperplane([1.,0.],[2.,0.])
+		line2 = Hyperplane([0.,1.],[0.,3])
+		p = Common.lines_intersection(line1,line2)
+		@test p == [0.,0.]
+
+		line1 = Hyperplane([1.,0.],[2.,0.])
+		line2 = Hyperplane([1.,0.],[0.,3])
+		p = Common.lines_intersection(line1,line2)
+		@test isnothing(p)
+	end
 end

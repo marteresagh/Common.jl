@@ -133,7 +133,7 @@ end
 
 #--------------------
 
-function planes_intersect(a::Plane,b::Plane)
+function planes_intersection(a::Plane,b::Plane)
 	a_vec = [a.a,a.b,a.c]
 	b_vec = [b.a,b.b,b.c]
 
@@ -143,7 +143,7 @@ function planes_intersect(a::Plane,b::Plane)
 	A = vcat(a_vec', b_vec', aXb_vec')
 	d = reshape([a.d, b.d, 0.],3,1)
 	p_inter = A\d
-	return p_inter, aXb_vec # point, direction of line intersection
+	return Lar.approxVal(8).(reshape(p_inter,3)), aXb_vec # point, direction of line intersection
 end
 
 
@@ -177,6 +177,8 @@ function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{
 	y = (a2*c1 - a1*c2)/denom;
 	return [x,y]
 end
+
+
 
 function models_intersection(V::Lar.Points,EV::Lar.Cells,FV::Lar.Cells)
 	copEV = Lar.coboundary_0(EV)
