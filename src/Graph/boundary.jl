@@ -49,7 +49,7 @@ function get_boundary_points(V::Lar.Points,EV::Lar.Cells)
 end
 
 function get_boundary_faces(V::Lar.Points,CV::Lar.Cells)
-	FV = convert(Array{Array{Int64,1},1}, collect(Set(cat(map(CV2FV,CV)))))
+	FV = convert(Array{Array{Int64,1},1}, collect(Set(CAT(map(CV2FV,CV)))))
 
 	M_2 = K(FV)
 	M_3 = K(CV)
