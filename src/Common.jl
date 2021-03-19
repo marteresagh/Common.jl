@@ -58,6 +58,6 @@ module Common
 	include("Tools/tools.jl")
 
 	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
-			monitorInput, flushprintln, getmodel, #funs
+			monitorInput, flushprintln, flushprint, getmodel, #funs
 			NearestNeighbors, Statistics, Lar, LightGraphs #modules
 end # module
