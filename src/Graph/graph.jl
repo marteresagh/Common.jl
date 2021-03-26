@@ -70,14 +70,15 @@ end
 
 
 """
-function biconnected_comps(g)
+function biconnected_comps(V,EV)
+	g = model2graph(V,EV)
+	sort_EV = sort.(EV)
 	gs = LightGraphs.biconnected_components(g)
 	comps = Array{Int64,1}[]
 	for bic in gs
 		comp = Int64[]
 		for edge in bic
-			union!(comp,edge.dst)
-			union!(comp,edge.src)
+			union!(comp,findall(x->x==[edge.src,edge.dst],sort_EV)[1])
 		end
 		push!(comps,comp)
 	end
