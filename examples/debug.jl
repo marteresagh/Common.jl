@@ -12,18 +12,5 @@ GL.VIEW([
 g = Common.model2graph(V,EV)
 
 gs = LightGraphs.biconnected_components(g)
-function bic_comps(g)
-	gs = LightGraphs.biconnected_components(g)
-	comps = Array{Int64,1}[]
-	for bic in gs
-		comp = Int64[]
-		for edge in bic
-			union!(comp,edge.dst)
-			union!(comp,edge.src)
-		end
-		push!(comps,comp)
-	end
-	return comps
-end
 
-comps = bic_comps(g)
+comps = Common.biconnected_comps(g)
