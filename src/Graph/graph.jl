@@ -64,3 +64,22 @@ function makes_direct(g,s)
 	end
 	return dg
 end
+
+"""
+	biconnected_comps(g)
+
+
+"""
+function biconnected_comps(g)
+	gs = LightGraphs.biconnected_components(g)
+	comps = Array{Int64,1}[]
+	for bic in gs
+		comp = Int64[]
+		for edge in bic
+			union!(comp,edge.dst)
+			union!(comp,edge.src)
+		end
+		push!(comps,comp)
+	end
+	return comps
+end
