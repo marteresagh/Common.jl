@@ -33,8 +33,7 @@ function get_boundary_edges(V::Lar.Points,FV::Lar.Cells)
 
 	S1 = sum(∂_2,dims=2)
 
-	inner = [k for k=1:length(S1) if S1[k]==2]
-	outer = setdiff(collect(1:length(EV)), inner)
+	outer = [k for k=1:length(S1) if S1[k]==1]
 	return EV[outer]
 end
 
@@ -43,8 +42,7 @@ function get_boundary_points(V::Lar.Points,EV::Lar.Cells)
 
 	S1 = sum(M_2',dims=2)
 
-	inner = [k for k=1:length(S1) if S1[k]==2]
-	outer = setdiff(union(EV...), inner)
+	outer = [k for k=1:length(S1) if S1[k]==1]
 	return outer
 end
 
