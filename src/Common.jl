@@ -4,7 +4,7 @@ module Common
 
 	using LinearAlgebraicRepresentation
 	Lar = LinearAlgebraicRepresentation
-	import LinearAlgebraicRepresentation.triangulate2d
+	# import LinearAlgebraicRepresentation.triangulate2d
 
 	using SparseArrays
 
