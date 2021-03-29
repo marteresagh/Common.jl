@@ -10,7 +10,9 @@ GL.VIEW([
 ]);
 
 g = Common.model2graph(V,EV)
-
+graph = Common.model2graph_edge2edge(P,EV)
 gs = LightGraphs.biconnected_components(g)
 
-comps = Common.biconnected_comps(g)
+comps = Common.biconnected_comps(V,EV)
+
+Lar.biconnectedComponent((V,EV))
