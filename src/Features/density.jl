@@ -59,3 +59,20 @@ function estimate_threshold(points::Lar.Points, k::Int64)
 	threshold = mu + rho
 	return threshold
 end
+
+"""
+	point_cloud_distance(source, target)
+
+Computes for each point in the source point cloud the distance to the closest point in the target point cloud.
+"""
+function point_cloud_distance(source::PointCloud, target::PointCloud)
+	S = source.coordinates
+	T = target.coordinates
+	return point_cloud_distance(S,T)
+end
+
+function point_cloud_distance(source::Lar.Points, target::Lar.Points)
+	kdtree = KDTree(target)
+	idxs, dists = NearestNeighbors.nn(kdtree, source)
+	return idxs,dists
+end

@@ -15,4 +15,15 @@ gs = LightGraphs.biconnected_components(g)
 
 comps = Common.biconnected_comps(V,EV)
 
-Lar.biconnectedComponent((V,EV))
+source = rand(3,10)
+
+target = rand(3,10).+[1,0,0]
+
+idxs, dists = Common.point_cloud_distance(source::Lar.Points, target::Lar.Points)
+
+min(dists...)
+GL.VIEW([
+	GL.GLPoints(permutedims(source),GL.COLORS[1])
+	GL.GLPoints(permutedims(target),GL.COLORS[2])
+	GL.GLFrame2
+]);
