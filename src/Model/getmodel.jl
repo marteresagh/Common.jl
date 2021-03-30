@@ -37,12 +37,12 @@ function getmodel(plane::Plane, thickness::Float64, aabb::AABB)::Lar.LAR
 	getmodel(Lar.inv(plane.matrix[1:3,1:3]),plane.d,thickness,aabb)
 end
 
-function getmodel(basis::Matrix, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
+function getmodel(basis::Matrix, constant::Float64, thickness::Float64, aabb::AABB; new_origin = [0.0,0.0,0.0]::Array{Float64,1})::Lar.LAR
 	verts,_ = getmodel(aabb)
 	center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
 	quota = basis[:,3]*constant
 
-	position = center_model+(quota-Lar.dot(basis[:,3],center_model)*basis[:,3])
+	position = center_model+(quota-Lar.dot(basis[:,3],center_model-new_origin)*basis[:,3])
 	newverts = basis'*verts
 	#extrema of newverts x e y
 	x_range = extrema(newverts[1,:])
@@ -53,24 +53,24 @@ function getmodel(basis::Matrix, constant::Float64, thickness::Float64, aabb::AA
 	return Common.getmodel(volume)
 end
 
-# se presente una nuova ucs bisogna indicargli la nuova origine
-function getmodel(basis::Matrix, origine::Array{Float64,1}, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
-		verts,_ = getmodel(aabb)
-		center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
-
-		quota = basis[:,3]*constant
-
-		position =  center_model+(quota-Lar.dot(basis[:,3],center_model-origine)*basis[:,3])
-		newverts = basis'*verts
-
-		#extrema of newverts x e y
-		x_range = extrema(newverts[1,:])
-		y_range = extrema(newverts[2,:])
-
-		scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
-		volume = Volume(scale,position,Common.matrix2euler(basis))
-		return Common.getmodel(volume)
-	end
+# # se presente una nuova ucs bisogna indicargli la nuova origine
+# function getmodel(basis::Matrix, origine::Array{Float64,1}, constant::Float64, thickness::Float64, aabb::AABB)::Lar.LAR
+# 		verts,_ = getmodel(aabb)
+# 		center_model = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
+#
+# 		quota = basis[:,3]*constant
+#
+# 		position =  center_model+(quota-Lar.dot(basis[:,3],center_model-origine)*basis[:,3])
+# 		newverts = basis'*verts
+#
+# 		#extrema of newverts x e y
+# 		x_range = extrema(newverts[1,:])
+# 		y_range = extrema(newverts[2,:])
+#
+# 		scale = [x_range[2]-x_range[1]+1.e-2,y_range[2]-y_range[1]+1.e-2,thickness]
+# 		volume = Volume(scale,position,Common.matrix2euler(basis))
+# 		return Common.getmodel(volume)
+# 	end
 
 """
 	 getmodel(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1}, thickness::Float64, aabb::AABB) -> model::Lar.LAR
