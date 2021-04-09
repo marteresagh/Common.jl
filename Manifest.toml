@@ -257,8 +257,8 @@ uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [[LinearAlgebraicRepresentation]]
 deps = ["DataStructures", "Distributed", "IntervalTrees", "LinearAlgebra", "NearestNeighbors", "Revise", "SparseArrays", "Triangle_jll", "Triangulate"]
-git-tree-sha1 = "eb4971e4a1a78fd72fc45eb8156b33423bd7f63a"
-repo-rev = "e9eb2f4b651bdb76d3e4240d81192ce15627796b"
+git-tree-sha1 = "ba98f14694a4fd5200b1e7248dba598429f7db3b"
+repo-rev = "962282a8da36a3f36b889311c92c28379c6a2ec4"
 repo-url = "https://github.com/cvdlab/LinearAlgebraicRepresentation.jl"
 uuid = "95167b0c-186a-594b-a231-52369c6de044"
 version = "1.0.0"
