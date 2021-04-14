@@ -107,7 +107,6 @@ A `model` and an `AABB` intersection:
  - 1 -> model intersect but not contains AABB
  - 2 -> model contains AABB
 """
-
 function modelsdetection(model::Lar.LAR,octree::AABB)::Int
 	verts,edges,faces = model
 	aabbmodel = Common.boundingbox(verts)
@@ -131,28 +130,37 @@ function modelsdetection(model::Lar.LAR,octree::AABB)::Int
 end
 
 
-#--------------------
+"""
+	planes_intersection(a::Plane,b::Plane) -> line
 
+Return line intersection.
+"""
 function planes_intersection(a::Plane,b::Plane)
-	a_vec = [a.a,a.b,a.c]
-	b_vec = [b.a,b.b,b.c]
+	a_vec = a.normal
+	b_vec = b.normal
 
 	aXb_vec = Lar.cross(a_vec, b_vec)
-	aXb_vec /= Lar.norm(aXb_vec)
-
-	A = vcat(a_vec', b_vec', aXb_vec')
-	d = reshape([a.d, b.d, 0.],3,1)
-	p_inter = A\d
-	return Lar.approxVal(8).(reshape(p_inter,3)), aXb_vec # point, direction of line intersection
+	if aXb_vec != [0.,0.,0.]
+		aXb_vec /= Lar.norm(aXb_vec)
+		A = vcat(a_vec', b_vec', aXb_vec')
+		d = reshape([a.d, b.d, 0.],3,1)
+		p_inter = A\d
+		return Lar.approxVal(8).(reshape(p_inter,3)), aXb_vec # point, direction of line intersection
+	else
+		return nothing
+	end
 end
 
+"""
+	lines_intersection(line1::Hyperplane,line2::Hyperplane) -> point
 
+Return point intersection.
+"""
 function lines_intersection(line1::Hyperplane,line2::Hyperplane)
 	l1 = [line1.centroid,line1.centroid+line1.direction]
 	l2 = [line2.centroid,line2.centroid+line2.direction]
 	return lines_intersection(l1,l2)
 end
-
 
 function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{Float64,1},1})
 	# line = [[x1,y1],[x2,y2]] start_point, end_point
@@ -179,20 +187,19 @@ function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{
 end
 
 
-
-function models_intersection(V::Lar.Points,EV::Lar.Cells,FV::Lar.Cells)
-	copEV = Lar.coboundary_0(EV)
-	copFE = Lar.coboundary_1(V, FV, EV)
-	W = permutedims(V)
-
-	rV, rcopEV, rcopFE = Lar.Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
-
-	triangulated_faces = Lar.triangulate(rV, [rcopEV, rcopFE]);
-	FVs = convert(Array{Lar.Cells}, triangulated_faces);
-
-	indx = findall(x->x==0, length.(FVs))
-	deleteat!(FVs, indx)
-
-	V = permutedims(rV)
-	return V, FVs
-end
+# function models_intersection(V::Lar.Points,EV::Lar.Cells,FV::Lar.Cells)
+# 	copEV = Lar.coboundary_0(EV)
+# 	copFE = Lar.coboundary_1(V, FV, EV)
+# 	W = permutedims(V)
+#
+# 	rV, rcopEV, rcopFE = Lar.Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
+#
+# 	triangulated_faces = Lar.triangulate(rV, [rcopEV, rcopFE]);
+# 	FVs = convert(Array{Lar.Cells}, triangulated_faces);
+#
+# 	indx = findall(x->x==0, length.(FVs))
+# 	deleteat!(FVs, indx)
+#
+# 	V = permutedims(rV)
+# 	return V, FVs
+# end

@@ -9,8 +9,18 @@ k = 10
 outliers = Common.outliers(PC2D, [1:PC2D.n_points...], k)
 tofit = setdiff([1:PC2D.n_points...], outliers)
 
+# dirty points
 GL.VIEW([
-			GL.GLPoints(convert(Lar.Points,PC2D.coordinates[:,tofit]'),GL.COLORS[12]),
-			GL.GLPoints(convert(Lar.Points,PC2D.coordinates[:,outliers]'),GL.COLORS[2]),
+	Visualization.points(PC2D.coordinates; color = GL.COLORS[12]),
+])
 
+# outliers in red
+GL.VIEW([
+	Visualization.points(PC2D.coordinates[:,tofit]; color = GL.COLORS[12]),
+	Visualization.points(PC2D.coordinates[:,outliers];color = GL.COLORS[2]),
+])
+
+# points without outliers
+GL.VIEW([
+	Visualization.points(PC2D.coordinates[:,tofit]; color = GL.COLORS[12]),
 ])

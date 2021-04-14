@@ -28,8 +28,8 @@ GL.VIEW([
 	GL.GLPoints(convert(Lar.Points,points'),GL.COLORS[6])
 	# GL.GLPoints(convert(Lar.Points,points_flat'),GL.COLORS[1])
 	GL.GLGrid(V,FV)
-	Visualization.helper_axis(Lar.inv(plane.matrix))
-	GL.GLAxis(GL.Point3d(0,0,0),GL.Point3d(1,1,1))
+	Visualization.axis_helper(Lar.inv(plane.matrix); x_color=GL.COLORS[6],y_color=GL.COLORS[7],z_color=GL.COLORS[5] )
+	Visualization.axis_helper()
 ]);
 
 
@@ -54,7 +54,7 @@ params2D = Common.LinearFit(outlier)
 hyperplane = Hyperplane(PointCloud(outlier),params2D...)
 GL.VIEW([
     GL.GLPoints(convert(Lar.Points,outlier'),GL.COLORS[6])
-	Visualization.mesh_lines([hyperplane])...
+	Visualization.lines([hyperplane])...
 	GL.GLFrame2
 ]);
 
