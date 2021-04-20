@@ -18,7 +18,7 @@ function subsample_poisson_disk(points::Lar.Points, p=0.2::Float64,par=0.05::Flo
 		return test
 	end
 
-	npoints = size(P,2)
+	npoints = size(points,2)
 	voxs = DataStructures.SortedDict{Array{Float64,1},Array{Array{Float64,1},1}}()
 	for i in 1:npoints
 		point = P[:,i]
