@@ -42,6 +42,7 @@ module Common
 	include("Features/double_verts.jl")
 	include("Features/estimation.jl")
 	include("Features/neighbors.jl")
+	include("Features/subsample.jl")
 	# geometry
 	include("Geometry/boundingbox.jl")
 	include("Geometry/fit.jl")
