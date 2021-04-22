@@ -67,8 +67,6 @@ end
 
 """
 	biconnected_comps(g)
-
-
 """
 function biconnected_comps(V,EV)
 	g = model2graph(V,EV)
@@ -84,3 +82,107 @@ function biconnected_comps(V,EV)
 	end
 	return comps
 end
+
+
+"""
+	get_cycles(V,EV)
+
+
+"""
+### migliore versione
+function get_cycles(V,EV)
+    g = Common.model2graph(V,EV)
+    cycles = LightGraphs.cycle_basis(g)
+    comps = Vector{Int64}[]
+    for cycle in cycles
+        comp = Int64[]
+        for i in 1:length(EV)
+            if EV[i][1] in cycle && EV[i][2] in cycle
+                push!(comp,i)
+            end
+        end
+        push!(comps,comp)
+    end
+    return comps
+end
+
+
+# versione peggiore
+# function get_cycles(V,EV)
+#     matrix = Lar.characteristicMatrix(EV)
+#     g = Common.model2graph(V,EV)
+#     cycles = LightGraphs.cycle_basis(g)
+#     comps = Vector{Int64}[]
+#     for cycle in cycles
+#         M = copy(matrix)
+#         diff = setdiff(collect(1:size(V,2)),cycle)
+#         M[:,diff].=0
+#         dropzeros!(M)
+#         a = sum(M,dims=2)
+#
+#         comp =  [k for k=1:length(a) if a[k]==2]
+#         # comp = Int64[]
+#         # for i in 1:length(EV)
+#         #     if EV[i][1] in cycle && EV[i][2] in cycle
+#         #         push!(comp,i)
+#         #     end
+#         # end
+#         push!(comps,comp)
+#     end
+#     return comps
+# end
+
+function digraph_from_topology(V,EV)
+    n = size(V,2)
+    dg = DiGraph(n)
+    for a in EV
+        add_edge!(dg, a[2], a[1])
+    end
+    dg
+end
+"
+Finds (undirected) cycle.
+"
+function find_cycle(V,EV)
+    nnodes = size(V,2)
+    digraph = digraph_from_topology(V,EV)
+    graph = Graph(digraph)
+
+    # assume that graph is connected, so starting from single root is OK
+
+    # initialize DFS
+    root = 1
+    stack = [(root, root)] # collect unvisited nodes with parent
+    parent = fill(0, nnodes) # 0 means not visited
+
+    # run search
+    while length(stack) > 0 # not empty
+        from, current = pop!(stack)
+        parent[current] = from
+        for to in neighbors(graph, current)
+            if to == from
+                continue # no antiparallel move
+            elseif parent[to] == 0 # not visited
+                push!(stack, (current, to))
+            else # found cycle, run it in reverse
+                path = [[to, current]]
+                backtrack = current
+                while backtrack ≠ to
+                    push!(path, [backtrack, parent[backtrack]])
+                    backtrack = parent[backtrack]
+                end
+                return path
+            end
+        end
+    end
+
+    # found no cycle
+    return []
+end
+
+
+EW = find_cycle(V,EV)
+
+GL.VIEW([
+    GL.GLGrid(V,EW)
+])
