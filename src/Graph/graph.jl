@@ -179,10 +179,3 @@ function find_cycle(V,EV)
     # found no cycle
     return []
 end
-
-
-EW = find_cycle(V,EV)
-
-GL.VIEW([
-    GL.GLGrid(V,EW)
-])
