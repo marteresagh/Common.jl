@@ -78,7 +78,7 @@ points = Common.apply_matrix(Common.t(center...),vcat(xs',ys'))
 # fit
 params2D = Common.Fit_Circle(points)
 
-circle = Hypersphere(PointCloud(points),params2D...)
+# circle = Hypersphere(PointCloud(points),params2D...)
 #
 # Visualization.VIEW([
 #     Visualization.GLPoints(convert(Lar.Points,points'),Visualization.COLORS[6])

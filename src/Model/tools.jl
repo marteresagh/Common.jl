@@ -86,3 +86,19 @@ function DrawPatches(planes::Array{Plane,1}, boxes::Union{Array{AABB,1},Array{Vo
 	V, EV, FV = struct2lar(out)
 	return V, EV, FV
 end
+
+"""
+Draw circle
+"""
+function DrawCircles()::LAR
+	# out = Array{Struct,1}()
+	# for i in 1:length(planes)
+	# 	plane = planes[i]
+	# 	box = boxes[i]
+	# 	V,EV,FV = getmodel(plane, box)
+	# 	push!(out, Struct([(V,EV,[union(FV...)])])) # unique cells
+	# end
+	# out = Struct( out )
+	# V, EV, FV = struct2lar(out)
+	# return V, EV, FV
+end
