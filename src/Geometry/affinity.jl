@@ -1,4 +1,4 @@
-"""
+Common."""
 	t(args::Array{Number,1}...)::Matrix
 
 Return an *affine transformation Matrix* in homogeneous coordinates. Such `translation` Matrix has ``d+1`` rows and ``d+1`` columns, where ``d`` is the number of translation parameters in the `args` array.
@@ -215,7 +215,7 @@ end
 # 	axsour, centsour = planesource
 # 	rotation_matrix = PointClouds.euler_matrix_from_vectors(axref,axsour)
 #
-# 	rototrasl = Geometry.t(centref...)*rotation_matrix'*Geometry.t(-centsour...)
+# 	rototrasl = Common.t(centref...)*rotation_matrix'*Geometry.t(-centsour...)
 # 	return rototrasl
 # end
 #

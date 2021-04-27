@@ -5,8 +5,8 @@ Delaunay triangulation of points in d-dimensional Euclidean space.
 """
 function delaunay_triangulation(points::Points)::Cells
     # TODO per il 2D usiamo Triangulate
-    centroid = Geometry.centroid(points)
-    T = apply_matrix(Geometry.t(-centroid...),points)
+    centroid = Common.centroid(points)
+    T = apply_matrix(Common.t(-centroid...),points)
     V = permutedims(T)
     mesh = delaunay(V);
     DT = [mesh.simplices[c,:] for c in 1:size(mesh.simplices,1)]
@@ -34,7 +34,7 @@ end
 # """
 #  	LinearAlgebraicRepresentation.triangulate2d(V::Points, EV::Cells)
 #
-# @overwrite Geometry.triangulate2d.
+# @overwrite Common.triangulate2d.
 # """
 # function LinearAlgebraicRepresentation.triangulate2d(V::Points, EV::Cells)
 #     # data for Constrained Delaunay Triangulation (CDT)

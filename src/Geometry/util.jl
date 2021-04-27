@@ -42,7 +42,7 @@ Return vector of traslation and new data.
 function subtractaverage(points::Points)
 	m,npoints = size(points)
 	c = centroid(points)
-	affineMatrix = Geometry.t(-c...)
+	affineMatrix = Common.t(-c...)
 	Y = apply_matrix(affineMatrix,points)
 	return c,Y
 end
@@ -85,7 +85,7 @@ matchcolumn(a,B) = findfirst(j->all(i->a[i] == B[i,j],1:size(B,1)),1:size(B,2))
 #
 # 	return hmax-hmin
 # end
-# 
+#
 # """
 # proiezioni
 # """

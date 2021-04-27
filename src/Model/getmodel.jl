@@ -22,13 +22,13 @@ function getmodel(volume::Volume)::LAR
 	cube_verts = [ 0.0  0.0  0.0  0.0  1.0  1.0  1.0  1.0;
  		  0.0  0.0  1.0  1.0  0.0  0.0  1.0  1.0;
  		  0.0  1.0  0.0  1.0  0.0  1.0  0.0  1.0]
-	V = apply_matrix(Geometry.t(-0.5,-0.5,-0.5),cube_verts)
+	V = apply_matrix(Common.t(-0.5,-0.5,-0.5),cube_verts)
 	EV = [[1, 2], [3, 4], [5, 6], [7, 8],[1, 3], [2, 4], [5, 7], [6, 8], [1, 5], [2, 6], [3, 7], [4, 8]]
 	FV = [[1, 2, 3, 4], [5, 6, 7, 8], [1, 2, 5, 6], [3, 4, 7, 8], [1, 3, 5, 7], [2, 4, 6, 8]]
 
-	scalematrix = Geometry.s(volume.scale...)
+	scalematrix = Common.s(volume.scale...)
 	rot = matrix4(euler2matrix(volume.rotation...))
-	trasl = Geometry.t(volume.position...)
+	trasl = Common.t(volume.position...)
 	affine = trasl*rot*scalematrix
 	T = apply_matrix(affine,V)
 	return T,EV,FV

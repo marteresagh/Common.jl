@@ -205,7 +205,7 @@ end
 #
 # 	rV, rcopEV, rcopFE = Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
 #
-# 	triangulated_faces = Geometry.triangulate(rV, [rcopEV, rcopFE]);
+# 	triangulated_faces = Common.triangulate(rV, [rcopEV, rcopFE]);
 # 	FVs = convert(Array{Cells}, triangulated_faces);
 #
 # 	indx = findall(x->x==0, length.(FVs))

@@ -51,7 +51,7 @@ end
 function oriented_boundingbox(points::Points)::Volume
 	center_,R = PCA(points)
 
-	V = apply_matrix(matrix4(LinearAlgebra.inv(R)),apply_matrix(Geometry.t(-center_...),points))
+	V = apply_matrix(matrix4(LinearAlgebra.inv(R)),apply_matrix(Common.t(-center_...),points))
 	aabb = boundingbox(V)
 
 	center_aabb = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]
@@ -82,7 +82,7 @@ function ch_oriented_boundingbox(points::Points)::Volume
 
 	center_ = centroid(points)
 
-	V = apply_matrix(matrix4(LinearAlgebra.inv(R)),apply_matrix(Geometry.t(-center_...),points))
+	V = apply_matrix(matrix4(LinearAlgebra.inv(R)),apply_matrix(Common.t(-center_...),points))
 	aabb = boundingbox(V)
 
 	center_aabb = [(aabb.x_max+aabb.x_min)/2,(aabb.y_max+aabb.y_min)/2,(aabb.z_max+aabb.z_min)/2]

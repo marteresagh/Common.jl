@@ -1,7 +1,7 @@
 function PCA(points::Points)
 	npoints = size(points,2)
 	@assert npoints>=3 "PCA: at least 2 points needed"
-	centroid = Geometry.centroid(points)
+	centroid = Common.centroid(points)
 
 	C = zeros(3,3)
 	for i in 1:npoints
@@ -33,7 +33,7 @@ function Fit_Line(points::Points)
 
 	npoints = size(points,2)
 	@assert npoints>=2 "linefit: at least 2 points needed"
-	centroid = Geometry.centroid(points)
+	centroid = Common.centroid(points)
 
 	C = zeros(2,2)
 	for i in 1:npoints
@@ -59,7 +59,7 @@ function Fit_Plane(points::Points)
 
 	npoints = size(points,2)
 	@assert npoints>=3 "PlaneFromPoints: at least 3 points needed"
-	centroid = Geometry.centroid(points)
+	centroid = Common.centroid(points)
 
 	# Matrix
 	xx = 0.; xy = 0.; xz = 0.;
