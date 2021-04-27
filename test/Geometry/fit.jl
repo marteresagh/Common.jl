@@ -45,8 +45,8 @@
 					3.80147  1.99903    1.5376   3.26004  0.162415   1.42049  1.54317    1.97008  2.95325    1.07629;
 				 	17.4241   6.5473    10.9475   7.98946  1.86524   11.0276   5.2589    12.8762   9.32074   11.6287]
 		params = Common.PCA(points)
-		@test Lar.approxVal(4).(params[2][:,3]) ≈ Lar.approxVal(4).([0.8017835998182375, 0.5345225852806715, -0.2672614167577797])
-		@test Lar.approxVal(4).(params[1]) ≈ Lar.approxVal(4).([1.5146032999999999, 1.9723835, 9.488574])
+		@test Common.approxVal(4).(params[2][:,3]) ≈ Common.approxVal(4).([0.8017835998182375, 0.5345225852806715, -0.2672614167577797])
+		@test Common.approxVal(4).(params[1]) ≈ Common.approxVal(4).([1.5146032999999999, 1.9723835, 9.488574])
 	end
 
 	@testset "Fit_Circle" begin

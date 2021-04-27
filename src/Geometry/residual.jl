@@ -1,60 +1,57 @@
 """
-	Dist_Point2Plane(point::Array{Float64,1}, plane::Hyperplane)
+	distance_point2plane(centroid::Point, direction::Point)(point::Point)
 
 Orthogonal distance `point` to `plane`.
 """
-function Dist_Point2Plane(point::Array{Float64,1}, plane::Hyperplane)::Float64
-	v = point - plane.centroid
-	p_star = Lar.dot(plane.direction,v)*plane.direction
-	return Lar.norm(p_star)
-	#return Lar.abs(Lar.dot(point,plane.normal)-Lar.dot(plane.normal,plane.centroid))
+function distance_point2plane(centroid::Point, direction::Point)
+	function distance_point2plane0(point::Point)::Float64
+		v = point - centroid
+		p_star = LinearAlgebra.dot(direction,v)*direction
+		return LinearAlgebra.norm(p_star)
+		#return LinearAlgebra.abs(LinearAlgebra.dot(point,plane.normal)-LinearAlgebra.dot(plane.normal,plane.centroid))
+	end
+	return distance_point2plane0
 end
 
 """
-	Dist_Point2Line(point::Array{Float64,1}, line::Hyperplane)
+	distance_point2line(centroid::Point, direction::Point)(point::Point)
 
 Orthogonal distance `point` to `line`.
 """
-function Dist_Point2Line(p::Array{Float64,1}, line::Hyperplane)::Float64
-	v = p - line.centroid
-	p_star = v - Lar.dot(line.direction,v)*line.direction
-	return Lar.norm(p_star)
+function distance_point2line(centroid::Point, direction::Point)
+	function distance_point2line0(point::Point)::Float64
+		v = point - centroid
+		p_star = v - LinearAlgebra.dot(direction,v)*direction
+		return LinearAlgebra.norm(p_star)
+	end
+	return distance_point2line0
 end
 
 """
-	residual(hyperplane::Hyperplane)(point::Array{Float64,1})
+	residual(hyperplane::Union{Plane,Line})(point::Point)
 
 Orthogonal distance `point` to `hyperplane`.
 """
-function residual(hyperplane::Hyperplane)
-	function residual0(point::Array{Float64,1})
+function residual(hyperplane::Union{Plane,Line})
+	function residual0(point::Point)
 		if length(point) == 2
-			return Common.Dist_Point2Line(point, hyperplane)
+			return distance_point2line(hyperplane.startPoint,hyperplane.direction)(point)
 		elseif length(point) == 3
-			return Common.Dist_Point2Plane(point, hyperplane)
+			return distance_point2plane(hyperplane.centroid,hyperplane.normal)(point)
 		end
 	end
 	return residual0
 end
 
 """
-	residual(hypersphere::Hypersphere)(point::Array{Float64,1})
+	residual(hypersphere::Hypersphere)(point::Point)
 
 Dreturn distance `point` to `hypersphere`.
 """
-function residual(hypersphere::Hypersphere)
-	function residual0(point::Array{Float64,1})
-		rp = Lar.norm(point-hypersphere.center)
-		return Lar.abs(rp-hypersphere.radius)
+function distance_point2sphere(center::Point,radius::Float64)
+	function distance_point2sphere0(point::Point)::Float64
+		rp = LinearAlgebra.norm(point-hypersphere.center)
+		return LinearAlgebra.abs(rp-hypersphere.radius)
 	end
-	return residual0
-end
-
-
-"""
-Return index of point in points with minor residual.
-"""
-function minresidual(points::Lar.Points, hyperplane::Hyperplane)
-	res = Common.residual(hyperplane).( [c[:] for c in eachcol(points)])
-	return findmin(res)[2]
+	return distance_point2sphere0
 end

@@ -1,26 +1,24 @@
 using Common
 using Test
 
-# struct
-include("struct.jl")
-# delaunay
-include("Delaunay/delaunay.jl")
-# features
-include("Features/density.jl")
-include("Features/double_verts.jl")
-include("Features/estimation.jl")
-include("Features/neighbors.jl")
+# fondamental struct
+# include("lar.jl")
+# include("struct.jl")
 # geometry
+include("Geometry/affinity.jl")
 include("Geometry/boundingbox.jl")
+include("Geometry/delaunay.jl")
 include("Geometry/fit.jl")
 include("Geometry/residual.jl")
-include("Geometry/rotations.jl")
 include("Geometry/util.jl")
-# graph
-include("Graph/boundary.jl")
-include("Graph/graph.jl")
+# from LinearAlgebraicRepresentation
+include("LAR/boundary.jl")
+# include("LAR/struct.jl")
+# include("LAR/util.jl")
+# NN
+include("NN/neighbors.jl")
 # model
+include("Model/double_verts.jl")
 include("Model/getmodel.jl")
 include("Model/intersection.jl")
-# tools
-include("Tools/tools.jl")
+include("Model/tools.jl")

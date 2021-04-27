@@ -101,13 +101,12 @@
 	end
 
 	@testset "lines_intersection" begin
-		line1 = Hyperplane([1.,0.],[2.,0.])
-		line2 = Hyperplane([0.,1.],[0.,3])
+		line1 = Line([2.,0.],[1.,0.],1.)
+		line2 = Line([0.,3],[0.,1.],1.)
 		p = Common.lines_intersection(line1,line2)
 		@test p == [0.,0.]
 
-		line1 = Hyperplane([1.,0.],[2.,0.])
-		line2 = Hyperplane([1.,0.],[0.,3])
+		line2 = Line([0.,3],[1.,0.],1.)
 		p = Common.lines_intersection(line1,line2)
 		@test isnothing(p)
 	end

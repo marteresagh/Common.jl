@@ -1,5 +1,5 @@
 """
-	box_intersects_plane(AABB::AABB, normal, centroid) -> Lar.Points
+	box_intersects_plane(AABB::AABB, normal, centroid) -> Points
 
 Return verteces of the intersection of a plane, described by `normal` and `centroid`, and an `AABB`.
 """
@@ -15,16 +15,26 @@ function box_intersects_plane(box::Union{AABB,Volume}, normal::Array{Float64,1},
 
 	vertexpolygon = []
 	for (i,j) in EV
-		lambda = (Lar.dot(normal,centroid)-Lar.dot(normal,allverteces[i]))/Lar.dot(normal,allverteces[j]-allverteces[i])
+		lambda = (LinearAlgebra.dot(normal,centroid)-LinearAlgebra.dot(normal,allverteces[i]))/LinearAlgebra.dot(normal,allverteces[j]-allverteces[i])
 		if lambda>=0 && lambda<=1
 			push!(vertexpolygon,pointint(i,j,lambda,allverteces))
 		end
 	end
 
 	V_int = hcat(vertexpolygon...)
-	return Common.remove_double_verts(V_int, 2)[1]
+	return remove_double_verts(V_int, 2)[1]
 end
 
+"""
+	isinbox(aabb::AABB,p::Points)
+
+Check if point `p` is in a `aabb`.
+"""
+function isinbox(aabb::AABB,p::Point)::Bool
+	return (  p[1]>=aabb.x_min && p[1]<=aabb.x_max &&
+			  p[2]>=aabb.y_min && p[2]<=aabb.y_max &&
+			   p[3]>=aabb.z_min && p[3]<=aabb.z_max )
+end
 
 """
 	AABBdetection(A::AABB,B::AABB) -> Bool
@@ -49,14 +59,14 @@ end
 
 
 """
-	inmodel(model::Lar.LAR)(p::Array{Float64,1}) -> Bool
+	inmodel(model::LAR)(p::Array{Float64,1}) -> Bool
 
 Check if point `p` is in `model`.
 """
-function inmodel(model::Lar.LAR)
+function inmodel(model::LAR)
 	coordsystem = box_new_coords_system(model)
 	newverts = coordsystem*model[1]
-	A = Common.boundingbox(newverts)
+	A = boundingbox(newverts)
 	# a = [extrema(newverts[i,:]) for i in 1:3]
 	# A = (hcat([a[1][1],a[2][1],a[3][1]]),hcat([a[1][2],a[2][2],a[3][2]]))
 
@@ -76,12 +86,12 @@ end
 
 
 """
-	separatingaxis(model::Lar.LAR,octree::AABB) -> Bool
+	separatingaxis(model::LAR,octree::AABB) -> Bool
 
 The separating axis theorem (SAT) says that:
 Two convex objects do not overlap if there exists a line (called axis) onto which the two objects' projections do not overlap.
 """
-function separatingaxis(model::Lar.LAR,octree::AABB)::Bool
+function separatingaxis(model::LAR,octree::AABB)::Bool
 	# https://en.wikipedia.org/wiki/Hyperplane_separation_theorem
 	# due box
 	V,EV,FV = getmodel(octree)
@@ -100,17 +110,17 @@ end
 
 
 """
-	modelsdetection(model::Lar.LAR,AABB::AABB) -> 0, 1, 2
+	modelsdetection(model::LAR,AABB::AABB) -> 0, 1, 2
 
 A `model` and an `AABB` intersection:
  - 0 -> model not intersect AABB
  - 1 -> model intersect but not contains AABB
  - 2 -> model contains AABB
 """
-function modelsdetection(model::Lar.LAR,octree::AABB)::Int
+function modelsdetection(model::LAR,octree::AABB)::Int
 	verts,edges,faces = model
-	aabbmodel = Common.boundingbox(verts)
-	if Common.AABBdetection(aabbmodel,octree)
+	aabbmodel = boundingbox(verts)
+	if AABBdetection(aabbmodel,octree)
 		#ci sono 3 casi se i due bounding box si incontrano:
 		# 1. octree è tutto interno  return 2
 		# 2. octree esterno return 0
@@ -131,7 +141,7 @@ end
 
 
 """
-	planes_intersection(a::Plane,b::Plane) -> line
+	planes_intersection(a::Plane,b::Plane) -> Line (if exist)
 
 Return line intersection.
 """
@@ -139,30 +149,24 @@ function planes_intersection(a::Plane,b::Plane)
 	a_vec = a.normal
 	b_vec = b.normal
 
-	aXb_vec = Lar.cross(a_vec, b_vec)
+	aXb_vec = LinearAlgebra.cross(a_vec, b_vec)
 	if aXb_vec != [0.,0.,0.]
-		aXb_vec /= Lar.norm(aXb_vec)
+		aXb_vec /= LinearAlgebra.norm(aXb_vec)
 		A = vcat(a_vec', b_vec', aXb_vec')
 		d = reshape([a.d, b.d, 0.],3,1)
 		p_inter = A\d
-		return Lar.approxVal(8).(reshape(p_inter,3)), aXb_vec # point, direction of line intersection
+		return approxVal(8).(reshape(p_inter,3)), aXb_vec # point, direction of line intersection
 	else
 		return nothing
 	end
 end
 
 """
-	lines_intersection(line1::Hyperplane,line2::Hyperplane) -> point
+	lines_intersection(line1::Hyperplane,line2::Hyperplane) -> Point (if exist)
 
 Return point intersection.
 """
-function lines_intersection(line1::Hyperplane,line2::Hyperplane)
-	l1 = [line1.centroid,line1.centroid+line1.direction]
-	l2 = [line2.centroid,line2.centroid+line2.direction]
-	return lines_intersection(l1,l2)
-end
-
-function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{Float64,1},1})
+function lines_intersection(line1::Array{Array{Float64,1},1}, line2::Array{Array{Float64,1},1})
 	# line = [[x1,y1],[x2,y2]] start_point, end_point
 	#http://www.pdas.com/lineint.html
 	x1,y1,x2,y2 = vcat(line1...)
@@ -186,16 +190,23 @@ function lines_intersection(line1::Array{Array{Float64,1},1},line2::Array{Array{
 	return [x,y]
 end
 
+function lines_intersection(line1::Line,line2::Line)
+	l1 = [line1.startPoint,line1.endPoint]
+	l2 = [line2.startPoint,line2.endPoint]
+	return lines_intersection(l1,l2)
+end
 
-# function models_intersection(V::Lar.Points,EV::Lar.Cells,FV::Lar.Cells)
-# 	copEV = Lar.coboundary_0(EV)
-# 	copFE = Lar.coboundary_1(V, FV, EV)
+
+
+# function models_intersection(V::Points,EV::Cells,FV::Cells)
+# 	copEV = coboundary_0(EV)
+# 	copFE = coboundary_1(V, FV, EV)
 # 	W = permutedims(V)
 #
-# 	rV, rcopEV, rcopFE = Lar.Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
+# 	rV, rcopEV, rcopFE = Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
 #
-# 	triangulated_faces = Lar.triangulate(rV, [rcopEV, rcopFE]);
-# 	FVs = convert(Array{Lar.Cells}, triangulated_faces);
+# 	triangulated_faces = Geometry.triangulate(rV, [rcopEV, rcopFE]);
+# 	FVs = convert(Array{Cells}, triangulated_faces);
 #
 # 	indx = findall(x->x==0, length.(FVs))
 # 	deleteat!(FVs, indx)

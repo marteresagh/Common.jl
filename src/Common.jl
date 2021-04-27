@@ -1,21 +1,8 @@
-__precompile__()
-
 module Common
-
-	using LinearAlgebraicRepresentation
-	Lar = LinearAlgebraicRepresentation
-	# import LinearAlgebraicRepresentation.triangulate2d
-
-	using SparseArrays
-
-	using LightGraphs
-	using NearestNeighbors
-
-	using Delaunay
-	using Triangulate
+    using LinearAlgebra
+    using SparseArrays
+    using Delaunay
 	using QHull
-
-	using Statistics
 
 	using Base.Cartesian
 	import Base.Prehashed
@@ -31,34 +18,44 @@ module Common
 		flush(stdout)
 	end
 
-	# include struct
-	include("struct.jl")
-	include("keyboard_event.jl")
-
-	# delaunay
-	include("Delaunay/delaunay.jl")
-	# features
-	include("Features/density.jl")
-	include("Features/double_verts.jl")
-	include("Features/estimation.jl")
-	include("Features/neighbors.jl")
-	include("Features/subsample.jl")
+	workdir = dirname(@__FILE__)
+	# fondamental struct
+	include("Struct/pointcloud.jl")
+	include("Struct/topology.jl")
+    include("Struct/objects.jl")
 	# geometry
-	include("Geometry/boundingbox.jl")
-	include("Geometry/fit.jl")
-	include("Geometry/residual.jl")
-	include("Geometry/rotations.jl")
-	include("Geometry/util.jl")
-	# graph
-	include("Graph/boundary.jl")
-	include("Graph/graph.jl")
+	geo = joinpath(workdir,"Geometry")
+	for file in readdir(geo)
+		include(joinpath(geo,file))
+	end
+	# from LinearAlgebraicRepresentation
+	lar = joinpath(workdir,"LAR")
+	for file in readdir(lar)
+		include(joinpath(lar,file))
+	end
 	# model
-	include("Model/getmodel.jl")
-	include("Model/intersection.jl")
-	# tools
-	include("Tools/tools.jl")
+	mod = joinpath(workdir,"Model")
+	for file in readdir(mod)
+		include(joinpath(mod,file))
+	end
+	# include("Model/double_verts.jl")
+	# include("Model/getmodel.jl")
+	# include("Model/intersection.jl")
+	# include("Model/tools.jl")
+	# include("Geometry/affinity.jl")
+	# include("Geometry/boundingbox.jl")
+	# include("Geometry/delaunay.jl")
+	# include("Geometry/fit.jl")
+	# include("Geometry/residual.jl")
+	# include("Geometry/util.jl")
+	# include("LAR/struct.jl")
+	# include("LAR/util.jl")
+	# include("LAR/boundary.jl")
 
-	export  PointCloud, Hyperplane, AABB, Volume, Plane, Hypersphere, #structs
-			monitorInput, flushprintln, flushprint, getmodel, #funs
-			NearestNeighbors, Statistics, Lar, LightGraphs #modules
+	# dep
+	export LineaAlgebra, NearestNeighbors
+	#structs
+  	export PointCloud, AABB, Volume, Plane, Line #Hypersphere, Hyperplane
+	export flushprintln, flushprint #funs
+			#monitorInput,  getmodel, NearestNeighbors, Statistics, Lar, LightGraphs #modules
 end # module
