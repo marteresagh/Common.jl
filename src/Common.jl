@@ -38,19 +38,6 @@ module Common
 	for file in readdir(mod)
 		include(joinpath(mod,file))
 	end
-	# include("Model/double_verts.jl")
-	# include("Model/getmodel.jl")
-	# include("Model/intersection.jl")
-	# include("Model/tools.jl")
-	# include("Geometry/affinity.jl")
-	# include("Geometry/boundingbox.jl")
-	# include("Geometry/delaunay.jl")
-	# include("Geometry/fit.jl")
-	# include("Geometry/residual.jl")
-	# include("Geometry/util.jl")
-	# include("LAR/struct.jl")
-	# include("LAR/util.jl")
-	# include("LAR/boundary.jl")
 
 	# dep
 	export LineaAlgebra, NearestNeighbors
