@@ -15,8 +15,6 @@ include("Geometry/util.jl")
 include("LAR/boundary.jl")
 # include("LAR/struct.jl")
 # include("LAR/util.jl")
-# NN
-include("NN/neighbors.jl")
 # model
 include("Model/double_verts.jl")
 include("Model/getmodel.jl")
