@@ -23,6 +23,11 @@ module Common
 	include("Struct/pointcloud.jl")
 	include("Struct/topology.jl")
     include("Struct/objects.jl")
+	# linear algebra
+	la = joinpath(workdir,"LinAlg")
+	for file in readdir(la)
+		include(joinpath(la,file))
+	end
 	# geometry
 	geo = joinpath(workdir,"Geometry")
 	for file in readdir(geo)
@@ -40,9 +45,9 @@ module Common
 	end
 
 	# dep
-	export LineaAlgebra, NearestNeighbors
+	export LineaAlgebra
 	#structs
   	export PointCloud, AABB, Volume, Plane, Line #Hypersphere, Hyperplane
-	export flushprintln, flushprint #funs
-			#monitorInput,  getmodel, NearestNeighbors, Statistics, Lar, LightGraphs #modules
+	#funs
+	export flushprintln, flushprint
 end # module
