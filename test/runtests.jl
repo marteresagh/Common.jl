@@ -4,13 +4,14 @@ using Test
 # fondamental struct
 # include("lar.jl")
 # include("struct.jl")
+# Linear Algebra
+include("LinAlg/affinity.jl")
+include("LinAlg/util.jl")
 # geometry
-include("Geometry/affinity.jl")
 include("Geometry/boundingbox.jl")
 include("Geometry/delaunay.jl")
 include("Geometry/fit.jl")
 include("Geometry/residual.jl")
-include("Geometry/util.jl")
 # from LinearAlgebraicRepresentation
 include("LAR/boundary.jl")
 # include("LAR/struct.jl")
