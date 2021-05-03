@@ -184,7 +184,7 @@ struct Line
 
 	function Line(startPoint::Point,endPoint::Point)
 		direction = endPoint-startPoint
-		direction /= Lar.norm(direction)
+		direction /= LinearAlgebra.norm(direction)
 		new(startPoint,endPoint,direction)
 	end
 
