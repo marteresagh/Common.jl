@@ -41,6 +41,13 @@ mutable struct AABB
 	end
 end
 
+
+function Base.show(io::IO, aabb::Common.AABB)
+    println(io, "min: [$(aabb.x_min),$(aabb.y_min),$(aabb.z_min)]")
+	println(io, "max: [$(aabb.x_max),$(aabb.y_max),$(aabb.z_max)]")
+end
+
+
 """
 Volume
 - scale: size of box
