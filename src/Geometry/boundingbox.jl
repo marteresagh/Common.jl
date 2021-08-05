@@ -25,25 +25,21 @@ Update bounding box.
 """
 function update_boundingbox!(aabb::AABB,point::Point)
 	x, y, z = point
-	if x < aabb.x_min
-		aabb.x_min = x
-	end
-	if y < aabb.y_min
-		aabb.y_min = y
-	end
-	if z < aabb.z_min
-		aabb.z_min = z
-	end
-	if x > aabb.x_max
-		aabb.x_max = x
-	end
-	if y > aabb.y_max
-		aabb.y_max = y
-	end
-	if z > aabb.z_max
-		aabb.z_max = z
-	end
+	aabb.x_min = min(aabb.x_min, x)
+	aabb.y_min = min(aabb.y_min, y)
+	aabb.z_min = min(aabb.z_min, z)
+	aabb.x_max = max(aabb.x_max, x)
+	aabb.y_max = max(aabb.y_max, y)
+	aabb.z_max = max(aabb.z_max, z)
 end
+
+function update_boundingbox!(aabb::AABB, bbcc::AABB)
+	p_min = [bbcc.x_min,bbcc.y_min,bbcc.z_min]
+	p_max = [bbcc.x_max, bbcc.y_max, bbcc.z_max]
+	update_boundingbox!(aabb,p_min)
+	update_boundingbox!(aabb,p_max)
+end
+
 
 """
 	oriented_boundingbox(points::Points)

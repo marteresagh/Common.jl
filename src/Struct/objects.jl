@@ -30,6 +30,8 @@ mutable struct AABB
 	# 2D
 	AABB(x_max, x_min, y_max, y_min) = new(x_max, x_min, y_max, y_min, 0, 0)
 
+	AABB() = new(-Inf, Inf, -Inf, Inf, -Inf, Inf)
+
 	function AABB(points::Points)
 		dim = size(points,1)
 		a = [extrema(points[i,:]) for i in 1:dim]
