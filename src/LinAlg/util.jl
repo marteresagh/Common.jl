@@ -67,6 +67,17 @@ Returns `nothing` if `a` is not column of `B`.
 """
 matchcolumn(a,B) = findfirst(j->all(i->a[i] == B[i,j],1:size(B,1)),1:size(B,2))
 
+
+"""
+	add_zeta_coordinates(points2D::Points,latitude::Float64)
+
+Embed a set of 2D points in 3D space adding a common z latitude.
+"""
+function add_zeta_coordinates(points2D::Points,latitude::Float64)
+	z_coordinates = fill(latitude,size(points2D,2))
+	return vcat(points2D,z_coordinates')
+end
+
 # """
 #
 # """

@@ -195,22 +195,3 @@ function lines_intersection(line1::Line,line2::Line)
 	l2 = [line2.startPoint,line2.endPoint]
 	return lines_intersection(l1,l2)
 end
-
-
-
-# function models_intersection(V::Points,EV::Cells,FV::Cells)
-# 	copEV = coboundary_0(EV)
-# 	copFE = coboundary_1(V, FV, EV)
-# 	W = permutedims(V)
-#
-# 	rV, rcopEV, rcopFE = Arrangement.spatial_arrangement_1(W, copEV, copFE, false)
-#
-# 	triangulated_faces = Common.triangulate(rV, [rcopEV, rcopFE]);
-# 	FVs = convert(Array{Cells}, triangulated_faces);
-#
-# 	indx = findall(x->x==0, length.(FVs))
-# 	deleteat!(FVs, indx)
-#
-# 	V = permutedims(rV)
-# 	return V, FVs
-# end

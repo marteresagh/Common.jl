@@ -45,7 +45,7 @@ module Common
 	end
 
 	# dep
-	export LineaAlgebra
+	export LineaAlgebra, SparseArrays
 	#structs
   	export PointCloud, AABB, Volume, Plane, Line #Hypersphere, Hyperplane
 	#funs
