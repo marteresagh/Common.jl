@@ -8,10 +8,10 @@ module Common
 	import Base.Prehashed
 
 	# println with flush
-	# function flushprintln(x...)
-	# 	println(join(x, " ")...)
-	# 	flush(stdout)
-	# end
+	function flushprintln(x...)
+		println(join(x, " ")...)
+		flush(stdout)
+	end
 
 	workdir = dirname(@__FILE__)
 	# fondamental struct
