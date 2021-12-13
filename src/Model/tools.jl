@@ -99,3 +99,25 @@ function DrawCircles()::LAR
 	# V, EV, FV = struct2lar(out)
 	# return V, EV, FV
 end
+
+"""
+faces2triangles(V, FV)
+
+Return collection of triangles of each convex cell in FV.
+"""
+function faces2triangles(V, FV)
+  FVs = Vector{Vector{Int64}}[]
+  for face in FV
+
+    points_face = V[:, face]
+
+    plane = Common.Plane(points_face)
+
+    point_z_zero = Common.apply_matrix(plane.matrix, points_face)[1:2, :]
+
+    triangle = Common.delaunay_triangulation(point_z_zero)
+    push!(FVs, map(x -> face[x], triangle))
+  end
+
+  return FVs
+end

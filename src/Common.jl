@@ -8,15 +8,10 @@ module Common
 	import Base.Prehashed
 
 	# println with flush
-	function flushprintln(x...)
-		println(join(x, " ")...)
-		flush(stdout)
-	end
-
-	function flushprint(x...)
-		print(join(x, " ")...)
-		flush(stdout)
-	end
+	# function flushprintln(x...)
+	# 	println(join(x, " ")...)
+	# 	flush(stdout)
+	# end
 
 	workdir = dirname(@__FILE__)
 	# fondamental struct
@@ -48,6 +43,5 @@ module Common
 	export LineaAlgebra, SparseArrays
 	#structs
   	export PointCloud, AABB, Volume, Plane, Line #Hypersphere, Hyperplane
-	#funs
-	export flushprintln, flushprint
+
 end # module
