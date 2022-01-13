@@ -21,7 +21,15 @@ PointCloud
 PointCloud(coordinates,rgbs,normals)
 PointCloud(coordinates,rgbs)
 PointCloud(coordinates)
-PointCloud()
+PointCloud(dimension)
+```
+
+# Methods
+```jldoctest
+PointCloud(coordinates,rgbs,normals)
+PointCloud(coordinates,rgbs)
+PointCloud(coordinates)
+PointCloud(dimension)
 ```
 
 # Fields
@@ -40,12 +48,66 @@ mutable struct PointCloud
     rgbs::Points
 	normals::Points
 
-	PointCloud(coordinates,rgbs,normals) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,normals)
-	PointCloud(coordinates,rgbs) = new(size(coordinates,1),size(coordinates,2),coordinates,rgbs,reshape([],0,0))
-	PointCloud(coordinates) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],0,0),reshape([],0,0))
-	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0),reshape([],0,0))
+	function PointCloud(coordinates::Points,rgbs::Points,normals::Points)
+		dimension = size(coordinates,1)
+		npoints = size(coordinates,2)
+		@assert dimension == size(normals,1) "dimension mismatch: points in $(dimension)D space and normals in $(size(normals,1))D space"
+		@assert size(coordinates,2) == size(rgbs,2) "length mismatch: $(size(coordinates,2)) points and $(size(rgbs,2)) rgb fields"
+		@assert size(coordinates,2) == size(normals,2) "length mismatch: $(size(coordinates,2)) points and $(size(normals,2)) normal fields"
+		return new(dimension,npoints,coordinates,rgbs,normals)
+	end
+
+	function PointCloud(coordinates::Points,rgbs::Points)
+		dimension = size(coordinates,1)
+		npoints = size(coordinates,2)
+		@assert size(coordinates,2) == size(rgbs,2) "dimension mismatch: $(size(coordinates,2)) points and $(size(rgbs,2)) rgb fields"
+		return new(dimension,npoints,coordinates,rgbs,reshape([],dimension,0))
+	end
+
+	PointCloud(coordinates::Points) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],3,0),reshape([],size(coordinates,1),0))
+	PointCloud(dimension::Int8) = new(dimension,0,reshape([],Int64(dimension),0),reshape([],3,0),reshape([],Int64(dimension),0))
+
+	function add_point!(pointcloud::PointCloud, position::Point; rgb::Point=[], normal::Point=[])
+		pointcloud.coordinates = hcat(pointcloud.coordinates, position)
+
+		@assert !isempty(rgb) || (isempty(rgb) && isempty(pointcloud.rgbs)) "add rgb field to point"
+		@assert !isempty(normal) || (isempty(normal) && isempty(pointcloud.normals)) "add normal field to point"
+
+		if !isempty(rgb) && !isempty(pointcloud.rgbs)
+			pointcloud.rgbs = hcat(pointcloud.rgbs, rgb)
+		end
+
+		if !isempty(normal) && !isempty(pointcloud.normals)
+			pointcloud.normals = hcat(pointcloud.normals, normal)
+		end
+
+		pointcloud.n_points+=1
+		return true
+	end
+
+	function merge_pointcloud(cloud1,cloud2)
+		@assert cloud1.dimension == cloud2.dimension "not same dimension"
+		positions = hcat(cloud1.coordinates,cloud2.coordinates)
+
+		rgbs = reshape([],3,0)
+		if !isempty(cloud1.rgbs) && !isempty(cloud2.rgbs)
+			rgbs = hcat(cloud1.rgbs,cloud2.rgbs)
+		end
+
+		normals = reshape([],Int64(cloud1.dimension),0)
+		if !isempty(cloud1.normals) && !isempty(cloud2.normals)
+			hcat(cloud1.normals,cloud2.normals)
+		end
+
+		cloud = PointCloud(positions,rgbs,normals)
+
+		return cloud
+	end
+
 end
 
-function add(pointcloud::PointCloud, position::Point, rgb::Point, normal::Point)
-	# TODO
-end
+
+# #
+# function add_normals!(pointcloud::PointCloud, positions::Point; rgbs::Point, normals::Point)
+# 	# TODO
+# end

@@ -11,3 +11,7 @@ aabb = AABB(1,0,1,0,1,0)
 model = Common.getmodel(aabb)
 V,EV,FV = Common.DrawPlanes(plane,aabb)
 Visualization.VIEW([Visualization.GLGrid(V,FV),Visualization.GLGrid(model[1],model[2]), Visualization.axis_helper()...])
+
+p = [0. 1. 1. 0.;
+	0. 0. 1. 1.]
+Common.getArea(p)

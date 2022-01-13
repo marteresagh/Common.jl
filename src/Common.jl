@@ -1,8 +1,13 @@
 module Common
     using LinearAlgebra
+	using OrderedCollections
     using SparseArrays
     using Delaunay
 	using QHull
+	using Triangulate
+	using IntervalTrees
+
+
 
 	using Base.Cartesian
 	import Base.Prehashed

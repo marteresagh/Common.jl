@@ -1,0 +1,239 @@
+using SparseArrays
+using IntervalTrees, LinearAlgebra
+# using Revise,
+# using OhMyREPL
+
+#
+#	Method to compute an internal point to a polyhedron.
+#	----------------------------------------------------
+#
+#	1. Take two of points close to the opposite sides of any face of a polyhedron, e.g., the first face.
+#	2. For each of the two points compute the intersections of a (vertical) ray with the planes (of the faces) intersected by the ray (positive direction of the half-line).
+#	3. Transform each such plane and face (and intersection point) to 2D space.
+#	4. Test for point-in-polygon intersection.
+#	5. Compute the parity of the intersection points for each ray.
+#	6. Invariant:  if one is even; the other is odd.
+#	7. The initial point with odd number of intersection points is interior to the polyhedron. The other is exterior.
+#
+
+
+
+"""
+	testinternalpoint(V::Lar.Points, EV::Lar.Cells, FV::Lar.Cells)
+"""
+function testinternalpoint(V, EV, FV)
+    copEV = lar2cop(EV)
+    copFV = lar2cop(FV)
+    copFE = copFV * copEV'
+    I, J, Val = findnz(copFE)
+    triple = zip([(i, j, 1) for (i, j, v) in zip(I, J, Val) if v == 2]...)
+    I, J, Val = map(collect, triple)
+    Val = convert(Array{Int8,1}, Val)
+    copFE = sparse(I, J, Val)
+    function testinternalpoint0(testpoint)
+        intersectedfaces = Int64[]
+        # spatial index for possible intersections with ray
+        faces = spaceindex(testpoint)((V, FV))
+        depot = []
+        # face in faces :  indices of faces of possible intersection with ray
+        for face in faces
+            value = rayintersection(testpoint)(V, FV, face)
+            if typeof(value) == Array{Float64,1}
+                push!(depot, (face, value))
+            end
+        end
+        # actual containment test of ray point in faces within depot
+        for (face, point3d) in depot
+            vs, edges, point2d = planemap(V, copEV, copFE, face)(point3d)
+            classify = pointInPolygonClassification(vs, edges) #TODO
+            inOut = classify(point2d)
+            if inOut != "p_out"
+                push!(intersectedfaces, face)
+            end
+        end
+        return intersectedfaces
+    end
+    return testinternalpoint0
+end
+
+
+function boundingbox(vertices::Points)
+    minimum = mapslices(x -> min(x...), vertices, dims = 2)
+    maximum = mapslices(x -> max(x...), vertices, dims = 2)
+    return minimum, maximum
+end
+
+function coordintervals(coord, bboxes)
+    boxdict = OrderedDict{Array{Float64,1},Array{Int64,1}}()
+    for (h, box) in enumerate(bboxes)
+        key = box[coord, :]
+        if haskey(boxdict, key) == false
+            boxdict[key] = [h]
+        else
+            push!(boxdict[key], h)
+        end
+    end
+    return boxdict
+end
+
+function boxcovering(bboxes, index, tree)
+    covers = [[] for k = 1:length(bboxes)]
+    for (i, boundingbox) in enumerate(bboxes)
+        extent = bboxes[i][index, :]
+        iterator = IntervalTrees.intersect(tree, tuple(extent...))
+        for x in iterator
+            append!(covers[i], x.value)
+        end
+    end
+    return covers
+end
+
+"""
+	spaceindex(point3d)(model)
+Compute the set of face boxes of possible intersection with a point-ray.
+Work in 3D, where the ray direction is parallel to the z-axis.
+Return an array of indices of face.
+#	Example
+```
+julia> V,(VV,EV,FV,CV) = Lar.cuboidGrid([1,1,1],true)
+julia> spaceindex([.5,.5,.5])((V,FV))
+3-element Array{Int64,1}:
+ 5
+ 6
+```
+"""
+function spaceindex(point3d::Array{Float64,1})::Function
+    function spaceindex0(model::LAR)::Array{Int,1}
+        V, CV = copy(model[1]), copy(model[2])
+        V = [V point3d]
+        dim, idx = size(V)
+        push!(CV, [idx, idx, idx])
+        cellpoints = [V[:, CV[k]]::Points for k = 1:length(CV)]
+        #----------------------------------------------------------
+        bboxes = [hcat(boundingbox(cell)...) for cell in cellpoints]
+        xboxdict = coordintervals(1, bboxes)
+        yboxdict = coordintervals(2, bboxes)
+        # xs,ys are IntervalTree type
+        xs = IntervalTrees.IntervalMap{Float64,Array}()
+        for (key, boxset) in xboxdict
+            xs[tuple(key...)] = boxset
+        end
+        ys = IntervalTrees.IntervalMap{Float64,Array}()
+        for (key, boxset) in yboxdict
+            ys[tuple(key...)] = boxset
+        end
+        xcovers = boxcovering(bboxes, 1, xs)
+        ycovers = boxcovering(bboxes, 2, ys)
+        covers = [intersect(pair...) for pair in zip(xcovers, ycovers)]
+
+        # add new code part
+
+        # remove each cell from its cover
+        pointcover = setdiff(covers[end], [idx + 1])
+        return pointcover[1:end-1]
+    end
+    return spaceindex0
+end
+
+"""
+	rayintersection(point3d::Array{Float64})(V,FV,face::Int)
+Compute the intersection point of the vertical line through `point3d` w `face`.
+If the face is parallel to `z axis` return `false`.
+# Example
+```
+julia> V,(VV,EV,FV,CV) = Lar.simplex(3,true);
+julia> V
+3×4 Array{Float64,2}:
+ 0.0  1.0  0.0  0.0
+ 0.0  0.0  1.0  0.0
+ 0.0  0.0  0.0  1.0
+julia> FV
+4-element Array{Array{Int64,1},1}:
+ [1, 2, 3]
+ [1, 2, 4]
+ [1, 3, 4]
+ [2, 3, 4]
+ julia> Lar.rayintersection([.333,.333,0])(V,FV,4)
+ 3-element Array{Float64,1}:
+  0.333
+  0.333
+  0.3340000000000001
+```
+"""
+function rayintersection(point3d)
+    function rayintersection0(V, FV, face::Int)
+        l0, l = point3d, [0, 0, 1.0]
+        ps = V[:, FV[face]]  # face points
+        p0 = ps[:, 1]
+        v1, v2 = ps[:, 2] - p0, ps[:, 3] - p0
+        n = LinearAlgebra.normalize(cross(v1, v2))
+
+        denom = LinearAlgebra.dot(n, l)
+        if (abs(denom) > 1e-8) #1e-6
+            p0l0 = p0 - l0
+            t = dot(p0l0, n) / denom
+            if t > 0
+                return l0 + t * l
+            end
+        else
+            #error("ray and face are parallel")
+            return false
+        end
+    end
+    return rayintersection0
+end
+
+
+"""
+	planemap(V,copEV,copFE,face)(point)
+Tranform the 3D face and the 3D point in their homologous 2D, in order to test for containment.
+"""
+function planemap(V, copEV, copFE, face)
+
+    function vcycle(copEV::ChainOp, copFE::ChainOp, f::Int64)
+        edges, signs = SparseArrays.findnz(copFE[f, :])
+        vpairs = [
+            s > 0 ? SparseArrays.findnz(copEV[e, :])[1] :
+                reverse(SparseArrays.findnz(copEV[e, :])[1])
+            for (e, s) in zip(edges, signs)
+        ]
+        a = [pair for pair in vpairs if length(pair) == 2]
+        function mycat(a::Cells)
+            out = []
+            for cell in a
+                append!(out, cell)
+            end
+            return out
+        end
+        vs = collect(Set(mycat(a)))
+        vdict = Dict(zip(vs, 1:length(vs)))
+        edges = [
+            [vdict[pair[1]], vdict[pair[2]]]
+            for pair in vpairs if length(pair) == 2
+        ]
+        return vs, edges
+    end
+
+
+    fv, edges = vcycle(copEV, copFE, face)
+    # Fv = Dict(zip(1:length(fv),fv))
+    # edges = [[Fv[u],Fv[v]] for (u,v) in edges]
+    function planemap0(point)
+        vs = V[:, fv]
+        # Plasm.view(Plasm.numbering(0.5)((vs,[[[k] for k=1:4],edges])))
+        #translation
+        point = point .- vs[:, 1]
+        vs = vs .- vs[:, 1]
+        u, v = edges[1]
+        z, w = [[z, w] for (z, w) in edges if z == v][1]
+        v1 = vs[:, u] - vs[:, v]
+        v2 = vs[:, w] - vs[:, v]
+        v3 = cross(v2, v1)
+        M = [v1 v2 v3]
+        vs = inv(M) * [vs point]
+        outvs = vs[1:2, 1:end-1]
+        outpoint = vs[1:2, end]
+        return outvs, edges, outpoint
+    end
+    return planemap0
+end
