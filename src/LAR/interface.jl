@@ -33,16 +33,8 @@ julia> Matrix(Lar.lar2cop(CV))
 ```
 """
 function lar2cop(CV::Cells)::ChainOp
-	I = Int64[]; J = Int64[]; Value = Int8[];
-	for k=1:size(CV,1)
-		n = length(CV[k])
-		append!(I, k * ones(Int64, n))
-		append!(J, CV[k])
-		append!(Value, ones(Int64, n))
-	end
-	return SparseArrays.sparse(I,J,Value)
+	return characteristicMatrix( CV )
 end
-
 
 """
 	cop2lar(cop::Lar.ChainOp)::Lar.Cells
