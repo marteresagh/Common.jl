@@ -1,8 +1,3 @@
-using SparseArrays
-using IntervalTrees, LinearAlgebra
-# using Revise,
-# using OhMyREPL
-
 #
 #	Method to compute an internal point to a polyhedron.
 #	----------------------------------------------------
@@ -15,13 +10,15 @@ using IntervalTrees, LinearAlgebra
 #	6. Invariant:  if one is even; the other is odd.
 #	7. The initial point with odd number of intersection points is interior to the polyhedron. The other is exterior.
 #
-
-
+function point_in_polyhedron(point, V::Points, EV::Cells, FV::Cells)
+    face_intersected = testinternalpoint(V, EV, FV)(point)
+    return length(face_intersected) % 2 == 0
+end
 
 """
 	testinternalpoint(V::Lar.Points, EV::Lar.Cells, FV::Lar.Cells)
 """
-function testinternalpoint(V, EV, FV)
+function testinternalpoint(V::Points, EV::Cells, FV::Cells)
     copEV = lar2cop(EV)
     copFV = lar2cop(FV)
     copFE = copFV * copEV'
@@ -57,9 +54,14 @@ function testinternalpoint(V, EV, FV)
 end
 
 
-function boundingbox(vertices::Points)
-    minimum = mapslices(x -> min(x...), vertices, dims = 2)
-    maximum = mapslices(x -> max(x...), vertices, dims = 2)
+function pboundingbox(vertices::Points)
+    a = [extrema(vertices[i,:]) for i in 1:size(vertices,1)]
+    minimum = Float64[]
+    maximum = Float64[]
+    for (min,max) in a
+       push!(minimum,min)
+       push!(maximum,max)
+    end
     return minimum, maximum
 end
 
@@ -110,7 +112,7 @@ function spaceindex(point3d::Array{Float64,1})::Function
         push!(CV, [idx, idx, idx])
         cellpoints = [V[:, CV[k]]::Points for k = 1:length(CV)]
         #----------------------------------------------------------
-        bboxes = [hcat(boundingbox(cell)...) for cell in cellpoints]
+        bboxes = [hcat(pboundingbox(cell)...) for cell in cellpoints]
         xboxdict = coordintervals(1, bboxes)
         yboxdict = coordintervals(2, bboxes)
         # xs,ys are IntervalTree type

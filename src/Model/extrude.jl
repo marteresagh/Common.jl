@@ -1,7 +1,7 @@
 # cells = spigoli di bordo oppure = triangoli che descrivono la forma
 # se spigoli di bordo ottengo l'estrusione delle facce esterne della superficie
 # se triangoli ottengo il solido chiuso
-function extrude(points, cells, size_extrusion)
+function extrude(points::Points, cells::Cells, size_extrusion::Float64)
 
     dim, n = size(points)
     if dim == 3
