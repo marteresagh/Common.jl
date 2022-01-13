@@ -14,6 +14,9 @@ include("Geometry/fit.jl")
 include("Geometry/residual.jl")
 # from LinearAlgebraicRepresentation
 include("LAR/boundary.jl")
+include("LAR/interface.jl")
+include("LAR/point_in_polygon.jl")
+include("LAR/point_in_polyhedron.jl")
 # include("LAR/struct.jl")
 # include("LAR/util.jl")
 # model
