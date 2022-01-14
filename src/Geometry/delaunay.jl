@@ -25,7 +25,9 @@ function constrained_triangulation2D(V::Points, EV::Cells)
 	triin.segmentlist = hcat(EV...)
 	(triout, vorout) = triangulate("pQ", triin)
 	trias = Array{Int64,1}[c[:] for c in eachcol(triout.trianglelist)]
-	return trias
+	edges = Array{Int64,1}[c[:] for c in eachcol(triout.segmentlist)]
+	points = triout.pointlist
+	return points, edges, trias
 end
 
 
@@ -37,13 +39,13 @@ end
 function constrained_triangulation_with_holes2D(V::Points, EV::Cells)
     # data for Constrained Delaunay Triangulation (CDT)
     points = permutedims(V)
-	trias = constrained_triangulation2D(V::Points, EV::Cells)
+	copEV = lar2cop(EV)
+	_, _, trias = constrained_triangulation2D(V, EV)
 
 	innertriangles = Array{Int64,1}[]
 	for (u,v,w) in trias
 		point = (points[u,:]+points[v,:]+points[w,:])./3
-		copEV = lar2cop(EV)
-		inner = point_in_face(point, points::Points, copEV::ChainOp)
+		inner = point_in_face(point, points, copEV)
 		if inner
 			push!(innertriangles,[u,v,w])
 		end
@@ -51,9 +53,9 @@ function constrained_triangulation_with_holes2D(V::Points, EV::Cells)
     return innertriangles
 end
 
-# 
+#
 # """
-#     constrained_triangulation2D(V::Points, EV::Cells) -> Cells
+#     constrained_triangulation3D(V::Points, EV::Cells) -> Cells
 #
 # Constrained Delaunay Triangulation (CDT) of points in 2D Euclidean space.
 # Lar interface of Triangulate.jl.
