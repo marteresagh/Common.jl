@@ -66,6 +66,7 @@ mutable struct PointCloud
 
 	PointCloud(coordinates::Points) = new(size(coordinates,1),size(coordinates,2),coordinates,reshape([],3,0),reshape([],size(coordinates,1),0))
 	PointCloud(dimension::Int8) = new(dimension,0,reshape([],Int64(dimension),0),reshape([],3,0),reshape([],Int64(dimension),0))
+	PointCloud() = new(0,0,reshape([],0,0),reshape([],0,0),reshape([],0,0))
 
 	function add_point!(pointcloud::PointCloud, position::Point; rgb::Point=[], normal::Point=[])
 		pointcloud.coordinates = hcat(pointcloud.coordinates, position)

@@ -12,7 +12,7 @@
 #
 function point_in_polyhedron(point, V::Points, EV::Cells, FV::Cells)
     face_intersected = testinternalpoint(V, EV, FV)(point)
-    return length(face_intersected) % 2 == 0
+    return !(length(face_intersected) % 2 == 0)
 end
 
 """
@@ -42,7 +42,7 @@ function testinternalpoint(V::Points, EV::Cells, FV::Cells)
         # actual containment test of ray point in faces within depot
         for (face, point3d) in depot
             vs, edges, point2d = planemap(V, copEV, copFE, face)(point3d)
-            classify = pointInPolygonClassification(vs, edges) #TODO
+            classify = pointInPolygonClassification(vs, edges)
             inOut = classify(point2d)
             if inOut != "p_out"
                 push!(intersectedfaces, face)
@@ -190,52 +190,55 @@ end
 	planemap(V,copEV,copFE,face)(point)
 Tranform the 3D face and the 3D point in their homologous 2D, in order to test for containment.
 """
-function planemap(V, copEV, copFE, face)
 
-    function vcycle(copEV::ChainOp, copFE::ChainOp, f::Int64)
-        edges, signs = SparseArrays.findnz(copFE[f, :])
-        vpairs = [
-            s > 0 ? SparseArrays.findnz(copEV[e, :])[1] :
-                reverse(SparseArrays.findnz(copEV[e, :])[1])
-            for (e, s) in zip(edges, signs)
-        ]
-        a = [pair for pair in vpairs if length(pair) == 2]
-        function mycat(a::Cells)
-            out = []
-            for cell in a
-                append!(out, cell)
-            end
-            return out
-        end
-        vs = collect(Set(mycat(a)))
-        vdict = Dict(zip(vs, 1:length(vs)))
-        edges = [
-            [vdict[pair[1]], vdict[pair[2]]]
-            for pair in vpairs if length(pair) == 2
-        ]
-        return vs, edges
-    end
+function planemap(V, copEV, copFE, f)
+	face,signs = Common.SparseArrays.findnz(copFE[f,:])
+	vpairs = [s>0 ? Common.SparseArrays.findnz(copEV[e,:])[1] :
+					reverse(SparseArrays.findnz(copEV[e,:])[1])
+				for (e,s) in zip(face,signs)]
+	a = [pair for pair in vpairs if length(pair)==2]
+	vs = union(a...)
+	vdict = Dict(zip(vs,1:length(vs)))
+	edges = [[vdict[pair[1]], vdict[pair[2]]] for pair in vpairs if length(pair)==2]
+	points = V[:,vs]
 
-
-    fv, edges = vcycle(copEV, copFE, face)
-    # Fv = Dict(zip(1:length(fv),fv))
-    # edges = [[Fv[u],Fv[v]] for (u,v) in edges]
     function planemap0(point)
-        vs = V[:, fv]
-        # Plasm.view(Plasm.numbering(0.5)((vs,[[[k] for k=1:4],edges])))
-        #translation
-        point = point .- vs[:, 1]
-        vs = vs .- vs[:, 1]
-        u, v = edges[1]
-        z, w = [[z, w] for (z, w) in edges if z == v][1]
-        v1 = vs[:, u] - vs[:, v]
-        v2 = vs[:, w] - vs[:, v]
-        v3 = cross(v2, v1)
-        M = [v1 v2 v3]
-        vs = inv(M) * [vs point]
-        outvs = vs[1:2, 1:end-1]
-        outpoint = vs[1:2, end]
-        return outvs, edges, outpoint
+        plane = Common.Plane(points)
+		outvs = Common.apply_matrix(plane.matrix,points)
+		outpoint = Common.apply_matrix(plane.matrix,point)
+
+        return outvs[1:2,:], edges, outpoint[1:2,:]
     end
+	
     return planemap0
 end
+
+
+
+
+# FROM python
+# function point_in_poly(points, point)
+#
+#     py"""
+#     from scipy.spatial import Delaunay
+#     import numpy as np
+#
+#     def get_delaunay(poly):
+#         poly = np.array(poly)
+#         return Delaunay(poly)
+#
+#     """
+#
+#     delaunay_model = py"get_delaunay"([c[:] for c in eachcol(points)])
+#
+#     py"""
+#     from scipy.spatial import Delaunay
+#     import numpy as np
+#
+#     def point_in_poly(delaunay_model,point):
+#         simplices = delaunay_model.find_simplex(point)
+#         return simplices
+#     """
+#     check = py"point_in_poly"(delaunay_model, point)
+#     return check[1] > 0
+# end
