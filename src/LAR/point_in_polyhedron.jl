@@ -131,8 +131,8 @@ function spaceindex(point3d::Array{Float64,1})::Function
         # add new code part
 
         # remove each cell from its cover
-        pointcover = setdiff(covers[end], [idx + 1])
-        return pointcover[1:end-1]
+		pointcover = setdiff(covers[end], length(CV))
+        return pointcover
     end
     return spaceindex0
 end
@@ -206,10 +206,8 @@ function planemap(V, copEV, copFE, f)
         plane = Common.Plane(points)
 		outvs = Common.apply_matrix(plane.matrix,points)
 		outpoint = Common.apply_matrix(plane.matrix,point)
-
         return outvs[1:2,:], edges, outpoint[1:2,:]
     end
-	
     return planemap0
 end
 
