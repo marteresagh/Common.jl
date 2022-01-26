@@ -181,3 +181,20 @@ function getArea(V)
 
     return area
 end
+
+# V = 2D vertices, triangulation of V
+function getAreaFaces(V,triangulation)
+	function triangle_area(triangle_points)
+        ret = ones(3, 3)
+        ret[:,1:2] = triangle_points'
+        return Common.abs(0.5 * Common.det(ret))
+    end
+
+	area = 0.
+	for tri in triangulation
+		ptri = V[:,tri]
+		area += triangle_area(ptri)
+	end
+	return area
+
+end
