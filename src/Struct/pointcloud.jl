@@ -100,9 +100,11 @@ mutable struct PointCloud
 			hcat(cloud1.normals,cloud2.normals)
 		end
 
-		cloud = PointCloud(positions,rgbs,normals)
+		if size(normals,2) == 0
+			return PointCloud(positions,rgbs)
+		end
 
-		return cloud
+		return PointCloud(positions,rgbs,normals)
 	end
 
 end
