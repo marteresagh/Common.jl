@@ -46,28 +46,37 @@ function extrude(points::Points, cells::Cells, size_extrusion::Float64)
     return points_final, new_triangles
 end
 
-# ESTRUSIONE CENTRATA
-# function extrude(V, EV, FV, size_extrusion)
-#     dim, n = size(V)
-#     if dim == 3
-#         plane = Common.Plane(V)
-#         V2D = Common.apply_matrix(plane.matrix, V)[1:2, :]
-#     else
-#         V2D = copy(V)
-#     end
-#
-#     new_points = hcat(Common.add_zeta_coordinates(V2D,-size_extrusion/2),Common.add_zeta_coordinates(V2D,size_extrusion/2))
-#
-#     if dim == 3
-#         V_extruded =
-#             Common.apply_matrix(Common.inv(plane.matrix), new_points)
-#     else
-#         V_extruded = copy(new_points)
-#     end
-#
-#     EV_extruded = [EV..., [[i,i+n] for i in 1:n]..., [map(x->x+n,edge) for edge in EV]...]
-#
-#     FV_extruded = [FV..., [[edge[1],edge[2],edge[2]+n,edge[1]+n] for edge in EV]..., [map(x->x+n,face) for face in FV]...]
-#
-#     return V_extruded, EV_extruded, FV_extruded
-# end
+function centered_extrusion(V, EV, FV, size_extrusion)
+    dim, n = size(V)
+    if dim == 3
+        plane = Common.Plane(V)
+        V2D = Common.apply_matrix(plane.matrix, V)[1:2, :]
+    else
+        V2D = copy(V)
+    end
+
+    new_points = hcat(
+        Common.add_zeta_coordinates(V2D, -size_extrusion / 2),
+        Common.add_zeta_coordinates(V2D, size_extrusion / 2),
+    )
+
+    if dim == 3
+        V_extruded = Common.apply_matrix(Common.inv(plane.matrix), new_points)
+    else
+        V_extruded = copy(new_points)
+    end
+
+    EV_extruded = [
+        EV...,
+        [[i, i + n] for i = 1:n]...,
+        [map(x -> x + n, edge) for edge in EV]...,
+    ]
+
+    FV_extruded = [
+        FV...,
+        [[edge[1], edge[2], edge[2] + n, edge[1] + n] for edge in EV]...,
+        [map(x -> x + n, face) for face in FV]...,
+    ]
+
+    return V_extruded, EV_extruded, FV_extruded
+end
