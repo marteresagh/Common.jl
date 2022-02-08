@@ -201,3 +201,53 @@ function lines_intersection(line1::Line,line2::Line)
 	l2 = [line2.startPoint,line2.endPoint]
 	return lines_intersection(l1,l2)
 end
+
+
+
+using PyCall
+function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
+    function point_in_poly(delaunay_model, point)
+
+        py"""
+        from scipy.spatial import Delaunay
+        import numpy as np
+
+        def point_in_poly(delaunay_model,point):
+            simplices = delaunay_model.find_simplex(point)
+            return simplices
+        """
+        check = py"point_in_poly"(delaunay_model, point)
+        return check[1] > 0
+    end
+
+    py"""
+       from scipy.spatial import Delaunay
+       import numpy as np
+
+       def get_delaunay(poly):
+           poly = np.array(poly)
+           return Delaunay(poly)
+
+       """
+    points_box, _, _ = Common.getmodel(aabb)
+    delaunay_model = py"get_delaunay"([c[:] for c in eachcol(points_box)])
+
+    n_verts_face = size(verts_face, 2)
+
+    point_in_poly =
+        [point_in_poly(delaunay_model, verts_face[:, i]) for i = 1:n_verts_face]
+    n_points_in_poly = sum(point_in_poly)
+    if n_points_in_poly == n_verts_face
+        return true
+    elseif n_points_in_poly > 0
+        return true
+    else
+        plane = Plane(verts_face[:, 1:3])
+        V = box_intersects_plane(aabb, plane.normal, plane.centroid)
+        if !isnothing(V) && size(V, 2) > 0
+            return true
+        end
+    end
+
+    return false
+end
