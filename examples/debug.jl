@@ -1,32 +1,8 @@
 using Common
 using Visualization
 using PyCall
-
-function box_intersects_plane(box::Union{AABB,Volume}, normal::Array{Float64,1}, centroid::Array{Float64,1})
-
-	function pointint(i,j,lambda,allverteces)
-		return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
-	end
-
-	V,EV,FV = Common.getmodel(box)
-
-	allverteces = [c[:] for c in eachcol(V)]
-
-	vertexpolygon = Vector{Float64}[]
-	for (i,j) in EV
-		lambda = (Common.LinearAlgebra.dot(normal,centroid)-Common.LinearAlgebra.dot(normal,allverteces[i]))/Common.LinearAlgebra.dot(normal,allverteces[j]-allverteces[i])
-		if lambda>=0 && lambda<=1
-			push!(vertexpolygon,pointint(i,j,lambda,allverteces))
-		end
-	end
-
-	if !isempty(vertexpolygon)
-		V_int = hcat(vertexpolygon...)
-		return Common.remove_double_verts(V_int, 2)[1]
-	else
-		return nothing
-	end
-end
+using FileManager
+using Detection
 
 function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
     function point_in_poly(delaunay_model, point)
@@ -66,7 +42,7 @@ function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
         return true
     else
         plane = Plane(verts_face[:, 1:3])
-        V = box_intersects_plane(aabb, plane.normal, plane.centroid)
+        V = Common.box_intersects_plane(aabb, plane.normal, plane.centroid)
         if !isnothing(V) && size(V, 2) > 0
             return true
         end
@@ -76,25 +52,58 @@ function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
 end
 
 
-aabb = Common.AABB(1, 0, 1, 0, 1, 0)
-V, EV, FV = Common.getmodel(aabb)
-verts_face = rand(3, 3)
-Visualization.VIEW([
-    Visualization.GLGrid(V, EV),
-    Visualization.points(verts_face),
-])
-box_intersect_face(aabb, verts_face)
+source = raw"C:\Users\marte\Documents\potreeDirectory\pointclouds\BOXES"
 
-verts_face = [-1 2 2 -1; -1 -1 2 2; 0.5 0.5 0.5 0.5]
-Visualization.VIEW([
-    Visualization.GLGrid(V, EV),
-    Visualization.points(verts_face),
-])
-box_intersect_face(aabb, verts_face)
+candidate_points, candidate_faces =
+    Detection.read_OFF(raw"C:\Users\marte\Documents\GEOWEB\PROGETTI\BASIC\vect3D\SEGMENTS\candidate_faces.off")
 
-verts_face = [-1 2 2 -1; -1 -1 2 2; 10. 10. 10. 10.]
-Visualization.VIEW([
-    Visualization.GLGrid(V, EV),
-    Visualization.points(verts_face),
-])
-box_intersect_face(aabb, verts_face)
+# devo fare un traversal per questo
+# se interseca il padre interseca forse anche i figli altrimenti skippo
+
+#
+# @time for k in keys(trie)
+#     aabb = FileManager.las2aabb(trie[k])
+#     faces = []
+#     for i in 1:length(candidate_faces)
+#         face = candidate_faces[i]
+#         if box_intersect_face(aabb, candidate_points[:,face])
+#             push!(faces, i)
+#         end
+#     end
+#     trie_faces[k] = faces
+# end
+
+trie = FileManager.potree2trie(source)
+trie_faces = FileManager.Trie{Vector{Int64}}()
+
+
+for k in keys(trie)
+    faces = Int[]
+    trie_faces[k] = faces
+end
+
+
+
+function dfs(trie, trie_faces, points_face, int_face)# due callback: 1 con controllo e 1 senza controllo
+
+	file = trie.value # path to node file
+	nodebb = FileManager.las2aabb(file) # aabb of current octree
+	inter = box_intersect_face(nodebb, points_face)
+	if inter
+		# intersecato ma non contenuto
+		# alcuni punti ricadono nel modello altri no
+		push!(trie_faces.value, int_face)
+		for key in collect(keys(trie.children)) # for all children
+			dfs(trie.children[key], trie_faces.children[key], points_face, int_face)
+		end
+	end
+
+end
+
+for i in 1:length(candidate_faces)
+	points = candidate_points[:,candidate_faces[i]]
+	dfs(trie, trie_faces, points, i)
+end
+
+
+# scrivi una visualizzazione per prova
