@@ -3,27 +3,33 @@
 
 Return verteces of the intersection of a plane, described by `normal` and `centroid`, and an `AABB`.
 """
+
 function box_intersects_plane(box::Union{AABB,Volume}, normal::Array{Float64,1}, centroid::Array{Float64,1})
 
 	function pointint(i,j,lambda,allverteces)
 		return allverteces[i]+lambda*(allverteces[j]-allverteces[i])
 	end
 
-	V,EV,FV = getmodel(box)
+	V,EV,FV = Common.getmodel(box)
 
 	allverteces = [c[:] for c in eachcol(V)]
 
-	vertexpolygon = []
+	vertexpolygon = Vector{Float64}[]
 	for (i,j) in EV
-		lambda = (LinearAlgebra.dot(normal,centroid)-LinearAlgebra.dot(normal,allverteces[i]))/LinearAlgebra.dot(normal,allverteces[j]-allverteces[i])
+		lambda = (Common.LinearAlgebra.dot(normal,centroid)-Common.LinearAlgebra.dot(normal,allverteces[i]))/Common.LinearAlgebra.dot(normal,allverteces[j]-allverteces[i])
 		if lambda>=0 && lambda<=1
 			push!(vertexpolygon,pointint(i,j,lambda,allverteces))
 		end
 	end
 
-	V_int = hcat(vertexpolygon...)
-	return remove_double_verts(V_int, 2)[1]
+	if !isempty(vertexpolygon)
+		V_int = hcat(vertexpolygon...)
+		return Common.remove_double_verts(V_int, 2)[1]
+	else
+		return nothing
+	end
 end
+
 
 """
 	isinbox(aabb::AABB,p::Points)
