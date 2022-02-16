@@ -203,8 +203,6 @@ function lines_intersection(line1::Line,line2::Line)
 end
 
 
-
-using PyCall
 function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
     function point_in_poly(delaunay_model, point)
 
@@ -217,7 +215,8 @@ function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
             return simplices
         """
         check = py"point_in_poly"(delaunay_model, point)
-        return check[1] > 0
+
+        return check[1] >= 0
     end
 
     py"""
@@ -230,12 +229,14 @@ function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
 
        """
     points_box, _, _ = Common.getmodel(aabb)
+    points_box = Common.approxVal(8).(points_box)
     delaunay_model = py"get_delaunay"([c[:] for c in eachcol(points_box)])
 
     n_verts_face = size(verts_face, 2)
 
     point_in_poly =
         [point_in_poly(delaunay_model, verts_face[:, i]) for i = 1:n_verts_face]
+    # @show point_in_poly
     n_points_in_poly = sum(point_in_poly)
     if n_points_in_poly == n_verts_face
         return true
@@ -243,9 +244,22 @@ function box_intersect_face(aabb::Common.AABB, verts_face::Common.Points)
         return true
     else
         plane = Plane(verts_face[:, 1:3])
-        V = box_intersects_plane(aabb, plane.normal, plane.centroid)
+        V = Common.box_intersects_plane(aabb, plane.normal, plane.centroid)
+
         if !isnothing(V) && size(V, 2) > 0
-            return true
+            V = Common.approxVal(8).(V)
+            p_face = Common.apply_matrix(plane.matrix, verts_face)
+            edges = [[i, i + 1] for i = 1:size(verts_face, 2)-1]
+            push!(edges, [size(verts_face, 2), 1])
+            p_int = Common.apply_matrix(plane.matrix, V)
+            for i = 1:size(p_int, 2)
+                if Common.pointInPolygonClassification(p_face, edges)(p_int[
+                    :,
+                    i,
+                ]) != "p_out"
+                    return true
+                end
+            end
         end
     end
 

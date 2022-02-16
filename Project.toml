@@ -8,13 +8,15 @@ Delaunay = "07eb4e4e-0c6d-46ef-bc4e-83d5e5d860a9"
 IntervalTrees = "524e6230-43b7-53ae-be76-1e9e4d08d11b"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 QHull = "a8468747-bd6f-53ef-9e5c-744dbc5c59e7"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Triangulate = "f7e6ffb2-c36d-4f8f-a77e-16e897189344"
 
 [compat]
-Delaunay = ">=1.1.0"
-QHull = ">=0.2.1"
+Delaunay = "^1.1.0"
+QHull = "^0.2.1"
+Triangulate = "^2.1.0"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
