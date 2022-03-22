@@ -70,6 +70,8 @@ struct Volume
 	position::Array{Float64,1}
 	# Euler angles of box
 	rotation::Array{Float64,1}
+
+	#METODI TODO
 end
 
 

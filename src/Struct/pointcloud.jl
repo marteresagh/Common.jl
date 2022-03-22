@@ -52,7 +52,6 @@ mutable struct PointCloud
 		dimension = size(coordinates,1)
 		npoints = size(coordinates,2)
 		@assert dimension == size(normals,1) "dimension mismatch: points in $(dimension)D space and normals in $(size(normals,1))D space"
-		@assert size(coordinates,2) == size(rgbs,2) "length mismatch: $(size(coordinates,2)) points and $(size(rgbs,2)) rgb fields"
 		@assert size(coordinates,2) == size(normals,2) "length mismatch: $(size(coordinates,2)) points and $(size(normals,2)) normal fields"
 		return new(dimension,npoints,coordinates,rgbs,normals)
 	end
@@ -60,7 +59,7 @@ mutable struct PointCloud
 	function PointCloud(coordinates::Points,rgbs::Points)
 		dimension = size(coordinates,1)
 		npoints = size(coordinates,2)
-		@assert size(coordinates,2) == size(rgbs,2) "dimension mismatch: $(size(coordinates,2)) points and $(size(rgbs,2)) rgb fields"
+		
 		return new(dimension,npoints,coordinates,rgbs,reshape([],dimension,0))
 	end
 
