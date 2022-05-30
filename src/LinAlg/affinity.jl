@@ -100,7 +100,7 @@ end
 """
 	euler2matrix(x::Float64,y::Float64,z::Float64)
 
-Euler to matrix.
+Euler to matrix in XYZ order.
 """
 function euler2matrix(x::Float64,y::Float64,z::Float64)
 
