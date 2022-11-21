@@ -1,42 +1,32 @@
-# """
-# DrawPlanes
-# """
-# function DrawPlanes(planes::Array{Hyperplane,1}; box_oriented=true)::LAR
-# 	out = Array{Struct,1}()
-# 	for obj in planes
-# 		plane = Plane(obj.direction,obj.centroid)
-# 		if box_oriented
-# 			box = ch_oriented_boundingbox(obj.inliers.coordinates)
-# 		else
-# 			box = boundingbox(obj.inliers.coordinates)
-# 		end
-# 		cell = getmodel(plane,box)
-# 		push!(out, Struct([cell]))
-# 	end
-# 	out = Struct( out )
-# 	V, EV, FV = struct2lar(out)
-# 	return V, EV, FV
-# end
-# function DrawPlanes(plane::Hyperplane; box_oriented=true)
-# 	return DrawPlanes([plane],box_oriented=box_oriented)
-# end
-#
-#
-# function DrawPlanes(planes::Array{Hyperplane,1}, box::Union{AABB,Volume})::LAR
-# 	out = Array{Struct,1}()
-# 	for obj in planes
-# 		plane = Plane(obj.direction,obj.centroid)
-# 		cell = getmodel(plane,box)
-# 		push!(out, Struct([cell])) # triangles cells
-# 	end
-# 	out = Struct( out )
-# 	V, EV, FV = struct2lar(out)
-# 	return V, EV, FV
-# end
-# function DrawPlanes(plane::Hyperplane, box::Union{AABB,Volume})
-# 	return DrawPlanes([plane],box)
-# end
+"""
+clusterizza in funzione della direzione una lista di linee
+"""
+function clustering_by_direction(lines::Vector{Line})
+    clusters = []
 
+    for line in lines
+        found = false
+
+        for cluster in clusters
+            if Common.dot(line.direction,cluster[1].direction) > 0.98
+                push!(cluster, line)
+                found = true
+                break
+            end
+        end
+
+        if !found
+            push!(clusters, [line])
+        end
+    end
+
+    return clusters
+end
+
+
+"""
+Restituisce il modello LAR delle linee
+"""
 function DrawLines(lines::Array{Line,1})::LAR
 	out = Array{Struct,1}()
 	for line in lines
@@ -69,7 +59,7 @@ function DrawPlanes(plane::Plane, box::Union{AABB,Volume})
 end
 
 """
-Draw linear patches
+Restituisce il modello LAR delle patches
 """
 function DrawPatches(planes::Array{Plane,1}, boxes::Union{Array{AABB,1},Array{Volume,1}})::LAR
 	out = Array{Struct,1}()
@@ -84,21 +74,6 @@ function DrawPatches(planes::Array{Plane,1}, boxes::Union{Array{AABB,1},Array{Vo
 	return V, EV, FV
 end
 
-"""
-Draw circle
-"""
-function DrawCircles()::LAR
-	# out = Array{Struct,1}()
-	# for i in 1:length(planes)
-	# 	plane = planes[i]
-	# 	box = boxes[i]
-	# 	V,EV,FV = getmodel(plane, box)
-	# 	push!(out, Struct([(V,EV,[union(FV...)])])) # unique cells
-	# end
-	# out = Struct( out )
-	# V, EV, FV = struct2lar(out)
-	# return V, EV, FV
-end
 
 """
 faces2triangles(V, FV)

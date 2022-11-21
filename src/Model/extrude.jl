@@ -1,6 +1,10 @@
 # cells = spigoli di bordo oppure = triangoli che descrivono la forma
 # se spigoli di bordo ottengo l'estrusione delle facce esterne della superficie
 # se triangoli ottengo il solido chiuso
+
+"""
+Estrusione di altezza size_extrution.
+"""
 function extrude(points::Points, cells::Cells, size_extrusion::Float64)
 
     dim, n = size(points)
@@ -46,6 +50,10 @@ function extrude(points::Points, cells::Cells, size_extrusion::Float64)
     return points_final, new_triangles
 end
 
+
+"""
+Estrusione di altezza size_extrution ma centrata rispetto al modello.
+"""
 function centered_extrusion(V, EV, FV, size_extrusion)
     dim, n = size(V)
     if dim == 3

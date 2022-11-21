@@ -192,7 +192,11 @@ function orthonormal_basis(a,b,c)
 	return hcat(u,v,w) # by column
 end
 
+"""
+	orthonormal_basis(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
 
+Create orthonormal basis from two points and a vector.
+"""
 function orthonormal_basis(p1::Array{Float64,1}, p2::Array{Float64,1}, axis_y::Array{Float64,1})
 	axis = (p2-p1)/LinearAlgebra.norm(p2-p1)
 	axis_y /= LinearAlgebra.norm(axis_y)

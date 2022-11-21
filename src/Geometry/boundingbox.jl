@@ -1,5 +1,7 @@
 """
-AABB
+Reshape of bb
+INPUT:
+- ([x_min,y_min,z_min],[x_max,y_max,z_max])
 """
 function return_AABB(aabb)::AABB
 	#aabb = ([x_min,y_min,z_min],[x_max,y_max,z_max])
@@ -11,6 +13,7 @@ end
 	boundingbox(points::Points) -> AABB
 
 Axis aligned bounding box.
+Dati i punti restituisce il BB.
 """
 function boundingbox(points::Points)::AABB
 	a = [extrema(points[i,:]) for i in 1:size(points,1)]
@@ -20,8 +23,11 @@ end
 
 """
 	update_boundingbox!(aabb::AABB,point)
+	update_boundingbox!(aabb::AABB, bbcc::AABB)
 
 Update bounding box.
+Dato un BB e un punto, aggiorna il BB.
+Dato un BB e un altro BB, aggiorna il primo BB.
 """
 function update_boundingbox!(aabb::AABB,point::Point)
 	x, y, z = point
@@ -43,6 +49,8 @@ end
 
 """
 	oriented_boundingbox(points::Points)
+
+Restituisce il BB orientato secondo i punti (con algoritmo PCA)
 """
 function oriented_boundingbox(points::Points)::Volume
 	center_,R = PCA(points)
@@ -60,6 +68,8 @@ end
 
 """
 	ch_oriented_boundingbox(points::Points)
+
+Restituisce il BB orientato secondo i punti (con algoritmo del convex hull)
 """
 function ch_oriented_boundingbox(points::Points)::Volume
 	R = nothing
@@ -91,6 +101,8 @@ end
 
 """
 	basis_minimum_OBB_2D(points::Points)
+
+Restitusce la base del BB orientato.
 """
 function basis_minimum_OBB_2D(points::Points)
 	R = nothing

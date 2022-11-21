@@ -2,10 +2,23 @@ using FileManager
 using Common
 using Visualization
 
-source = raw"C:\Users\marte\Documents\potreeDirectory\pointclouds\STANZA_CASALETTO"
+source = raw"D:\pointclouds\terreni\cava.laz"
 
-PC = FileManager.source2pc(source,0)
+PC = FileManager.las2localcoords(source)
+PC2 = FileManager.las2pointcloud(source)
+
+V = PC.coordinates .+ PC.offset
+
 Visualization.VIEW([
-        Visualization.points(PC.coordinates; color=Visualization.COLORS[1],alpha = 0.7)
-        Visualization.points(PC.coordinates[:,1:200]; color=Visualization.COLORS[2],alpha = 1.)
+        Visualization.points(PC.coordinates; color= Visualization.COLORS[4],  alpha = 0.2)
+        Visualization.points(PC2.coordinates; color= Visualization.COLORS[2],   alpha = 0.2)
     ])
+
+
+PC1 = FileManager.source2pc(raw"C:\Users\marte\Documents\GEOWEB\test\VECT_GLOBAL\VECT\POINTCLOUDS\PARTITIONS\fitted.las", 2)
+PC2 = FileManager.source2pc(raw"C:\Users\marte\Documents\GEOWEB\test\VECT_GLOBAL\VECT\POINTCLOUDS\FULL\slice.las", 2)
+
+Visualization.VIEW([
+        Visualization.points(PC1.coordinates; color=Visualization.COLORS[1], alpha = 0.2)
+        Visualization.points(PC2.coordinates; color=Visualization.COLORS[2], alpha = 0.2)
+])
